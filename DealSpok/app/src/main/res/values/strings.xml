@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">DealSpok</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="favouriten">Favouriten</string>
+    <string name="deals_heute">Deals Heute</string>
+    <string name="deals">Deals</string>
+    <string name="online_deals">Online Deals</string>
+    <string name="gutscheine">Gutscheine</string>
+
+
+
+</resources>
