@@ -1,5 +1,6 @@
 package com.dealspok.dealspok;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -57,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
                 if (id == R.id.nav_favourite) {
                     fragment = new Main();
                 } else if (id == R.id.nav_ort) {
+                    Intent startActivityIntent = new Intent(MainActivity.this, GooglePlacesAutocompleteActivity.class);
+                    startActivity(startActivityIntent);
+                    MainActivity.this.finish();
                 }
                 else if (id == R.id.nav_benachrichtigungen) {
                 //    fragment = new Deals();

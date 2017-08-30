@@ -11,6 +11,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAFwAN92cuI1x5l8O3NMgmI_xCTOgWNi3g"/>
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +25,8 @@
             android:name=".MainActivity"
             android:label="Deals"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".GooglePlacesAutocompleteActivity"></activity>
     </application>
 
 </manifest>
