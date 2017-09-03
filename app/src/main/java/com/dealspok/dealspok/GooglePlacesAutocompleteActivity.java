@@ -10,9 +10,11 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.gson.Gson;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
@@ -112,6 +114,14 @@ public class GooglePlacesAutocompleteActivity extends LocationActivityBase {
                 //Log.i(TAG, "Place Selected: " + place.getName());
 
                 mPlaceDetailsText.setText( "Name: " + place.getName() + "\n" +  "Address: " + place.getAddress());
+
+                            // MY_PREFS_NAME - a static String variable like:
+
+                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(place);
+                editor.putString("locationObject", json);
+                editor.commit();
 
                 // Format the place's details and display them in the TextView.
 //                mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(),
