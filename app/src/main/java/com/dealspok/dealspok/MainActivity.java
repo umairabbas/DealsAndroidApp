@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_ort) {
                     Intent startActivityIntent = new Intent(MainActivity.this, GooglePlacesAutocompleteActivity.class);
                     startActivity(startActivityIntent);
-                    MainActivity.this.finish();
                 }
                 else if (id == R.id.nav_benachrichtigungen) {
                 //    fragment = new Deals();

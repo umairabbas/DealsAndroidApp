@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -25,6 +26,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class GooglePlacesAutocompleteActivity extends LocationActivityBase {
     /**
@@ -58,22 +62,48 @@ public class GooglePlacesAutocompleteActivity extends LocationActivityBase {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent startActivityIntent = new Intent(GooglePlacesAutocompleteActivity.this, MainActivity.class);
-                startActivity(startActivityIntent);
-                GooglePlacesAutocompleteActivity.this.finish();
+
+                SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+                String restoredText = prefs.getString("locationObject", null);
+                if (restoredText != null) {
+                    Intent startActivityIntent = new Intent(GooglePlacesAutocompleteActivity.this, MainActivity.class);
+                    startActivity(startActivityIntent);
+                    GooglePlacesAutocompleteActivity.this.finish();
+                }
+                else {
+                    Snackbar mySnackbar = Snackbar.make(view, R.string.locationErrorMsg, Snackbar.LENGTH_SHORT);
+                    mySnackbar.show();
+                }
             }
         });
 
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent startActivityIntent = new Intent(GooglePlacesAutocompleteActivity.this, MainActivity.class);
+                Intent startActivityIntent = new Intent(GooglePlacesAutocompleteActivity.this, LocationManual.class);
                 startActivity(startActivityIntent);
                 GooglePlacesAutocompleteActivity.this.finish();
             }
         });
         // Retrieve the TextViews that will display details about the selected place.
         mPlaceDetailsText = (TextView) findViewById(R.id.place_details);
+
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+        String restoredText = prefs.getString("locationObject", null);
+
+        if (restoredText != null) {
+
+            try {
+                JSONObject obj = new JSONObject(restoredText);
+                String locationName = obj.getString("Name");
+                String locationAddress = obj.getString("Address");
+                if(!locationName.isEmpty() && !locationAddress.isEmpty()) {
+                    mPlaceDetailsText.setText( "Name: " + locationName + "\n" +  "Address: " + locationAddress);
+                }
+            } catch (Throwable t) {
+            }
+
+        }
     }
 
     private void openAutocompleteActivity() {
@@ -113,14 +143,15 @@ public class GooglePlacesAutocompleteActivity extends LocationActivityBase {
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 //Log.i(TAG, "Place Selected: " + place.getName());
 
-                mPlaceDetailsText.setText( "Name: " + place.getName() + "\n" +  "Address: " + place.getAddress());
+                mPlaceDetailsText.setText( "Name: \"" + place.getName() + "\n" +  "Address: " + place.getAddress());
 
                             // MY_PREFS_NAME - a static String variable like:
 
+                String placeJson = "{\"Name\":\"" + place.getName() + "\", \"Address\": \"" + place.getAddress() + "\"}";
+                //Gson gson = new Gson();
+                //String json = gson.toJson(placeJson);
                 SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
-                Gson gson = new Gson();
-                String json = gson.toJson(place);
-                editor.putString("locationObject", json);
+                editor.putString("locationObject", placeJson);
                 editor.commit();
 
                 // Format the place's details and display them in the TextView.

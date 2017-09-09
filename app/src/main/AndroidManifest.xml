@@ -27,6 +27,8 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".GooglePlacesAutocompleteActivity"></activity>
+        <activity
+            android:name=".LocationManual"></activity>
     </application>
 
 </manifest>

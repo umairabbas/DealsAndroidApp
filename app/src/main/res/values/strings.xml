@@ -13,6 +13,8 @@
     <string name="gutscheine">Gutscheine</string>
     <string name="shopping">Shopping</string>
 
+    <string name="locationErrorMsg">"Bitte wählen Sie einen Standort"</string>
+
     <string name="sharedPredName">com.dealspok.www.MyPrefsFile</string>
     <string name="place_details">
     <![CDATA[

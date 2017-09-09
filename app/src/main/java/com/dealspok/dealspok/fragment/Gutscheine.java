@@ -41,8 +41,8 @@ public class Gutscheine extends Fragment {
 
     public List<DealsObject> getTestData() {
         List<DealsObject> recentSongs = new ArrayList<>();
-//        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
-//        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
+        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
+        recentSongs.add(new DealsObject("Adele2", "Someone Like You2", ""));
 //        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
 //        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
 //        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
