@@ -11,22 +11,22 @@ import com.dealspok.dealspok.R;
 
 public class DealsViewHolder extends RecyclerView.ViewHolder{
 
-    public TextView songTitle;
-    public TextView songAuthor;
-    public ImageView songImage;
+    public TextView dealTitle;
+    public TextView dealDescription;
+    public ImageView dealCoverUrl;
 
-    public DealsViewHolder(View itemView, TextView songTitle, TextView songAuthor, ImageView songImage) {
+    public DealsViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl) {
         super(itemView);
-        this.songTitle = songTitle;
-        this.songAuthor = songAuthor;
-        this.songImage = songImage;
+        this.dealTitle = dealTitle;
+        this.dealDescription = dealDescription;
+        this.dealCoverUrl = dealCoverUrl;
     }
 
     public DealsViewHolder(View itemView) {
         super(itemView);
 
-        songTitle = (TextView)itemView.findViewById(R.id.song_title);
-        songAuthor = (TextView)itemView.findViewById(R.id.song_author);
-        songImage = (ImageView)itemView.findViewById(R.id.song_cover);
+        dealTitle = (TextView)itemView.findViewById(R.id.deal_title);
+        dealDescription = (TextView)itemView.findViewById(R.id.deal_description);
+        dealCoverUrl = (ImageView)itemView.findViewById(R.id.deal_cover_url);
     }
 }
