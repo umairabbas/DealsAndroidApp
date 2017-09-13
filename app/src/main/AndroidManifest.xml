@@ -13,7 +13,10 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAFwAN92cuI1x5l8O3NMgmI_xCTOgWNi3g"/>
+            android:value="AIzaSyCnEXKge_M54dyLyIkkBXgWzetKIFUUE1s"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -26,7 +26,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
     @Override
     public DealsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.dealslist_layout, parent, false);
-        return new DealsViewHolder(view);
+        return new DealsViewHolder(view, allDeals);
     }
 
     @Override
