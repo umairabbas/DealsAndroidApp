@@ -1,11 +1,14 @@
 package com.dealspok.dealspok.adapter;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dealspok.dealspok.DealsDetail;
 import com.dealspok.dealspok.R;
 
 
@@ -27,6 +30,16 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
 
         dealTitle = (TextView)itemView.findViewById(R.id.deal_title);
         dealDescription = (TextView)itemView.findViewById(R.id.deal_description);
-        dealCoverUrl = (ImageView)itemView.findViewById(R.id.deal_cover_url);
+        dealCoverUrl = (ImageView)itemView.findViewById(R.id.card_image_gut);
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+                Intent intent = new Intent(context, DealsDetail.class);
+                intent.putExtra(DealsDetail.EXTRA_POSITION, getAdapterPosition());
+                context.startActivity(intent);
+            }
+        });
     }
 }

@@ -50,6 +50,8 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_manual);
 
+        
+
         // don't forget to sort our array (in case it's not sorted)
         Arrays.sort(COUNTRIES);
 

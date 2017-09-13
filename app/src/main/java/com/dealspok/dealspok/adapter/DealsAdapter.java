@@ -34,7 +34,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
         DealsObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getTitle());
         holder.dealDescription.setText(deals.getDescription());
-        Picasso.with(context).load(deals.getCoverUrl()).resize(holder.dealCoverUrl.getWidth(), 400).into(holder.dealCoverUrl);
+        Picasso.with(context).load(deals.getCoverUrl()).into(holder.dealCoverUrl);
     }
 
     @Override
