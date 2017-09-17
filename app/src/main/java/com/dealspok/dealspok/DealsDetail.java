@@ -55,17 +55,19 @@ public class DealsDetail extends AppCompatActivity implements
         String coverUrl = intent.getStringExtra("coverImg");
         Double locationLat = intent.getDoubleExtra("lat", -50.7753);
         Double locationLong = intent.getDoubleExtra("long", 6.0839);
+        String contact = intent.getStringExtra("contact");
 
         LOCATIONCORDINATE = new LatLng(locationLat, locationLong);
         //Resources resources = getResources();
         //String[] places = resources.getStringArray(R.array.places);
-        collapsingToolbar.setTitle(title);//places[postion % places.length]);
+        collapsingToolbar.setTitle(title);
 
-        //String[] placeDetails = resources.getStringArray(R.array.place_details);
         TextView placeDetail = (TextView) findViewById(R.id.place_detail);
-        placeDetail.setText(desc);//placeDetails[postion % placeDetails.length]);
+        placeDetail.setText(desc);
 
-        //TypedArray placePictures = resources.obtainTypedArray(R.array.places_picture);
+        TextView contactText = (TextView) findViewById(R.id.place_contact);
+        contactText.setText(contact);
+
         ImageView placePicutre = (ImageView) findViewById(R.id.image);
 
         Picasso.with(this).load(coverUrl).into(placePicutre);

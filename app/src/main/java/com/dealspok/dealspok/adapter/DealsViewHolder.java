@@ -46,6 +46,7 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
                 intent.putExtra("coverImg", currDeal.getCoverUrl().toString());
                 intent.putExtra("lat", currDeal.getLocation().getLatitude());
                 intent.putExtra("long", currDeal.getLocation().getLongitude());
+                intent.putExtra("contact", currDeal.getContact());
                 intent.putExtra(DealsDetail.EXTRA_POSITION, getAdapterPosition());
                 context.startActivity(intent);
             }
