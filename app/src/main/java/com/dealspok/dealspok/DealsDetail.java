@@ -55,11 +55,13 @@ public class DealsDetail extends AppCompatActivity implements
         String coverUrl = intent.getStringExtra("coverImg");
         Double locationLat = intent.getDoubleExtra("lat", -50.7753);
         Double locationLong = intent.getDoubleExtra("long", 6.0839);
-        String contact = intent.getStringExtra("contact");
+        String contact = "";
+        if(intent.hasExtra("contact")){
+            contact = intent.getStringExtra("contact");
+        }
+
 
         LOCATIONCORDINATE = new LatLng(locationLat, locationLong);
-        //Resources resources = getResources();
-        //String[] places = resources.getStringArray(R.array.places);
         collapsingToolbar.setTitle(title);
 
         TextView placeDetail = (TextView) findViewById(R.id.place_detail);

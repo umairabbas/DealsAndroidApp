@@ -16,20 +16,20 @@ import com.dealspok.dealspok.entities.DealsObject;
 import java.util.List;
 
 
-public class DealsViewHolder extends RecyclerView.ViewHolder{
+public class GutscheineViewHolder extends RecyclerView.ViewHolder{
 
     public TextView dealTitle;
     public TextView dealDescription;
     public ImageView dealCoverUrl;
 
-    public DealsViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl) {
+    public GutscheineViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl) {
         super(itemView);
         this.dealTitle = dealTitle;
         this.dealDescription = dealDescription;
         this.dealCoverUrl = dealCoverUrl;
     }
 
-    public DealsViewHolder(View itemView, final List<DealObject> allDeals) {
+    public GutscheineViewHolder(View itemView, final List<DealsObject> allDeals) {
         super(itemView);
 
         dealTitle = (TextView)itemView.findViewById(R.id.deal_title);
@@ -41,13 +41,13 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
             public void onClick(View v) {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, DealsDetail.class);
-                DealObject currDeal = allDeals.get(getAdapterPosition());
-                intent.putExtra("title", currDeal.getDealTitle());
-                intent.putExtra("desc", currDeal.getDealDescription());
-                intent.putExtra("coverImg", currDeal.getDealImageUrl());
-//                intent.putExtra("lat", currDeal.getLocation().getLatitude());
-//                intent.putExtra("long", currDeal.getLocation().getLongitude());
-//                intent.putExtra("contact", currDeal.getContact());
+                DealsObject currDeal = allDeals.get(getAdapterPosition());
+                intent.putExtra("title", currDeal.getTitle());
+                intent.putExtra("desc", currDeal.getDescription());
+                intent.putExtra("coverImg", currDeal.getCoverUrl().toString());
+                intent.putExtra("lat", currDeal.getLocation().getLatitude());
+                intent.putExtra("long", currDeal.getLocation().getLongitude());
+                intent.putExtra("contact", currDeal.getContact());
                 intent.putExtra(DealsDetail.EXTRA_POSITION, getAdapterPosition());
                 context.startActivity(intent);
             }

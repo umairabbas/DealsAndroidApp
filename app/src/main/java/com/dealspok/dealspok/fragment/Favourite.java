@@ -36,8 +36,8 @@ public class Favourite extends Fragment {
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
-        DealsAdapter mAdapter = new DealsAdapter(getActivity(), getTestData());
-        songRecyclerView.setAdapter(mAdapter);
+//        DealsAdapter mAdapter = new DealsAdapter(getActivity(), getTestData());
+//        songRecyclerView.setAdapter(mAdapter);
         return view;
     }
 

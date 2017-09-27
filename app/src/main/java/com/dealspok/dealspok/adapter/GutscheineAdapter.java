@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class GutscheineAdapter extends RecyclerView.Adapter<DealsViewHolder>{
+public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder>{
 
     private Context context;
     private List<DealsObject> allDeals;
@@ -24,13 +24,13 @@ public class GutscheineAdapter extends RecyclerView.Adapter<DealsViewHolder>{
     }
 
     @Override
-    public DealsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GutscheineViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.gutscheinelist_layout, parent, false);
-        return new DealsViewHolder(view, allDeals);
+        return new GutscheineViewHolder(view, allDeals);
     }
 
     @Override
-    public void onBindViewHolder(DealsViewHolder holder, int position) {
+    public void onBindViewHolder(GutscheineViewHolder holder, int position) {
         DealsObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getTitle());
         holder.dealDescription.setText(deals.getDescription());

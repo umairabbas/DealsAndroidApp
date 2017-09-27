@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dealspok.dealspok.R;
+import com.dealspok.dealspok.entities.DealObject;
 import com.dealspok.dealspok.entities.DealsObject;
 import com.squareup.picasso.Picasso;
 
@@ -16,9 +17,9 @@ import java.util.List;
 public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
 
     private Context context;
-    private List<DealsObject> allDeals;
+    private List<DealObject> allDeals;
 
-    public DealsAdapter(Context context, List<DealsObject> allDeals) {
+    public DealsAdapter(Context context, List<DealObject> allDeals) {
         this.context = context;
         this.allDeals = allDeals;
     }
@@ -31,10 +32,10 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
 
     @Override
     public void onBindViewHolder(DealsViewHolder holder, int position) {
-        DealsObject deals = allDeals.get(position);
-        holder.dealTitle.setText(deals.getTitle());
-        holder.dealDescription.setText(deals.getDescription());
-        Picasso.with(context).load(deals.getCoverUrl()).into(holder.dealCoverUrl);
+        DealObject deals = allDeals.get(position);
+        holder.dealTitle.setText(deals.getDealTitle());
+        holder.dealDescription.setText(deals.getDealDescription());
+        Picasso.with(context).load(deals.getDealImageUrl()).into(holder.dealCoverUrl);
     }
 
     @Override

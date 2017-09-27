@@ -3,6 +3,7 @@ package com.dealspok.dealspok.fragment;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dealspok.dealspok.R;
+import com.dealspok.dealspok.Utils.ConnectionDetector;
 import com.dealspok.dealspok.adapter.GutscheineAdapter;
 import com.dealspok.dealspok.entities.DealsObject;
 
@@ -27,15 +29,29 @@ import static java.util.Calendar.DATE;
 
 public class Gutscheine extends Fragment {
 
+    // Connection detector
+    ConnectionDetector cd;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutscheine, container, false);
-
         getActivity().setTitle("DealSpok");
         RecyclerView songRecyclerView = (RecyclerView)view.findViewById(R.id.song_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
+
+        cd = new ConnectionDetector(getActivity().getApplicationContext());
+        // Check for internet connection
+        if (!cd.isConnectingToInternet()) {
+            // Internet Connection is not present
+            Snackbar snackbar = Snackbar
+                    .make(view, "Internet Connection Error\n" +
+                            "Please connect to working Internet connection", Snackbar.LENGTH_LONG);
+            snackbar.show();
+            // stop executing code by return
+            return view;
+        }
 
         GutscheineAdapter mAdapter = new GutscheineAdapter(getActivity(), getTestData());
         songRecyclerView.setAdapter(mAdapter);
