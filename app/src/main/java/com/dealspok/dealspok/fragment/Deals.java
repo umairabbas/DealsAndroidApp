@@ -20,6 +20,9 @@ import com.dealspok.dealspok.Utils.JSONParser;
 import com.dealspok.dealspok.adapter.DealsAdapter;
 import com.dealspok.dealspok.entities.DealObject;
 import com.dealspok.dealspok.entities.DealsObject;
+import com.dealspok.dealspok.entities.Shop;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -43,14 +46,14 @@ public class Deals extends Fragment {
     private static final String URL_ALBUMS = "http://82.165.160.225/dealspock/api/deals/list";
 
     // ALL JSON node names
-    private static final String TAG_ID = "dealId";
-    private static final String TAG_TITLE = "dealTitle";
-    private static final String TAG_DESC = "dealDescription";
-    private static final String TAG_IMG = "dealImageUrl";
-    private static final String TAG_CREATED = "dateCreated";
-    private static final String TAG_PUBLISH = "datePublished";
-    private static final String TAG_EXP = "dateExpire";
-    // albums JSONArray
+//    private static final String TAG_ID = "dealId";
+//    private static final String TAG_TITLE = "dealTitle";
+//    private static final String TAG_DESC = "dealDescription";
+//    private static final String TAG_IMG = "dealImageUrl";
+//    private static final String TAG_CREATED = "dateCreated";
+//    private static final String TAG_PUBLISH = "datePublished";
+//    private static final String TAG_EXP = "dateExpire";
+        // albums JSONArray
     private JSONArray dealArr = null;
 
     private RecyclerView songRecyclerView;
@@ -138,15 +141,17 @@ public class Deals extends Fragment {
                     for (int i = 0; i < dealArr.length(); i++) {
                         JSONObject c = dealArr.getJSONObject(i);
                         // Storing each json item values in variable
-                        int id = c.getInt(TAG_ID);
-                        String name = c.getString(TAG_TITLE);
-                        String desc = c.getString(TAG_DESC);
-                        String img = c.getString(TAG_IMG);
-                        long created = c.getLong(TAG_CREATED);
-                        long publish = c.getLong(TAG_PUBLISH);
-                        long expiry = c.getLong(TAG_EXP);
-
-                        deals.add(new DealObject(id, name, img, desc, created, publish, expiry));
+//                        int id = c.getInt(TAG_ID);
+//                        String name = c.getString(TAG_TITLE);
+//                        String desc = c.getString(TAG_DESC);
+//                        String img = c.getString(TAG_IMG);
+//                        long created = c.getLong(TAG_CREATED);
+//                        long publish = c.getLong(TAG_PUBLISH);
+//                        long expiry = c.getLong(TAG_EXP);
+                        Gson gson = new GsonBuilder().create();
+                        DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
+                        deals.add(newDeal);
+                        //deals.add(new DealObject(id, name, img, desc, created, publish, expiry));
 
                     }
                 } else {

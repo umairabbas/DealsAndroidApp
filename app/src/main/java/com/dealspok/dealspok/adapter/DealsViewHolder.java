@@ -3,6 +3,7 @@ package com.dealspok.dealspok.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,20 +21,25 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
 
     public TextView dealTitle;
     public TextView dealDescription;
+    public TextView dealOldPrice;
+    public TextView dealPrice;
     public ImageView dealCoverUrl;
 
-    public DealsViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl) {
-        super(itemView);
-        this.dealTitle = dealTitle;
-        this.dealDescription = dealDescription;
-        this.dealCoverUrl = dealCoverUrl;
-    }
+//    public DealsViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl) {
+//        super(itemView);
+//        this.dealTitle = dealTitle;
+//        this.dealDescription = dealDescription;
+//        this.dealCoverUrl = dealCoverUrl;
+//    }
 
     public DealsViewHolder(View itemView, final List<DealObject> allDeals) {
         super(itemView);
 
         dealTitle = (TextView)itemView.findViewById(R.id.deal_title);
         dealDescription = (TextView)itemView.findViewById(R.id.deal_description);
+        dealOldPrice = (TextView)itemView.findViewById(R.id.deal_old_price);
+        dealOldPrice.setPaintFlags(dealOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        dealPrice = (TextView)itemView.findViewById(R.id.deal_price);
         dealCoverUrl = (ImageView)itemView.findViewById(R.id.card_image_gut);
 
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -45,9 +51,13 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
                 intent.putExtra("title", currDeal.getDealTitle());
                 intent.putExtra("desc", currDeal.getDealDescription());
                 intent.putExtra("coverImg", currDeal.getDealImageUrl());
-//                intent.putExtra("lat", currDeal.getLocation().getLatitude());
-//                intent.putExtra("long", currDeal.getLocation().getLongitude());
-//                intent.putExtra("contact", currDeal.getContact());
+
+                String[] location = currDeal.getShopObj().getShopLocation().split(";");
+                intent.putExtra("lat", location[0]);
+                intent.putExtra("long", location[1]);
+                intent.putExtra("contact", currDeal.getShopObj().getShopContact());
+                intent.putExtra("address", currDeal.getShopObj().getShopAddress());
+                intent.putExtra("shopName", currDeal.getShopObj().getShopName());
                 intent.putExtra(DealsDetail.EXTRA_POSITION, getAdapterPosition());
                 context.startActivity(intent);
             }

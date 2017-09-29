@@ -11,8 +11,15 @@ public class DealObject {
     private String dealImageUrl;
     private String dealDescription;
     private long dateCreated;
+    private long datePublished;
+    private long dateExpire;
+    private String timezone;
+    private long originalPrice;
+    private long dealPrice;
+    private String currency;
+    private Shop shop;
 
-    public DealObject(int dealId, String dealTitle, String dealImageUrl, String dealDescription, long dateCreated, long datePublished, long dateExpire) {
+    public DealObject(int dealId, String dealTitle, String dealImageUrl, String dealDescription, long dateCreated, long datePublished, long dateExpire, String timezone, long originalPrice, long dealPrice, String currency, Shop shop) {
         this.dealId = dealId;
         this.dealTitle = dealTitle;
         this.dealImageUrl = dealImageUrl;
@@ -20,10 +27,52 @@ public class DealObject {
         this.dateCreated = dateCreated;
         this.datePublished = datePublished;
         this.dateExpire = dateExpire;
+        this.timezone = timezone;
+        this.originalPrice = originalPrice;
+        this.dealPrice = dealPrice;
+        this.currency = currency;
+        this.setShopObj(shop);
     }
 
-    private long datePublished;
-    private long dateExpire;
+    public Shop getShopObj() {
+        return shop;
+    }
+
+    public void setShopObj(Shop shopObj) {
+        shop = shopObj;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
+    public long getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(long originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public long getDealPrice() {
+        return dealPrice;
+    }
+
+    public void setDealPrice(long dealPrice) {
+        this.dealPrice = dealPrice;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 
     public int getDealId() {
         return dealId;
@@ -42,7 +91,7 @@ public class DealObject {
     }
 
     public String getDealImageUrl() {
-        return dealImageUrl;
+        return "http://82.165.160.225" + dealImageUrl;
     }
 
     public void setDealImageUrl(String dealImageUrl) {

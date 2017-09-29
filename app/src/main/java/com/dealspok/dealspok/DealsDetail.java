@@ -59,6 +59,23 @@ public class DealsDetail extends AppCompatActivity implements
         if(intent.hasExtra("contact")){
             contact = intent.getStringExtra("contact");
         }
+        String shopName = "";
+        if(intent.hasExtra("shopName")){
+            shopName = intent.getStringExtra("shopName");
+        }
+        String address = "";
+        if(intent.hasExtra("address")){
+            address = intent.getStringExtra("address");
+        }
+
+        TextView shopNameText = (TextView) findViewById(R.id.shopName);
+        shopNameText.setText(shopName);
+
+        TextView contactText = (TextView) findViewById(R.id.shop_contact);
+        contactText.setText(contact);
+
+        TextView AddressText = (TextView) findViewById(R.id.shop_address);
+        AddressText.setText(address);
 
 
         LOCATIONCORDINATE = new LatLng(locationLat, locationLong);
@@ -67,8 +84,6 @@ public class DealsDetail extends AppCompatActivity implements
         TextView placeDetail = (TextView) findViewById(R.id.place_detail);
         placeDetail.setText(desc);
 
-        TextView contactText = (TextView) findViewById(R.id.place_contact);
-        contactText.setText(contact);
 
         ImageView placePicutre = (ImageView) findViewById(R.id.image);
 
