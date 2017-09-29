@@ -1,1 +1,1 @@
-![Alt text](shot1.jpg?raw=true "Screen Shot 1")
+![Alt text](shot1.jpg =250x "Screen Shot 1")
