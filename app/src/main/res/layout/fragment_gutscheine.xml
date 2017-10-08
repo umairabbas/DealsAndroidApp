@@ -38,7 +38,8 @@
     <Spinner
         android:id="@+id/spinnerInput"
         android:layout_width="120dp"
-        android:padding="@dimen/_12sdp"
+        android:visibility="gone"
+        android:padding="@dimen/_8sdp"
         android:layout_height="wrap_content"
         android:spinnerMode="dropdown" />
 
