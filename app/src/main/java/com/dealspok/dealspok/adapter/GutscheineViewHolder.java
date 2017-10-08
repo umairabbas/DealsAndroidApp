@@ -10,8 +10,7 @@ import android.widget.TextView;
 
 import com.dealspok.dealspok.DealsDetail;
 import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.entities.DealsObject;
+import com.dealspok.dealspok.entities.GutscheineObject;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder{
         this.dealCoverUrl = dealCoverUrl;
     }
 
-    public GutscheineViewHolder(View itemView, final List<DealsObject> allDeals) {
+    public GutscheineViewHolder(View itemView, final List<GutscheineObject> allDeals) {
         super(itemView);
 
         dealTitle = (TextView)itemView.findViewById(R.id.deal_title);
@@ -41,13 +40,17 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder{
             public void onClick(View v) {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, DealsDetail.class);
-                DealsObject currDeal = allDeals.get(getAdapterPosition());
-                intent.putExtra("title", currDeal.getTitle());
-                intent.putExtra("desc", currDeal.getDescription());
-                intent.putExtra("coverImg", currDeal.getCoverUrl().toString());
-                intent.putExtra("lat", currDeal.getLocation().getLatitude());
-                intent.putExtra("long", currDeal.getLocation().getLongitude());
-                intent.putExtra("contact", currDeal.getContact());
+                GutscheineObject currDeal = allDeals.get(getAdapterPosition());
+                intent.putExtra("title", currDeal.getGutscheinTitle());
+                intent.putExtra("desc", currDeal.getGutscheinDescription());
+                intent.putExtra("coverImg", currDeal.getGutscheinImageUrl(context).toString());
+                intent.putExtra("lat", Double.parseDouble(currDeal.getShop().getShopLocationLat()));
+                intent.putExtra("long", Double.parseDouble(currDeal.getShop().getShopLocationLong()));
+                intent.putExtra("contact", currDeal.getShop().getShopContact());
+                intent.putExtra("address", currDeal.getShop().getShopAddress());
+                intent.putExtra("shopName", currDeal.getShop().getShopName());
+                intent.putExtra("shopCountry", currDeal.getShop().getShopCountry());
+                intent.putExtra("shopDetails", currDeal.getShop().getShopDetails());
                 intent.putExtra(DealsDetail.EXTRA_POSITION, getAdapterPosition());
                 context.startActivity(intent);
             }

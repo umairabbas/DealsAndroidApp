@@ -1,9 +1,7 @@
 package com.dealspok.dealspok.fragment;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,9 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.adapter.CustomFragmentPageAdapter;
-import com.dealspok.dealspok.adapter.DealsAdapter;
-import com.dealspok.dealspok.entities.DealsObject;
+import com.dealspok.dealspok.entities.GutscheineObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,14 +37,14 @@ public class Favourite extends Fragment {
         return view;
     }
 
-    public List<DealsObject> getTestData() {
-        List<DealsObject> recentSongs = new ArrayList<>();
-//        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
-//        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
-//        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
-//        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
-//        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
-//        recentSongs.add(new DealsObject("Adele", "Someone Like You", ""));
+    public List<GutscheineObject> getTestData() {
+        List<GutscheineObject> recentSongs = new ArrayList<>();
+//        recentSongs.add(new GutscheineObject("Adele", "Someone Like You", ""));
+//        recentSongs.add(new GutscheineObject("Adele", "Someone Like You", ""));
+//        recentSongs.add(new GutscheineObject("Adele", "Someone Like You", ""));
+//        recentSongs.add(new GutscheineObject("Adele", "Someone Like You", ""));
+//        recentSongs.add(new GutscheineObject("Adele", "Someone Like You", ""));
+//        recentSongs.add(new GutscheineObject("Adele", "Someone Like You", ""));
         return recentSongs;
     }
 }

@@ -1,14 +1,13 @@
 package com.dealspok.dealspok.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.entities.DealsObject;
+import com.dealspok.dealspok.entities.GutscheineObject;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -16,9 +15,9 @@ import java.util.List;
 public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder>{
 
     private Context context;
-    private List<DealsObject> allDeals;
+    private List<GutscheineObject> allDeals;
 
-    public GutscheineAdapter(Context context, List<DealsObject> allDeals) {
+    public GutscheineAdapter(Context context, List<GutscheineObject> allDeals) {
         this.context = context;
         this.allDeals = allDeals;
     }
@@ -31,10 +30,10 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
 
     @Override
     public void onBindViewHolder(GutscheineViewHolder holder, int position) {
-        DealsObject deals = allDeals.get(position);
-        holder.dealTitle.setText(deals.getTitle());
-        holder.dealDescription.setText(deals.getDescription());
-        Picasso.with(context).load(deals.getCoverUrl()).into(holder.dealCoverUrl);
+        GutscheineObject deals = allDeals.get(position);
+        holder.dealTitle.setText(deals.getGutscheinTitle());
+        holder.dealDescription.setText(deals.getGutscheinDescription());
+        Picasso.with(context).load(deals.getGutscheinImageUrl(context)).into(holder.dealCoverUrl);
     }
 
     @Override

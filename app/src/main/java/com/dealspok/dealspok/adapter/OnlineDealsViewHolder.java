@@ -1,6 +1,5 @@
 package com.dealspok.dealspok.adapter;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -11,14 +10,15 @@ import android.widget.TextView;
 
 import com.dealspok.dealspok.DealsDetail;
 import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.entities.DealObject;
 import com.dealspok.dealspok.entities.OnlineDealsObject;
-import com.dealspok.dealspok.fragment.OnlineDeals;
 
 import java.util.List;
 
+/**
+ * Created by Umi on 07.10.2017.
+ */
 
-public class DealsViewHolder extends RecyclerView.ViewHolder{
+public class OnlineDealsViewHolder extends RecyclerView.ViewHolder{
 
     public TextView dealTitle;
     public TextView dealDescription;
@@ -26,14 +26,7 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
     public TextView dealPrice;
     public ImageView dealCoverUrl;
 
-//    public DealsViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl) {
-//        super(itemView);
-//        this.dealTitle = dealTitle;
-//        this.dealDescription = dealDescription;
-//        this.dealCoverUrl = dealCoverUrl;
-//    }
-
-    public DealsViewHolder(View itemView, final List<DealObject> allDeals) {
+    public OnlineDealsViewHolder(View itemView, final List<OnlineDealsObject> allDeals) {
         super(itemView);
 
         dealTitle = (TextView)itemView.findViewById(R.id.deal_title);
@@ -48,17 +41,17 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
             public void onClick(View v) {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, DealsDetail.class);
-                DealObject currDeal = allDeals.get(getAdapterPosition());
+                OnlineDealsObject currDeal = allDeals.get(getAdapterPosition());
                 intent.putExtra("title", currDeal.getDealTitle());
                 intent.putExtra("desc", currDeal.getDealDescription());
                 intent.putExtra("coverImg", currDeal.getDealImageUrl(context));
-                intent.putExtra("lat",  Double.parseDouble(currDeal.getShopObj().getShopLocationLat()));
-                intent.putExtra("long", Double.parseDouble(currDeal.getShopObj().getShopLocationLong()));
-                intent.putExtra("contact", currDeal.getShopObj().getShopContact());
-                intent.putExtra("address", currDeal.getShopObj().getShopAddress());
-                intent.putExtra("shopName", currDeal.getShopObj().getShopName());
-                intent.putExtra("shopCountry", currDeal.getShopObj().getShopCountry());
-                intent.putExtra("shopDetails", currDeal.getShopObj().getShopDetails());
+                intent.putExtra("lat",  Double.parseDouble(currDeal.getShop().getShopLocationLat()));
+                intent.putExtra("long", Double.parseDouble(currDeal.getShop().getShopLocationLong()));
+                intent.putExtra("contact", currDeal.getShop().getShopContact());
+                intent.putExtra("address", currDeal.getShop().getShopAddress());
+                intent.putExtra("shopName", currDeal.getShop().getShopName());
+                intent.putExtra("shopCountry", currDeal.getShop().getShopCountry());
+                intent.putExtra("shopDetails", currDeal.getShop().getShopDetails());
                 intent.putExtra(DealsDetail.EXTRA_POSITION, getAdapterPosition());
                 context.startActivity(intent);
             }

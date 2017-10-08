@@ -1,5 +1,9 @@
 package com.dealspok.dealspok.entities;
 
+import android.content.Context;
+
+import com.dealspok.dealspok.R;
+
 /**
  * Created by Umi on 25.09.2017.
  */
@@ -90,8 +94,8 @@ public class DealObject {
         this.dealTitle = dealTitle;
     }
 
-    public String getDealImageUrl() {
-        return "http://82.165.160.225" + dealImageUrl;
+    public String getDealImageUrl(Context c) {
+        return c.getString(R.string.apiUrl) + dealImageUrl + dealId;
     }
 
     public void setDealImageUrl(String dealImageUrl) {

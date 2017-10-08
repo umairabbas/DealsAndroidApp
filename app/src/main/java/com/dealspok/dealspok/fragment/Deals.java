@@ -1,9 +1,6 @@
 package com.dealspok.dealspok.fragment;
 
-import android.app.ProgressDialog;
-import android.database.Cursor;
-import android.location.Location;
-import android.net.Uri;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,92 +10,136 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.dealspok.dealspok.MainActivity;
 import com.dealspok.dealspok.R;
+import com.dealspok.dealspok.Utils.DoubleNameValuePair;
+import com.dealspok.dealspok.Utils.IntNameValuePair;
 import com.dealspok.dealspok.Utils.JSONParser;
 import com.dealspok.dealspok.adapter.DealsAdapter;
 import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.entities.DealsObject;
-import com.dealspok.dealspok.entities.Shop;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Umi on 28.08.2017.
  */
 
-public class Deals extends Fragment {
+public class Deals extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private List<DealObject> deals;
-    // Creating JSON Parser object
     JSONParser jsonParser = new JSONParser();
-    // albums JSON url
-    private static final String URL_ALBUMS = "http://82.165.160.225/dealspock/api/deals/list";
-
-    // ALL JSON node names
-//    private static final String TAG_ID = "dealId";
-//    private static final String TAG_TITLE = "dealTitle";
-//    private static final String TAG_DESC = "dealDescription";
-//    private static final String TAG_IMG = "dealImageUrl";
-//    private static final String TAG_CREATED = "dateCreated";
-//    private static final String TAG_PUBLISH = "datePublished";
-//    private static final String TAG_EXP = "dateExpire";
-        // albums JSONArray
+    Context context;
+    private final String URL_Deals = "/mobile/api/deals/list";
     private JSONArray dealArr = null;
-
     private RecyclerView songRecyclerView;
+    private int maxDistance = 10;
+    private DealsAdapter mAdapter;
+
+    private Spinner spinner;
+    private static final String[] paths = {"1 KM", "2 KM", "5 KM", "10 KM", "50 KM", "100 KM"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_gutscheine, container, false);
-
-        getActivity().setTitle("DealSpok");
+        final View view = inflater.inflate(R.layout.fragment_gutscheine, container, false);
+        context = getContext();
+        getActivity().setTitle("Regional Deals");
         songRecyclerView = (RecyclerView)view.findViewById(R.id.song_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
-        deals = new ArrayList<>();
+        spinner = (Spinner)view.findViewById(R.id.spinnerInput);
+        spinner.setVisibility(View.VISIBLE);
+        ArrayAdapter<String>adapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, paths);
 
-        // Loading Albums JSON in Background Thread
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
+//        view.findViewById(R.id.distanceInput).setVisibility(View.VISIBLE);
+//        SeekBar seek = (SeekBar) view.findViewById(R.id.select_distance);
+//        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            TextView seekText = (TextView) view.findViewById(R.id.distance);
+//            int newProgress = 10;
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                if(progress < 5){
+//                    newProgress = progress;
+//                }
+//                else {
+//                    newProgress = (int) (Math.rint((double) progress / 10) * 10);
+//                }
+//                seekBar.setProgress(newProgress);
+//                seekText.setText(Integer.toString(newProgress) + " KM");
+//                maxDistance = newProgress;
+//                new LoadDeals().execute();
+//            }
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {}
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {}
+//        });
+
+
+        deals = new ArrayList<>();
+        mAdapter = new DealsAdapter(getActivity(), deals);
+        songRecyclerView.setAdapter(mAdapter);
+        // Loading JSON in Background Thread
         new LoadDeals().execute();
 
         return view;
     }
 
-    Location createNewLocation(double latitude, double longitude) {
-        Location location = new Location("dummyprovider");
-        location.setLongitude(longitude);
-        location.setLatitude(latitude);
-        return location;
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+
+        switch (position) {
+            case 0:
+                maxDistance = 1;
+                new LoadDeals().execute();
+                break;
+            case 1:
+                maxDistance = 2;
+                new LoadDeals().execute();
+                break;
+            case 2:
+                maxDistance = 5;
+                new LoadDeals().execute();
+                break;
+            case 3:
+                maxDistance = 10;
+                new LoadDeals().execute();
+                break;
+            case 4:
+                maxDistance = 50;
+                new LoadDeals().execute();
+                break;
+            case 5:
+                maxDistance = 100;
+                new LoadDeals().execute();
+                break;
+        }
     }
-    public List<DealsObject> getData() {
-        List<DealsObject> deals = new ArrayList<>();
 
-//        deals.add(new DealsObject(3, Uri.parse("http://www.couponforshopping.com/wp-content/uploads/2014/12/hm-coupon.png"),
-//                "20% H&M", "Sale on Jeans, shirts, ladies shoes, Jackets. Valid only till 2017", "Tel: 089 / 7 85 94 - 413", createNewLocation(50.7746461,6.0846929), created, created));
-//        deals.add(new DealsObject(2, Uri.parse("http://worldfranchise.eu/sites/default/files/franchises/photos/rcl_backwerk-fassade_02_a.jpg"),
-//                "30% Discount BackWerk", "Free Coffee in Morning. We offer amazing environment. Hot tea + buffet in very cheap price also available", "+49 241 94379920", createNewLocation(50.7803965,6.0775336), created, created));
-//        deals.add(new DealsObject(1, Uri.parse("http://2.bp.blogspot.com/-Mbq5kmMtrgI/T44zS6BzQ6I/AAAAAAAAA20/QjajhABxexU/s1600/458827_10151501202440023_142518590022_23600640_1232321177_o.jpg"),
-//                "20% Rabatt Mcdonalds", "Promotion period: 18 April – 18 May and while stocks last. Available from 11am – 4am, EVERYDAY!.\nWe offer amazing environment. Hot tea + buffet in very cheap price also available\n Kindly make booking before coming, we are expecting a lot of customers", "Tel: 089 / 7 85 94 - 413", createNewLocation(50.7752744,6.0864533), created, created));
-//        deals.add(new DealsObject(2, Uri.parse("http://worldfranchise.eu/sites/default/files/franchises/photos/rcl_backwerk-fassade_02_a.jpg"),
-//                "30% Discount BackWerk", "Free Coffee in Morning. We offer amazing environment. Hot tea + buffet in very cheap price also available", "+49 241 94379920", createNewLocation(50.7803965,6.0775336), created, created));
-//        deals.add(new DealsObject(3, Uri.parse("http://www.couponforshopping.com/wp-content/uploads/2014/12/hm-coupon.png"),
-//                "20% H&M", "Sale on Jeans, shirts, ladies shoes, Jackets. Valid only till 2017", "Tel: 089 / 7 85 94 - 413", createNewLocation(50.7746461,6.0846929), created, created));
-//        deals.add(new DealsObject(1, Uri.parse("http://2.bp.blogspot.com/-Mbq5kmMtrgI/T44zS6BzQ6I/AAAAAAAAA20/QjajhABxexU/s1600/458827_10151501202440023_142518590022_23600640_1232321177_o.jpg"),
-//                "20% Rabatt Mcdonalds", "Promotion period: 18 April – 18 May and while stocks last. Available from 11am – 4am, EVERYDAY!.\nWe offer amazing environment. Hot tea + buffet in very cheap price also available\n Kindly make booking before coming, we are expecting a lot of customers", "Tel: 089 / 7 85 94 - 413", createNewLocation(50.7752744,6.0864533), created, created));
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
-        return deals;
     }
 
     /**
@@ -119,40 +160,29 @@ public class Deals extends Fragment {
 //            pDialog.show();
         }
 
-        /**
-         * getting Albums JSON
-         */
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
+            params.add(new DoubleNameValuePair("lat", 50.781203));
+            params.add(new DoubleNameValuePair("long", 6.078068));
+            params.add(new IntNameValuePair("radius", maxDistance*1000));
+
             // getting JSON string from URL
-            String json = jsonParser.makeHttpRequest(URL_ALBUMS, "GET",
+            String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
                     params);
 
-            // Check your log cat for JSON reponse
-            Log.d("Albums JSON: ", "> " + json);
+            Log.d("JSON: ", "> " + json);
 
             try {
                 dealArr = new JSONArray(json);
-
+                deals.clear();
                 if (dealArr != null) {
-                    // looping through All albums
                     for (int i = 0; i < dealArr.length(); i++) {
                         JSONObject c = dealArr.getJSONObject(i);
-                        // Storing each json item values in variable
-//                        int id = c.getInt(TAG_ID);
-//                        String name = c.getString(TAG_TITLE);
-//                        String desc = c.getString(TAG_DESC);
-//                        String img = c.getString(TAG_IMG);
-//                        long created = c.getLong(TAG_CREATED);
-//                        long publish = c.getLong(TAG_PUBLISH);
-//                        long expiry = c.getLong(TAG_EXP);
                         Gson gson = new GsonBuilder().create();
                         DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
                         deals.add(newDeal);
-                        //deals.add(new DealObject(id, name, img, desc, created, publish, expiry));
-
                     }
                 } else {
                     Log.d("Deals: ", "null");
@@ -175,11 +205,9 @@ public class Deals extends Fragment {
                     /**
                      * Updating parsed JSON data into ListView
                      * */
-                    DealsAdapter mAdapter = new DealsAdapter(getActivity(), deals);
-                    songRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                 }
             });
-
         }
     }
 }

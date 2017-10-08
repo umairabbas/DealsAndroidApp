@@ -6,14 +6,6 @@
     android:background="@color/colorLightWhite"
     tools:context="com.dealspok.dealspok.fragment.OnlineDeals">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Online Deals"
-        android:padding="@dimen/_16sdp"
-        android:textSize="@dimen/_13sdp"
-        android:textColor="@color/colorLightBlack"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/song_list"
         android:layout_width="match_parent"

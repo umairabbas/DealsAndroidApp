@@ -8,6 +8,7 @@ public class CategoryObject {
 
     private String catName;
     private String catShortName;
+    private String catLanguage;
 
     public String getCatName() {
         return catName;

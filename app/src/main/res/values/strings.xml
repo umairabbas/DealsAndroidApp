@@ -12,6 +12,8 @@
     <string name="online_deals">Online Deals</string>
     <string name="gutscheine">Gutscheine</string>
     <string name="shopping">Shopping</string>
+    <string name="max_distance">Entfernung</string>
+    <string name="apiUrl">https://www.regionaldeals.de:80</string>
 
     <string name="locationErrorMsg">"Bitte wählen Sie einen Standort"</string>
 

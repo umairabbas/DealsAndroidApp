@@ -148,6 +148,7 @@ public class GooglePlacesAutocompleteActivity extends LocationActivityBase {
                             // MY_PREFS_NAME - a static String variable like:
 
                 String placeJson = "{\"Name\":\"" + place.getName() + "\", \"Address\": \"" + place.getAddress() + "\"}";
+
                 //Gson gson = new Gson();
                 //String json = gson.toJson(placeJson);
                 SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();

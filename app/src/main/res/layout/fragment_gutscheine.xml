@@ -6,6 +6,42 @@
     android:background="@color/colorLightWhite"
     tools:context="com.dealspok.dealspok.fragment.Gutscheine">
 
+        <!--<RelativeLayout android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/distanceInput"-->
+            <!--android:visibility="gone"-->
+            <!--android:layout_margin="10dp">-->
+            <!--<TextView android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/distanceTitle"-->
+                <!--android:textSize="14sp"-->
+                <!--android:text="@string/max_distance" />-->
+            <!--<LinearLayout android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_toRightOf="@+id/distanceTitle"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:orientation="horizontal">-->
+                <!--<SeekBar android:id="@+id/select_distance"-->
+                    <!--android:layout_width="200dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--style="@style/Widget.AppCompat.SeekBar.Discrete"-->
+                    <!--android:max="100"-->
+                    <!--android:progress="10"/>-->
+                <!--<TextView android:id="@+id/distance"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:minEms="8"-->
+                    <!--android:text="10 KM" />-->
+            <!--</LinearLayout>-->
+        <!--</RelativeLayout>-->
+
+    <Spinner
+        android:id="@+id/spinnerInput"
+        android:layout_width="120dp"
+        android:padding="@dimen/_12sdp"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/song_list"
         android:layout_width="match_parent"
@@ -14,5 +50,4 @@
         android:paddingBottom="@dimen/md_keylines"
         android:paddingTop="@dimen/md_keylines"
         android:scrollbars="none" />
-
 </LinearLayout>
