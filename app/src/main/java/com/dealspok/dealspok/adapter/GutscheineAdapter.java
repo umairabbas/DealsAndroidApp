@@ -33,7 +33,7 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
         GutscheineObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getGutscheinTitle());
         holder.dealDescription.setText(deals.getGutscheinDescription());
-        Picasso.with(context).load(deals.getGutscheinImageUrl(context)).into(holder.dealCoverUrl);
+        Picasso.with(context).load(deals.getGutscheinImageUrl(context)).placeholder(R.drawable.menucover).into(holder.dealCoverUrl);
     }
 
     @Override

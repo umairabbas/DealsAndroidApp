@@ -19,6 +19,7 @@
             android:id="@+id/card_image_gut"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/card_image_height"
+            
             android:adjustViewBounds="true"
             android:contentDescription="@string/app_name"
             android:scaleType="fitXY" />

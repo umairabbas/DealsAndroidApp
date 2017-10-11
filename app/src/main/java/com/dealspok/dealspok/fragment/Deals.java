@@ -1,5 +1,6 @@
 package com.dealspok.dealspok.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -50,6 +51,8 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
     private RecyclerView songRecyclerView;
     private int maxDistance = 10;
     private DealsAdapter mAdapter;
+    private boolean isSpinnerInitial = true;
+    private ProgressDialog pDialog;
 
     private Spinner spinner;
     private static final String[] paths = {"1 KM", "2 KM", "5 KM", "10 KM", "50 KM", "100 KM"};
@@ -108,31 +111,37 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 
-        switch (position) {
-            case 0:
-                maxDistance = 1;
-                new UpdateDeals().execute();
-                break;
-            case 1:
-                maxDistance = 2;
-                new UpdateDeals().execute();
-                break;
-            case 2:
-                maxDistance = 5;
-                new UpdateDeals().execute();
-                break;
-            case 3:
-                maxDistance = 10;
-                new UpdateDeals().execute();
-                break;
-            case 4:
-                maxDistance = 50;
-                new UpdateDeals().execute();
-                break;
-            case 5:
-                maxDistance = 100;
-                new UpdateDeals().execute();
-                break;
+        if(isSpinnerInitial)
+        {
+            isSpinnerInitial = false;
+        }
+        else  {
+            switch (position) {
+                case 0:
+                    maxDistance = 1;
+                    new UpdateDeals().execute();
+                    break;
+                case 1:
+                    maxDistance = 2;
+                    new UpdateDeals().execute();
+                    break;
+                case 2:
+                    maxDistance = 5;
+                    new UpdateDeals().execute();
+                    break;
+                case 3:
+                    maxDistance = 10;
+                    new UpdateDeals().execute();
+                    break;
+                case 4:
+                    maxDistance = 50;
+                    new UpdateDeals().execute();
+                    break;
+                case 5:
+                    maxDistance = 100;
+                    new UpdateDeals().execute();
+                    break;
+            }
         }
     }
 
@@ -152,11 +161,11 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            pDialog = new ProgressDialog(AlbumsActivity.this);
-//            pDialog.setMessage("Listing Albums ...");
-//            pDialog.setIndeterminate(false);
-//            pDialog.setCancelable(false);
-//            pDialog.show();
+            pDialog = new ProgressDialog(context);
+            pDialog.setMessage("Loading...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
         }
 
         protected String doInBackground(String... args) {
@@ -197,7 +206,7 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
          **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all albums
-            //pDialog.dismiss();
+            pDialog.dismiss();
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {

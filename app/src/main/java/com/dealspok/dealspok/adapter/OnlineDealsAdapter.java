@@ -40,7 +40,7 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
         holder.dealDescription.setText(deals.getDealDescription());
         holder.dealOldPrice.setText(Long.toString(deals.getOriginalPrice()) + " €");
         holder.dealPrice.setText(Long.toString(deals.getDealPrice()) + " €");
-        Picasso.with(context).load(deals.getDealImageUrl(context)).into(holder.dealCoverUrl);
+        Picasso.with(context).load(deals.getDealImageUrl(context)).placeholder(R.drawable.menucover).into(holder.dealCoverUrl);
     }
 
     @Override
