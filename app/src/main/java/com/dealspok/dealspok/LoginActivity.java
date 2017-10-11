@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.dealspok.dealspok.fragment.Login;
+import com.dealspok.dealspok.fragment.SignUp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,10 @@ public class LoginActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    public void setCurrentFragItem(int pos){
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -57,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new Login(), "EXISTING USER");
-        adapter.addFragment(new Login(), "NEW USER");
+        adapter.addFragment(new SignUp(), "NEW USER");
         viewPager.setAdapter(adapter);
     }
 

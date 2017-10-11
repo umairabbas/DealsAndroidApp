@@ -69,7 +69,6 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder{
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                Toast.makeText(context, "Mitbtn CLICKED", Toast.LENGTH_LONG);
                 Intent intent = new Intent(context, LoginActivity.class);
                 context.startActivity(intent);
             }
