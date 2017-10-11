@@ -30,6 +30,9 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
 
     @Override
     public void onBindViewHolder(DealsViewHolder holder, int position) {
+        if(allDeals.size() < position){
+            return;
+        }
         DealObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getDealTitle());
         holder.dealDescription.setText(deals.getDealDescription());

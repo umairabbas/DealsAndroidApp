@@ -5,11 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dealspok.dealspok.DealsDetail;
+import com.dealspok.dealspok.GooglePlacesAutocompleteActivity;
+import com.dealspok.dealspok.LoginActivity;
 import com.dealspok.dealspok.R;
+import com.dealspok.dealspok.SplashActivity;
 import com.dealspok.dealspok.entities.GutscheineObject;
 
 import java.util.List;
@@ -20,12 +25,15 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder{
     public TextView dealTitle;
     public TextView dealDescription;
     public ImageView dealCoverUrl;
+    public Button mitMachenBtn;
 
-    public GutscheineViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl) {
+    public GutscheineViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl, Button mitBtn) {
         super(itemView);
         this.dealTitle = dealTitle;
         this.dealDescription = dealDescription;
         this.dealCoverUrl = dealCoverUrl;
+        this.mitMachenBtn = mitBtn;
+
     }
 
     public GutscheineViewHolder(View itemView, final List<GutscheineObject> allDeals) {
@@ -34,6 +42,7 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder{
         dealTitle = (TextView)itemView.findViewById(R.id.deal_title);
         dealDescription = (TextView)itemView.findViewById(R.id.deal_description);
         dealCoverUrl = (ImageView)itemView.findViewById(R.id.card_image_gut);
+        mitMachenBtn = (Button) itemView.findViewById(R.id.action_button);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +61,16 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder{
                 intent.putExtra("shopCountry", currDeal.getShop().getShopCountry());
                 intent.putExtra("shopDetails", currDeal.getShop().getShopDetails());
                 intent.putExtra(DealsDetail.EXTRA_POSITION, getAdapterPosition());
+                context.startActivity(intent);
+            }
+        });
+
+        mitMachenBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+                Toast.makeText(context, "Mitbtn CLICKED", Toast.LENGTH_LONG);
+                Intent intent = new Intent(context, LoginActivity.class);
                 context.startActivity(intent);
             }
         });
