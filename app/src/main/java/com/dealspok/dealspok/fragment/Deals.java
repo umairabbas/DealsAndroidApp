@@ -2,6 +2,7 @@ package com.dealspok.dealspok.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -37,6 +38,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by Umi on 28.08.2017.
  */
@@ -49,11 +52,12 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
     private final String URL_Deals = "/mobile/api/deals/list";
     private JSONArray dealArr = null;
     private RecyclerView songRecyclerView;
-    private int maxDistance = 10;
     private DealsAdapter mAdapter;
-    private boolean isSpinnerInitial = true;
     private ProgressDialog pDialog;
-
+    private boolean isSpinnerInitial = true;
+    private Double locationLat = 50.781203;
+    private Double locationLng = 6.078068;
+    private int maxDistance = 1;
     private Spinner spinner;
     private static final String[] paths = {"1 KM", "2 KM", "5 KM", "10 KM", "50 KM", "100 KM"};
 
@@ -73,8 +77,28 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
                 android.R.layout.simple_spinner_item, paths);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        isSpinnerInitial = true;
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+        String restoredText = prefs.getString("locationObject", null);
+
+        if (restoredText != null) {
+
+            try {
+                JSONObject obj = new JSONObject(restoredText);
+                String Lat = obj.getString("lat");
+                String Lng = obj.getString("lng");
+                if(!Lat.isEmpty() && !Lng.isEmpty()) {
+                    locationLat = Double.parseDouble(Lat);
+                    locationLng = Double.parseDouble(Lng);
+
+                }
+            } catch (Throwable t) {
+            }
+
+        }
 
 //        view.findViewById(R.id.distanceInput).setVisibility(View.VISIBLE);
 //        SeekBar seek = (SeekBar) view.findViewById(R.id.select_distance);
@@ -172,8 +196,8 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-            params.add(new DoubleNameValuePair("lat", 50.781203));
-            params.add(new DoubleNameValuePair("long", 6.078068));
+            params.add(new DoubleNameValuePair("lat", locationLat));
+            params.add(new DoubleNameValuePair("long", locationLng));
             params.add(new IntNameValuePair("radius", maxDistance*1000));
 
             // getting JSON string from URL

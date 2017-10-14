@@ -1,24 +1,42 @@
 package com.dealspok.dealspok.fragment;
 
 import android.app.ProgressDialog;
-import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.dealspok.dealspok.LoginActivity;
 import com.dealspok.dealspok.R;
+import com.dealspok.dealspok.Utils.DoubleNameValuePair;
+import com.dealspok.dealspok.Utils.IntNameValuePair;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -34,6 +52,15 @@ public class Login extends Fragment {
     private static final String TAG = "LoginFragment";
     private static final int REQUEST_SIGNUP = 0;
     private Context context;
+    private ViewPager viewPager;
+    private final String URL_Login = "/mobile/api/users/login";
+    private String email = "";
+    private String password = "";
+    private Boolean isSuccess = false;
+    private String name ="";
+    private ProgressDialog progressDialog;
+    private String message = "";
+
 
     public Login() {
         // Required empty public constructor
@@ -56,13 +83,15 @@ public class Login extends Fragment {
         View v = inflater.inflate(R.layout.login_fragment, container, false);
         context = getContext();
 
+        viewPager = getActivity().findViewById(R.id.viewpager);
+
         ButterKnife.inject(this, v);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                //login();
+                login();
             }
         });
 
@@ -70,6 +99,7 @@ public class Login extends Fragment {
 
             @Override
             public void onClick(View v) {
+                viewPager.setCurrentItem(1);
                 // Start the Signup fragment
 //                FragmentManager fragmentManager = getFragmentManager();
 //                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -91,55 +121,118 @@ public class Login extends Fragment {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(getContext(),
-                R.style.Theme_AppCompat_DayNight_Dialog);
+        progressDialog = new ProgressDialog(getContext(),
+                R.style.ThemeOverlay_AppCompat_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
+        email = _emailText.getText().toString();
+        password = _passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+        new LoginCall().execute();
     }
 
+    class LoginCall extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
+        protected String doInBackground(String... args) {
+            try {
+                URL url = new URL(context.getString(R.string.apiUrl) + URL_Login);
+                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Accept","application/json");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+                conn.connect();
 
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
-                this.getActivity().finish();
+//                StringBuilder encodedUrl = new StringBuilder("username=" + URLEncoder.encode(email, "UTF-8"));
+//                encodedUrl.append("&password=" + URLEncoder.encode(password, "UTF-8"));
+//
+//                List<NameValuePair> params = new ArrayList<NameValuePair>();
+//
+//                params.add(new BasicNameValuePair("username", email));
+//                params.add(new BasicNameValuePair("password", password));
+
+                JSONObject jsonParam = new JSONObject();
+                jsonParam.put("email", email);
+                jsonParam.put("password", password);
+                Log.i("JSON", jsonParam.toString());
+
+                DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+                //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
+                os.writeBytes(jsonParam.toString());
+
+                os.flush();
+                os.close();
+
+                Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+                Log.i("MSG" , conn.getResponseMessage());
+
+                BufferedReader in;
+
+                if (200 <= conn.getResponseCode() && conn.getResponseCode() <= 299) {
+                    in = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                } else {
+                    in = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
+                }
+                String inputLine;
+                StringBuffer res = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    res.append(inputLine);
+                }
+                in.close();
+
+                JSONObject jObject = new JSONObject(res.toString());
+                message = jObject.getString("message");
+
+                conn.disconnect();
+
+                if(message.equals("successfull")) {
+                    isSuccess = true;
+                    String firstName = jObject.getString("firstName");
+                    String lastName = jObject.getString("lastName");
+                    name = firstName + " " + lastName;
+                }
+                else {
+                    isSuccess = false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         **/
+        protected void onPostExecute(String file_url) {
+            progressDialog.dismiss();
+            _loginButton.setEnabled(true);
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    if(isSuccess) {
+                        Toast.makeText(context, "Welcome " + name, Toast.LENGTH_LONG).show();
+                        getActivity().finish();
+                    } else {
+                        Toast.makeText(context,  "Login failed\n" + message, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        // disable going back to the MainActivity
-//        getActivity().moveTaskToBack(true);
-//    }
-
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-        getActivity().finish();
     }
 
     public void onLoginFailed() {
         //Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
         _loginButton.setEnabled(true);
     }
 
@@ -150,7 +243,7 @@ public class Login extends Fragment {
         String password = _passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+            _emailText.setError("enter a valid username or email address");
             valid = false;
         } else {
             _emailText.setError(null);

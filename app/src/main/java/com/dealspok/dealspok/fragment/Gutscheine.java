@@ -1,6 +1,7 @@
 package com.dealspok.dealspok.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,8 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.dealspok.dealspok.R;
+import com.dealspok.dealspok.Utils.DoubleNameValuePair;
+import com.dealspok.dealspok.Utils.IntNameValuePair;
 import com.dealspok.dealspok.Utils.JSONParser;
 import com.dealspok.dealspok.adapter.DealsAdapter;
 import com.dealspok.dealspok.adapter.GutscheineAdapter;
@@ -29,11 +35,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by Umi on 28.08.2017.
  */
 
-public class Gutscheine extends Fragment {
+public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private List<GutscheineObject> deals;
     JSONParser jsonParser = new JSONParser();
@@ -41,6 +49,13 @@ public class Gutscheine extends Fragment {
     private final String URL_Deals = "/mobile/api/gutschein/list";
     private JSONArray dealArr = null;
     private RecyclerView songRecyclerView;
+    private GutscheineAdapter mAdapter;
+    private boolean isSpinnerInitial = true;
+    private Double locationLat = 50.781203;
+    private Double locationLng = 6.078068;
+    private int maxDistance = 1;
+    private Spinner spinner;
+    private static final String[] paths = {"1 KM", "2 KM", "5 KM", "10 KM", "50 KM", "100 KM"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,11 +67,82 @@ public class Gutscheine extends Fragment {
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
+        spinner = (Spinner)view.findViewById(R.id.spinnerInput);
+        spinner.setVisibility(View.VISIBLE);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, paths);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        isSpinnerInitial = true;
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+        String restoredText = prefs.getString("locationObject", null);
+
+        if (restoredText != null) {
+
+            try {
+                JSONObject obj = new JSONObject(restoredText);
+                String Lat = obj.getString("lat");
+                String Lng = obj.getString("lng");
+                if(!Lat.isEmpty() && !Lng.isEmpty()) {
+                    locationLat = Double.parseDouble(Lat);
+                    locationLng = Double.parseDouble(Lng);
+
+                }
+            } catch (Throwable t) {
+            }
+
+        }
+
+
         deals = new ArrayList<>();
         // Loading JSON in Background Thread
         new Gutscheine.LoadDeals().execute();
 
         return view;
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+
+        if(isSpinnerInitial)
+        {
+            isSpinnerInitial = false;
+        }
+        else  {
+            switch (position) {
+                case 0:
+                    maxDistance = 1;
+                    new Gutscheine.UpdateDeals().execute();
+                    break;
+                case 1:
+                    maxDistance = 2;
+                    new Gutscheine.UpdateDeals().execute();
+                    break;
+                case 2:
+                    maxDistance = 5;
+                    new Gutscheine.UpdateDeals().execute();
+                    break;
+                case 3:
+                    maxDistance = 10;
+                    new Gutscheine.UpdateDeals().execute();
+                    break;
+                case 4:
+                    maxDistance = 50;
+                    new Gutscheine.UpdateDeals().execute();
+                    break;
+                case 5:
+                    maxDistance = 100;
+                    new Gutscheine.UpdateDeals().execute();
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 
     /**
@@ -118,7 +204,7 @@ public class Gutscheine extends Fragment {
                     /**
                      * Updating parsed JSON data into ListView
                      * */
-                    GutscheineAdapter mAdapter = new GutscheineAdapter(getActivity(), deals);
+                    mAdapter = new GutscheineAdapter(getActivity(), deals);
                     songRecyclerView.setAdapter(mAdapter);
                 }
             });
@@ -126,22 +212,64 @@ public class Gutscheine extends Fragment {
         }
     }
 
-//    public List<GutscheineObject> getTestData() {
-//        Date created = new Date();
-//        List<GutscheineObject> deals = new ArrayList<>();
-//        deals.add(new GutscheineObject(1, Uri.parse("http://2.bp.blogspot.com/-Mbq5kmMtrgI/T44zS6BzQ6I/AAAAAAAAA20/QjajhABxexU/s1600/458827_10151501202440023_142518590022_23600640_1232321177_o.jpg"),
-//                "20% Rabatt Mcdonalds", "Promotion period: 18 April – 18 May and while stocks last. Available from 11am – 4am, EVERYDAY!.\nWe offer amazing environment. Hot tea + buffet in very cheap price also available.\nKindly make booking before coming, we are expecting a lot of customers", "Tel: 089 / 7 85 94 - 413", createNewLocation(50.7752744,6.0864533), created, created));
-//        deals.add(new GutscheineObject(2, Uri.parse("http://worldfranchise.eu/sites/default/files/franchises/photos/rcl_backwerk-fassade_02_a.jpg"),
-//                "30% Discount BackWerk", "Free Coffee in Morning. We offer amazing environment. Hot tea + buffet in very cheap price also available", "+49 241 94379920", createNewLocation(50.7803965,6.0775336), created, created));
-//        deals.add(new GutscheineObject(3, Uri.parse("http://www.couponforshopping.com/wp-content/uploads/2014/12/hm-coupon.png"),
-//                "20% H&M", "Sale on Jeans, shirts, ladies shoes, Jackets. Valid only till 2017", "Tel: 089 / 7 85 94 - 413", createNewLocation(50.7746461,6.0846929), created, created));
-//        deals.add(new GutscheineObject(1, Uri.parse("http://2.bp.blogspot.com/-Mbq5kmMtrgI/T44zS6BzQ6I/AAAAAAAAA20/QjajhABxexU/s1600/458827_10151501202440023_142518590022_23600640_1232321177_o.jpg"),
-//                "20% Rabatt Mcdonalds", "Promotion period: 18 April – 18 May and while stocks last. Available from 11am – 4am, EVERYDAY!", "Tel: 089 / 7 85 94 - 413", createNewLocation(50.7752744,6.0864533), created, created));
-//        deals.add(new GutscheineObject(2, Uri.parse("http://worldfranchise.eu/sites/default/files/franchises/photos/rcl_backwerk-fassade_02_a.jpg"),
-//                "30% Discount BackWerk", "Free Coffee in Morning. We offer amazing environment. Hot tea + buffet in very cheap price also available", "+49 241 94379920", createNewLocation(50.7803965,6.0775336), created, created));
-//        deals.add(new GutscheineObject(3, Uri.parse("http://www.couponforshopping.com/wp-content/uploads/2014/12/hm-coupon.png"),
-//                "20% H&M", "Sale on Jeans, shirts, ladies shoes, Jackets. Valid only till 2017", "Tel: 089 / 7 85 94 - 413", createNewLocation(50.7746461,6.0846929), created, created));
-//
-//        return deals;
-//    }
+    class UpdateDeals extends AsyncTask<String, String, String> {
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            pDialog = new ProgressDialog(AlbumsActivity.this);
+//            pDialog.setMessage("Listing Albums ...");
+//            pDialog.setIndeterminate(false);
+//            pDialog.setCancelable(false);
+//            pDialog.show();
+        }
+
+        protected String doInBackground(String... args) {
+            // Building Parameters
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+            String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
+                    params);
+
+            Log.d("JSON: ", "> " + json);
+
+            try {
+                dealArr = new JSONArray(json);
+                deals.clear();
+                if (dealArr != null) {
+                    for (int i = 0; i < dealArr.length(); i++) {
+                        JSONObject c = dealArr.getJSONObject(i);
+                        Gson gson = new GsonBuilder().create();
+                        GutscheineObject newDeal = gson.fromJson(c.toString(), GutscheineObject.class);
+                        deals.add(newDeal);
+                    }
+                } else {
+                    Log.d("Deals: ", "null");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         **/
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog after getting all albums
+            //pDialog.dismiss();
+            // updating UI from Background Thread
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    /**
+                     * Updating parsed JSON data into ListView
+                     * */
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
 }

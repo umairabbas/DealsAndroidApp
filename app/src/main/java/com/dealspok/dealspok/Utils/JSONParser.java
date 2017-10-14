@@ -20,6 +20,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -49,7 +50,7 @@ public class JSONParser {
                 // defaultHttpClient
                 DefaultHttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(url);
-                httpPost.setEntity(new UrlEncodedFormEntity(params));
+                httpPost.setEntity(new UrlEncodedFormEntity(params, "utf-8"));
 
                 HttpResponse httpResponse = httpClient.execute(httpPost);
                 HttpEntity httpEntity = httpResponse.getEntity();
@@ -65,6 +66,21 @@ public class JSONParser {
                 HttpResponse httpResponse = httpClient.execute(httpGet);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 is = httpEntity.getContent();
+
+            } else if (method == "JSONPOST") {
+                // request method is POST
+                // defaultHttpClient
+                DefaultHttpClient httpClient = new DefaultHttpClient();
+                HttpPost httpPost = new HttpPost(url);
+                httpPost.setHeader("Accept", "application/json");
+                httpPost.setHeader("Content-type", "application/json;charset=UTF-8");
+                httpPost.setHeader("Accept-Charset", "utf-8");
+                httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                HttpEntity httpEntity = httpResponse.getEntity();
+                is = httpEntity.getContent();
+
             }
 
         } catch (UnsupportedEncodingException e) {

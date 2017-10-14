@@ -10,6 +10,7 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 
@@ -147,7 +148,12 @@ public class GooglePlacesAutocompleteActivity extends LocationActivityBase {
 
                             // MY_PREFS_NAME - a static String variable like:
 
-                String placeJson = "{\"Name\":\"" + place.getName() + "\", \"Address\": \"" + place.getAddress() + "\"}";
+                LatLng latlng = place.getLatLng();
+
+                String placeJson = "{\"Name\":\"" + place.getName()
+                        + "\", \"Address\": \"" + place.getAddress()
+                        + "\", \"lat\": \"" + latlng.latitude
+                        + "\", \"lng\": \"" + latlng.longitude + "\"}";
 
                 //Gson gson = new Gson();
                 //String json = gson.toJson(placeJson);
