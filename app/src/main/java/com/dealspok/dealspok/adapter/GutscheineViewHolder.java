@@ -3,6 +3,7 @@ package com.dealspok.dealspok.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,8 @@ import com.dealspok.dealspok.SplashActivity;
 import com.dealspok.dealspok.entities.GutscheineObject;
 
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class GutscheineViewHolder extends RecyclerView.ViewHolder{
@@ -69,8 +72,16 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder{
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                Intent intent = new Intent(context, LoginActivity.class);
-                context.startActivity(intent);
+
+                SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                String restoredText = prefs.getString("userObject", null);
+                if (restoredText != null) {
+                    Toast.makeText(context,restoredText,Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    context.startActivity(intent);
+                }
+
             }
         });
     }

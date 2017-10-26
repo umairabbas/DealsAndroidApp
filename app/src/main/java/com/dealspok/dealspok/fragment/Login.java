@@ -3,6 +3,7 @@ package com.dealspok.dealspok.fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -42,6 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Umi on 11.10.2017.
@@ -60,6 +62,7 @@ public class Login extends Fragment {
     private String name ="";
     private ProgressDialog progressDialog;
     private String message = "";
+    private JSONObject jObject;
 
 
     public Login() {
@@ -188,7 +191,7 @@ public class Login extends Fragment {
                 }
                 in.close();
 
-                JSONObject jObject = new JSONObject(res.toString());
+                jObject = new JSONObject(res.toString());
                 message = jObject.getString("message");
 
                 conn.disconnect();
@@ -217,6 +220,11 @@ public class Login extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     if(isSuccess) {
+
+                        SharedPreferences.Editor editor = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                        editor.putString("userObject", jObject.toString());
+                        editor.commit();
+
                         Toast.makeText(context, "Welcome " + name, Toast.LENGTH_LONG).show();
                         getActivity().finish();
                     } else {
