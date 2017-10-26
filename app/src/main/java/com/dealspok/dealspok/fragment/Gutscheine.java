@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +57,7 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
     private int maxDistance = 1;
     private Spinner spinner;
     private static final String[] paths = {"1 KM", "2 KM", "5 KM", "10 KM", "50 KM", "100 KM"};
+    private String userId = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,22 +81,26 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
 
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
-
-        if (restoredText != null) {
-
-            try {
+        String restoredUser = prefs.getString("userObject", null);
+        try {
+            if (restoredText != null) {
                 JSONObject obj = new JSONObject(restoredText);
                 String Lat = obj.getString("lat");
                 String Lng = obj.getString("lng");
                 if(!Lat.isEmpty() && !Lng.isEmpty()) {
                     locationLat = Double.parseDouble(Lat);
                     locationLng = Double.parseDouble(Lng);
-
                 }
-            } catch (Throwable t) {
             }
-
+            if (restoredUser != null) {
+                JSONObject obj = new JSONObject(restoredUser);
+                userId = obj.getString("userId");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Throwable t) {
         }
+
 
 
         deals = new ArrayList<>();
@@ -166,6 +172,7 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("userid", userId));
 
             // getting JSON string from URL
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
@@ -231,7 +238,7 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-            String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
+            String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals + "?userid=" + userId, "GET",
                     params);
 
             Log.d("JSON: ", "> " + json);

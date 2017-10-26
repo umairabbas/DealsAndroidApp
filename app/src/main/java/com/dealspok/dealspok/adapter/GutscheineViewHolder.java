@@ -1,13 +1,19 @@
 package com.dealspok.dealspok.adapter;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.http.HttpsConnection;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,18 +23,39 @@ import com.dealspok.dealspok.LoginActivity;
 import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.SplashActivity;
 import com.dealspok.dealspok.entities.GutscheineObject;
+import com.dealspok.dealspok.fragment.Gutscheine;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class GutscheineViewHolder extends RecyclerView.ViewHolder{
+public class GutscheineViewHolder extends RecyclerView.ViewHolder {
 
     public TextView dealTitle;
     public TextView dealDescription;
     public ImageView dealCoverUrl;
     public Button mitMachenBtn;
+    private Activity context;
 
     public GutscheineViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl, Button mitBtn) {
         super(itemView);
@@ -41,10 +68,10 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder{
 
     public GutscheineViewHolder(View itemView, final List<GutscheineObject> allDeals) {
         super(itemView);
-
-        dealTitle = (TextView)itemView.findViewById(R.id.deal_title);
-        dealDescription = (TextView)itemView.findViewById(R.id.deal_description);
-        dealCoverUrl = (ImageView)itemView.findViewById(R.id.card_image_gut);
+        context = (Activity) itemView.getContext();
+        dealTitle = (TextView) itemView.findViewById(R.id.deal_title);
+        dealDescription = (TextView) itemView.findViewById(R.id.deal_description);
+        dealCoverUrl = (ImageView) itemView.findViewById(R.id.card_image_gut);
         mitMachenBtn = (Button) itemView.findViewById(R.id.action_button);
 
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -67,22 +94,6 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder{
                 context.startActivity(intent);
             }
         });
-
-        mitMachenBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Context context = v.getContext();
-
-                SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-                String restoredText = prefs.getString("userObject", null);
-                if (restoredText != null) {
-                    Toast.makeText(context,restoredText,Toast.LENGTH_SHORT).show();
-                }else {
-                    Intent intent = new Intent(context, LoginActivity.class);
-                    context.startActivity(intent);
-                }
-
-            }
-        });
     }
+
 }
