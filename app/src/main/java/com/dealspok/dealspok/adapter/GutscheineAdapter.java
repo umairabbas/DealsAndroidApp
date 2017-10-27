@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.util.List;
+import java.util.Random;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -32,11 +34,16 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
     private Context context;
     private Activity activity;
     private List<GutscheineObject> allDeals;
+    private GradientDrawable gradientDrawable;
+    private int [] androidColors;
 
     public GutscheineAdapter(Context context, List<GutscheineObject> allDeals) {
         this.context = context;
         activity = (Activity)context;
         this.allDeals = allDeals;
+        gradientDrawable = new GradientDrawable();
+        gradientDrawable.setShape(GradientDrawable.RECTANGLE);
+        androidColors = context.getResources().getIntArray(R.array.androidcolors);
     }
 
     @Override
@@ -50,7 +57,8 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
         final GutscheineObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getGutscheinTitle());
         holder.dealDescription.setText(deals.getGutscheinDescription());
-        Picasso.with(context).load(deals.getGutscheinImageUrl(context)).placeholder(R.drawable.menucover).into(holder.dealCoverUrl);
+        gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
+        Picasso.with(context).load(deals.getGutscheinImageUrl(context)).placeholder(gradientDrawable).into(holder.dealCoverUrl);
         dealPosition = position;
         if(deals.isGutscheinAvailed()){
             holder.mitMachenBtn.setEnabled(false);
