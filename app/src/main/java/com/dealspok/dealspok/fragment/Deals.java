@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -232,6 +233,8 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
             // dismiss the dialog after getting all albums
             pDialog.dismiss();
             // updating UI from Background Thread
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     /**
@@ -300,6 +303,8 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     /**

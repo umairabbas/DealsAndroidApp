@@ -119,6 +119,9 @@ public class Shopping extends Fragment {
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
+            // here you check the value of getActivity() and break up if needed
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     /**

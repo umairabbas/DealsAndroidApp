@@ -206,6 +206,8 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     /**
@@ -269,6 +271,8 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     /**

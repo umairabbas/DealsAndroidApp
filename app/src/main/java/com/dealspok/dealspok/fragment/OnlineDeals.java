@@ -124,6 +124,8 @@ public class OnlineDeals extends Fragment {
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     /**

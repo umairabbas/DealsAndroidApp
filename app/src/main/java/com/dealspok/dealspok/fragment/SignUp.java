@@ -62,6 +62,7 @@ public class SignUp extends Fragment {
     private Boolean isShop = false;
     private Boolean isSuccess = false;
     private String message = "";
+    private String displayMsg = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,6 +131,7 @@ public class SignUp extends Fragment {
         protected String doInBackground(String... args) {
             try {
                 message = "";
+                displayMsg = "";
                 URL url = new URL(context.getString(R.string.apiUrl) + URL_AddUser);
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -175,12 +177,24 @@ public class SignUp extends Fragment {
                 JSONObject jObject = new JSONObject(res.toString());
                 message = jObject.getString("message");
 
-                if(message.equals("success")) {
+                if(message.equals(getString(R.string.SIGNUP_OK))) {
                     isSuccess = true;
+                    displayMsg = "Successfully Registered";
+                    //onSignupSuccess();
+                }
+                else if(message.equals(getString(R.string.SIGNUP_ERR_EMAIL_TAKEN))) {
+                    isSuccess = false;
+                    displayMsg = "Error! Email already taken";
+                    //onSignupSuccess();
+                }
+                else if(message.equals(getString(R.string.SIGNUP_ERR_USERNAME_TAKEN))) {
+                    isSuccess = false;
+                    displayMsg = "Error! Username already taken";
                     //onSignupSuccess();
                 }
                 else {
                     isSuccess = false;
+                    displayMsg = "Failed! Server error";
                     //onSignupFailed();
                 }
                 conn.disconnect();
@@ -197,13 +211,15 @@ public class SignUp extends Fragment {
         protected void onPostExecute(String file_url) {
             progressDialog.dismiss();
             _signupButton.setEnabled(true);
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     if(isSuccess) {
-                        Toast.makeText(context, "Successfully Registered!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, displayMsg, Toast.LENGTH_LONG).show();
                         viewPager.setCurrentItem(0);
                     } else {
-                        Snackbar.make(getView(), "Failed.\n" + message, Snackbar.LENGTH_SHORT);
+                        Toast.makeText(context, displayMsg, Toast.LENGTH_LONG).show();
                     }
                 }
             });

@@ -36,4 +36,19 @@
         AIzaSyCnEXKge_M54dyLyIkkBXgWzetKIFUUE1s
     </string>
 
+
+    <string name="SERVER_EXCEPTION">SERVER_EXCEPTION</string>
+    <string name="LOGIN_OK">LOGIN_SUCCESS</string>
+    <string name="LOGIN_ERR_INVALID_CREDENTIALS">LOGIN_ERR_INVALID_CREDENTIALS</string>
+    <string name="SIGNUP_ERR_EMAIL_TAKEN">SIGNUP_ERR_EMAIL_TAKEN</string>
+    <string name="SIGNUP_ERR_USERNAME_TAKEN">SIGNUP_ERR_USERNAME_TAKEN</string>
+    <string name="SIGNUP_OK">SIGNUP_OK</string>
+    <string name="PASSWORD_UPDATE_OK">PASSWORD_UPDATE_OK</string>
+    <string name="PASSWORD_UPDATE_NOT_OK">PASSWORD_UPDATE_NOT_OK</string>
+
+    <string name="USER_NOT_VALID">USER_NOT_VALID</string>
+
+    <string name="SHOPS_EMPTY">SHOPS_EMPTY</string>
+    <string name="SHOPS_ADD_OK">SHOPS_ADD_OK</string>
+
 </resources>

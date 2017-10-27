@@ -2,11 +2,9 @@ package com.dealspok.dealspok.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -19,23 +17,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.Utils.DoubleNameValuePair;
-import com.dealspok.dealspok.Utils.IntNameValuePair;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -144,6 +131,7 @@ public class Login extends Fragment {
 
         protected String doInBackground(String... args) {
             try {
+                message = "";
                 URL url = new URL(context.getString(R.string.apiUrl) + URL_Login);
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -152,14 +140,6 @@ public class Login extends Fragment {
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
                 conn.connect();
-
-//                StringBuilder encodedUrl = new StringBuilder("username=" + URLEncoder.encode(email, "UTF-8"));
-//                encodedUrl.append("&password=" + URLEncoder.encode(password, "UTF-8"));
-//
-//                List<NameValuePair> params = new ArrayList<NameValuePair>();
-//
-//                params.add(new BasicNameValuePair("username", email));
-//                params.add(new BasicNameValuePair("password", password));
 
                 JSONObject jsonParam = new JSONObject();
                 jsonParam.put("email", email);
@@ -196,11 +176,15 @@ public class Login extends Fragment {
 
                 conn.disconnect();
 
-                if(message.equals("successfull")) {
+                if(message.equals(getString(R.string.LOGIN_OK))) {
                     isSuccess = true;
                     String firstName = jObject.getString("firstName");
                     String lastName = jObject.getString("lastName");
                     name = firstName + " " + lastName;
+                }
+                else if (message.equals(getString(R.string.LOGIN_ERR_INVALID_CREDENTIALS))){
+                    isSuccess = false;
+                    message = "Invalid Credentials";
                 }
                 else {
                     isSuccess = false;
