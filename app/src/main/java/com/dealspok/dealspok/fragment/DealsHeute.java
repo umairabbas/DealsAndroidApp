@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -39,7 +40,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Umi on 28.08.2017.
  */
 
-public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedListener {
+public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private List<DealObject> deals;
     JSONParser jsonParser = new JSONParser();
@@ -55,6 +56,7 @@ public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedL
     private int maxDistance = 1;
     private Spinner spinner;
     private static final String[] paths = {"1 KM", "2 KM", "5 KM", "10 KM", "50 KM", "100 KM"};
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,37 +97,28 @@ public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedL
 
         }
 
-//        view.findViewById(R.id.distanceInput).setVisibility(View.VISIBLE);
-//        SeekBar seek = (SeekBar) view.findViewById(R.id.select_distance);
-//        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            TextView seekText = (TextView) view.findViewById(R.id.distance);
-//            int newProgress = 10;
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                if(progress < 5){
-//                    newProgress = progress;
-//                }
-//                else {
-//                    newProgress = (int) (Math.rint((double) progress / 10) * 10);
-//                }
-//                seekBar.setProgress(newProgress);
-//                seekText.setText(Integer.toString(newProgress) + " KM");
-//                maxDistance = newProgress;
-//                new LoadDeals().execute();
-//            }
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {}
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {}
-//        });
-
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         deals = new ArrayList<>();
 
-        // Loading JSON in Background Thread
-        new DealsHeute.LoadDeals().execute();
+
+        swipeRefreshLayout.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        new DealsHeute.LoadDeals().execute();
+                    }
+                }
+        );
 
         return view;
+    }
+
+    @Override
+    public void onRefresh() {
+        // swipe refresh is performed, fetch the messages again
+        new UpdateDeals().execute();
     }
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
@@ -180,11 +173,12 @@ public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedL
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(context);
-            pDialog.setMessage("Loading...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
+            swipeRefreshLayout.setRefreshing(true);
+//            pDialog = new ProgressDialog(context);
+//            pDialog.setMessage("Loading...");
+//            pDialog.setIndeterminate(false);
+//            pDialog.setCancelable(false);
+//            pDialog.show();
         }
 
         protected String doInBackground(String... args) {
@@ -225,8 +219,9 @@ public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedL
          **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all albums
-            pDialog.dismiss();
+            //pDialog.dismiss();
             // updating UI from Background Thread
+            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
@@ -250,6 +245,7 @@ public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedL
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            swipeRefreshLayout.setRefreshing(true);
 //            pDialog = new ProgressDialog(AlbumsActivity.this);
 //            pDialog.setMessage("Listing Albums ...");
 //            pDialog.setIndeterminate(false);
@@ -297,6 +293,7 @@ public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedL
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
+            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {

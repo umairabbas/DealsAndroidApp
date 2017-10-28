@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,7 +46,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Umi on 28.08.2017.
  */
 
-public class Deals extends Fragment implements AdapterView.OnItemSelectedListener {
+public class Deals extends Fragment implements AdapterView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private List<DealObject> deals;
     JSONParser jsonParser = new JSONParser();
@@ -61,6 +62,7 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
     private int maxDistance = 1;
     private Spinner spinner;
     private static final String[] paths = {"1 KM", "2 KM", "5 KM", "10 KM", "50 KM", "100 KM"};
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -101,6 +103,9 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
 
         }
 
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
 //        view.findViewById(R.id.distanceInput).setVisibility(View.VISIBLE);
 //        SeekBar seek = (SeekBar) view.findViewById(R.id.select_distance);
 //        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -128,10 +133,23 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
 
         deals = new ArrayList<>();
 
-        // Loading JSON in Background Thread
-        new LoadDeals().execute();
+        swipeRefreshLayout.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        new LoadDeals().execute();
+                    }
+                }
+        );
+
 
         return view;
+    }
+
+    @Override
+    public void onRefresh() {
+        // swipe refresh is performed, fetch the messages again
+        new UpdateDeals().execute();
     }
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
@@ -186,11 +204,12 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(context);
-            pDialog.setMessage("Loading...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
+            swipeRefreshLayout.setRefreshing(true);
+//            pDialog = new ProgressDialog(context);
+//            pDialog.setMessage("Loading...");
+//            pDialog.setIndeterminate(false);
+//            pDialog.setCancelable(false);
+//            pDialog.show();
         }
 
         protected String doInBackground(String... args) {
@@ -231,8 +250,9 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
          **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all albums
-            pDialog.dismiss();
+            //pDialog.dismiss();
             // updating UI from Background Thread
+            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
@@ -256,6 +276,7 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            swipeRefreshLayout.setRefreshing(true);
 //            pDialog = new ProgressDialog(AlbumsActivity.this);
 //            pDialog.setMessage("Listing Albums ...");
 //            pDialog.setIndeterminate(false);
@@ -303,6 +324,7 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
+            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {

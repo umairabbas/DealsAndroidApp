@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,7 +31,7 @@ import java.util.List;
  * Created by Umi on 30.08.2017.
  */
 
-public class Shopping extends Fragment {
+public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshListener{
 
     private List<OnlineDealsObject> deals;
     JSONParser jsonParser = new JSONParser();
@@ -38,6 +39,7 @@ public class Shopping extends Fragment {
     private final String URL_Online = "/mobile/api/onlinedeals/list";
     private JSONArray dealArr = null;
     private RecyclerView songRecyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,11 +51,27 @@ public class Shopping extends Fragment {
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
         deals = new ArrayList<>();
-        // Loading JSON in Background Thread
-        new Shopping.LoadDeals().execute();
+        swipeRefreshLayout.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        new Shopping.LoadDeals().execute();
+                    }
+                }
+        );
         return view;
     }
+
+    @Override
+    public void onRefresh() {
+        // swipe refresh is performed, fetch the messages again
+        new Shopping.LoadDeals().execute();
+    }
+
     /**
      * Background Async Task to Load all Albums by making http request
      * */
@@ -65,6 +83,7 @@ public class Shopping extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            swipeRefreshLayout.setRefreshing(true);
 //            pDialog = new ProgressDialog(AlbumsActivity.this);
 //            pDialog.setMessage("Listing Albums ...");
 //            pDialog.setIndeterminate(false);
@@ -95,7 +114,7 @@ public class Shopping extends Fragment {
 
             try {
                 dealArr = new JSONArray(json);
-
+                deals.clear();
                 if (dealArr != null) {
                     for (int i = 0; i < dealArr.length(); i++) {
                         JSONObject c = dealArr.getJSONObject(i);
@@ -120,6 +139,7 @@ public class Shopping extends Fragment {
             //pDialog.dismiss();
             // updating UI from Background Thread
             // here you check the value of getActivity() and break up if needed
+            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
@@ -129,6 +149,7 @@ public class Shopping extends Fragment {
                      * */
                     OnlineDealsAdapter mAdapter = new OnlineDealsAdapter(getActivity(), deals);
                     songRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                 }
             });
 

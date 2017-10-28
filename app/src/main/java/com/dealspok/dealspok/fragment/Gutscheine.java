@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -42,7 +43,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Umi on 28.08.2017.
  */
 
-public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedListener {
+public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private List<GutscheineObject> deals;
     JSONParser jsonParser = new JSONParser();
@@ -58,6 +59,7 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
     private Spinner spinner;
     private static final String[] paths = {"1 KM", "2 KM", "5 KM", "10 KM", "50 KM", "100 KM"};
     private String userId = "";
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -101,11 +103,22 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
         } catch (Throwable t) {
         }
 
-
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         deals = new ArrayList<>();
         // Loading JSON in Background Thread
-        new Gutscheine.LoadDeals().execute();
+        //new Gutscheine.LoadDeals().execute();
+
+        // sfirst time fetch messages
+        swipeRefreshLayout.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        new Gutscheine.LoadDeals().execute();
+                    }
+                }
+        );
 
         return view;
     }
@@ -151,6 +164,12 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
 
     }
 
+    @Override
+    public void onRefresh() {
+        // swipe refresh is performed, fetch the messages again
+        new Gutscheine.UpdateDeals().execute();
+    }
+
     /**
      * Background Async Task to Load all Albums by making http request
      * */
@@ -162,6 +181,7 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            swipeRefreshLayout.setRefreshing(true);
 //            pDialog = new ProgressDialog(AlbumsActivity.this);
 //            pDialog.setMessage("Listing Albums ...");
 //            pDialog.setIndeterminate(false);
@@ -206,6 +226,7 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
+            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
@@ -229,6 +250,7 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            swipeRefreshLayout.setRefreshing(true);
 //            pDialog = new ProgressDialog(AlbumsActivity.this);
 //            pDialog.setMessage("Listing Albums ...");
 //            pDialog.setIndeterminate(false);
@@ -271,6 +293,7 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
+            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {

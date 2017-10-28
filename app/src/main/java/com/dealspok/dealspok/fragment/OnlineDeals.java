@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,10 +16,7 @@ import android.view.ViewGroup;
 
 import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.Utils.JSONParser;
-import com.dealspok.dealspok.adapter.CustomFragmentPageAdapter;
-import com.dealspok.dealspok.adapter.DealsAdapter;
 import com.dealspok.dealspok.adapter.OnlineDealsAdapter;
-import com.dealspok.dealspok.entities.DealObject;
 import com.dealspok.dealspok.entities.OnlineDealsObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,7 +33,8 @@ import java.util.List;
  * Created by Umi on 28.08.2017.
  */
 
-public class OnlineDeals extends Fragment {
+public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+
 
     private List<OnlineDealsObject> deals;
     JSONParser jsonParser = new JSONParser();
@@ -43,6 +42,7 @@ public class OnlineDeals extends Fragment {
     private final String URL_Online = "/mobile/api/onlinedeals/list";
     private JSONArray dealArr = null;
     private RecyclerView songRecyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,11 +54,29 @@ public class OnlineDeals extends Fragment {
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
         deals = new ArrayList<>();
         // Loading JSON in Background Thread
-        new OnlineDeals.LoadDeals().execute();
+        swipeRefreshLayout.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        new OnlineDeals.LoadDeals().execute();
+                    }
+                }
+        );
+
         return view;
     }
+
+    @Override
+    public void onRefresh() {
+        // swipe refresh is performed, fetch the messages again
+        new LoadDeals().execute();
+    }
+
     /**
      * Background Async Task to Load all Albums by making http request
      * */
@@ -70,6 +88,7 @@ public class OnlineDeals extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            swipeRefreshLayout.setRefreshing(true);
 //            pDialog = new ProgressDialog(AlbumsActivity.this);
 //            pDialog.setMessage("Listing Albums ...");
 //            pDialog.setIndeterminate(false);
@@ -100,7 +119,7 @@ public class OnlineDeals extends Fragment {
 
             try {
                 dealArr = new JSONArray(json);
-
+                deals.clear();
                 if (dealArr != null) {
                     for (int i = 0; i < dealArr.length(); i++) {
                         JSONObject c = dealArr.getJSONObject(i);
@@ -124,6 +143,7 @@ public class OnlineDeals extends Fragment {
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
+            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
@@ -133,6 +153,7 @@ public class OnlineDeals extends Fragment {
                      * */
                     OnlineDealsAdapter mAdapter = new OnlineDealsAdapter(getActivity(), deals);
                     songRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                 }
             });
 
