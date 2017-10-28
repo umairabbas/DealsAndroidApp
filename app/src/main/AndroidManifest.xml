@@ -39,6 +39,16 @@
             android:label="Login"
             android:theme="@style/AppTheme"></activity>
         <activity
+            android:allowBackup="true"
+            android:name=".ShopActivity"
+            android:label="Shop"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:allowBackup="true"
+            android:name=".AddShopActivity"
+            android:label="Add Shop"
+            android:theme="@style/AppTheme"></activity>
+        <activity
             android:name=".GooglePlacesAutocompleteActivity"></activity>
         <activity
             android:name=".LocationManual"></activity>

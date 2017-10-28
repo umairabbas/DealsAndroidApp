@@ -16,7 +16,10 @@ public class Shop {
     private String shopContact;
     private Boolean isActive;
 
-
+    public Shop(int shopId, String shopName){
+        this.shopId = shopId;
+        this.shopName = shopName;
+    }
     public Shop(int shopId, String shopName, String shopAddress, String shopCountry, String shopDetails, String taxNumber, String shopLocationLat, String shopLocationLong, String shopContact, Boolean isActive) {
         this.shopId = shopId;
         this.shopName = shopName;

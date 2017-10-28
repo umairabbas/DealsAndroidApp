@@ -81,7 +81,8 @@ public class MainActivity extends AppCompatActivity {
                 //    fragment = new Deals();
                 }
                 else if (id == R.id.nav_selbstandige) {
-                //    fragment = new Deals();
+                    Intent startActivityIntent = new Intent(MainActivity.this, ShopActivity.class);
+                    startActivity(startActivityIntent);
                 }
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.main_container_wrapper, fragment);
