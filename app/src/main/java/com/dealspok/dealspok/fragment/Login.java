@@ -26,8 +26,8 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
@@ -56,10 +56,10 @@ public class Login extends Fragment {
         // Required empty public constructor
     }
 
-    @InjectView(R.id.input_email) EditText _emailText;
-    @InjectView(R.id.input_password) EditText _passwordText;
-    @InjectView(R.id.btn_login) Button _loginButton;
-    @InjectView(R.id.link_signup) TextView _signupLink;
+    @BindView(R.id.input_email) EditText _emailText;
+    @BindView(R.id.input_password) EditText _passwordText;
+    @BindView(R.id.btn_login) Button _loginButton;
+    @BindView(R.id.link_signup) TextView _signupLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class Login extends Fragment {
 
         viewPager = getActivity().findViewById(R.id.viewpager);
 
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 

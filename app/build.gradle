@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.dealspok.dealspok"
         minSdkVersion 19
@@ -31,7 +31,8 @@ dependencies {
     compile 'com.intuit.sdp:sdp-android:1.0.3'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.google.android.gms:play-services:10.2.0'
     compile 'com.google.code.gson:gson:2.+'
     compile 'com.squareup.picasso:picasso:2.+'

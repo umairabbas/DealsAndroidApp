@@ -1,6 +1,5 @@
 package com.dealspok.dealspok;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,10 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dealspok.dealspok.fragment.Login;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,8 +23,8 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 /**
  * Created by Umi on 28.10.2017.
@@ -35,17 +32,17 @@ import butterknife.InjectView;
 
 public class AddShopActivity extends AppCompatActivity {
 
-    @InjectView(R.id.input_name)
+    @BindView(R.id.input_name)
     EditText _nameText;
-    @InjectView(R.id.input_details)
+    @BindView(R.id.input_details)
     EditText _detailText;
-    @InjectView(R.id.input_contact)
+    @BindView(R.id.input_contact)
     EditText _contactText;
-    @InjectView(R.id.input_address)
+    @BindView(R.id.input_address)
     EditText _addressText;
-    @InjectView(R.id.input_tax)
+    @BindView(R.id.input_tax)
     EditText _taxText;
-    @InjectView(R.id.btn_shop_submit)
+    @BindView(R.id.btn_shop_submit)
     Button _shopButton;
 
     private final String URL_Login = "/mobile/api/shops/add";
@@ -66,7 +63,7 @@ public class AddShopActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_shop_activity);
         context = this;
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         _shopButton.setOnClickListener(new View.OnClickListener() {
 

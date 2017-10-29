@@ -17,8 +17,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.Utils.JSONParser;
@@ -43,12 +43,12 @@ public class SignUp extends Fragment {
         // Required empty public constructor
     }
 
-    @InjectView(R.id.input_name) EditText _nameText;
-    @InjectView(R.id.input_email) EditText _emailText;
-    @InjectView(R.id.input_password) EditText _passwordText;
-    @InjectView(R.id.btn_signup) Button _signupButton;
-    @InjectView(R.id.link_login) TextView _loginLink;
-    @InjectView(R.id.shopCheck) Switch _isShopKeeper;
+    @BindView(R.id.input_name) EditText _nameText;
+    @BindView(R.id.input_email) EditText _emailText;
+    @BindView(R.id.input_password) EditText _passwordText;
+    @BindView(R.id.btn_signup) Button _signupButton;
+    @BindView(R.id.link_login) TextView _loginLink;
+    @BindView(R.id.shopCheck) Switch _isShopKeeper;
 
     private ViewPager viewPager;
     private JSONObject Result = null;
@@ -74,7 +74,7 @@ public class SignUp extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.signup_fragment, container, false);
 
-        ButterKnife.inject(this, v);
+        ButterKnife.bind(this, v);
         context = getContext();
 
         viewPager = getActivity().findViewById(R.id.viewpager);
