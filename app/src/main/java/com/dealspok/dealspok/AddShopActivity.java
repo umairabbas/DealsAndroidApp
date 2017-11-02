@@ -45,7 +45,7 @@ public class AddShopActivity extends AppCompatActivity {
     @BindView(R.id.btn_shop_submit)
     Button _shopButton;
 
-    private final String URL_Login = "/mobile/api/shops/add";
+    private final String URL_Login = "/mobile/api/shops/upload-shop";
     private ProgressDialog progressDialog;
     private String name = "";
     private String contact = "";
@@ -129,6 +129,7 @@ public class AddShopActivity extends AppCompatActivity {
                 conn.connect();
 
                 JSONObject jsonParam = new JSONObject();
+                jsonParam.put("shopId", null);
                 jsonParam.put("shopName", name);
                 jsonParam.put("shopAddress", address);
                 jsonParam.put("shopCity", "Aachen");
@@ -138,7 +139,7 @@ public class AddShopActivity extends AppCompatActivity {
                 jsonParam.put("shopContact", contact);
                 jsonParam.put("shopDetails", desc);
                 jsonParam.put("taxNumber", tax);
-                jsonParam.put("isActive", false);
+                jsonParam.put("active", false);
 
                 Log.i("JSON", jsonParam.toString());
 
@@ -172,7 +173,7 @@ public class AddShopActivity extends AppCompatActivity {
 
                 conn.disconnect();
 
-                if(message.equals(getString(R.string.SHOPS_ADD_OK))) {
+                if(message.equals(getString(R.string.SHOPS_UPLOAD_OK))) {
                     isSuccess = true;
                 }
 //                else if (message.equals(getString(R.string.LOGIN_ERR_INVALID_CREDENTIALS))){

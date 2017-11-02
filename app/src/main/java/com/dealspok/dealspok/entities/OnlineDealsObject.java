@@ -25,6 +25,15 @@ public class OnlineDealsObject {
     private String dealUrl;
     private CategoryObject category;
     private Shop shop;
+    private Boolean favourite;
+
+    public Boolean getFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(Boolean favourite) {
+        this.favourite = favourite;
+    }
 
     public String getDealTitle() {
         return dealTitle;

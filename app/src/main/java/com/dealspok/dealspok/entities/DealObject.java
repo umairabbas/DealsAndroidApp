@@ -22,6 +22,15 @@ public class DealObject {
     private long dealPrice;
     private String currency;
     private Shop shop;
+    private Boolean favourite;
+
+    public Boolean getFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(Boolean favourite) {
+        this.favourite = favourite;
+    }
 
     public DealObject(int dealId, String dealTitle, String dealImageUrl, String dealDescription, long dateCreated, long datePublished, long dateExpire, String timezone, long originalPrice, long dealPrice, String currency, Shop shop) {
         this.dealId = dealId;

@@ -48,7 +48,15 @@
 
     <string name="USER_NOT_VALID">USER_NOT_VALID</string>
 
-    <string name="SHOPS_EMPTY">SHOPS_EMPTY</string>
-    <string name="SHOPS_ADD_OK">SHOPS_ADD_OK</string>
+    <string name="SHOPS_UPLOAD_ERR">SHOPS_UPLOAD_ERR</string>
+    <string name="SHOPS_UPLOAD_OK">SHOPS_UPLOAD_OK</string>
+
+    <string name="DEALS_FAV_CHECK">DEALS_FAV_CHECK</string>
+    <string name="DEALS_FAV_ERR">DEALS_FAV_ERR</string>
+
+    <string name="FAVOURITES_LIST_OK">FAVOURITES_LIST_OK</string>
+
+
+
 
 </resources>

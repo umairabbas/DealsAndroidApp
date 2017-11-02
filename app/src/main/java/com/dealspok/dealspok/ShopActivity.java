@@ -126,7 +126,8 @@ public class ShopActivity extends AppCompatActivity {
             Log.d("JSON: ", "> " + json);
 
             try {
-                shopArr = new JSONArray(json);
+                JSONObject jO = new JSONObject(json);
+                shopArr = (JSONArray) jO.getJSONArray("data");
                 shopList.clear();
                 if (shopArr != null) {
                     for (int i = 0; i < shopArr.length(); i++) {

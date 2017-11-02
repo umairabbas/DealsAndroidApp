@@ -149,7 +149,7 @@ public class SignUp extends Fragment {
                 jsonParam.put("phone", "");
                 jsonParam.put("address", "");
                 jsonParam.put("shopKeeper", isShop);
-                jsonParam.put("isActive", true);
+                jsonParam.put("active", true);
 
                 Log.i("JSON", jsonParam.toString());
                 DataOutputStream os = new DataOutputStream(conn.getOutputStream());

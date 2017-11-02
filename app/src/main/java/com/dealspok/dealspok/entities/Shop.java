@@ -14,7 +14,7 @@ public class Shop {
     private String shopLocationLat;
     private String shopLocationLong;
     private String shopContact;
-    private Boolean isActive;
+    private Boolean active;
 
     public Shop(int shopId, String shopName){
         this.shopId = shopId;
@@ -30,7 +30,7 @@ public class Shop {
         this.shopLocationLat = shopLocationLat;
         this.shopLocationLong = shopLocationLong;
         this.shopContact = shopContact;
-        this.isActive = isActive;
+        this.active = isActive;
     }
 
     public String getShopCountry() {
@@ -107,10 +107,10 @@ public class Shop {
     }
 
     public Boolean getActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(Boolean active) {
-        isActive = active;
+        active = active;
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
     public TextView dealOldPrice;
     public TextView dealPrice;
     public ImageView dealCoverUrl;
+    public ImageButton favoriteImageButton;
 
 //    public DealsViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl) {
 //        super(itemView);
@@ -42,6 +44,7 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
         dealOldPrice.setPaintFlags(dealOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         dealPrice = (TextView)itemView.findViewById(R.id.deal_price);
         dealCoverUrl = (ImageView)itemView.findViewById(R.id.card_image_gut);
+        favoriteImageButton = (ImageButton) itemView.findViewById(R.id.favorite_button);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
