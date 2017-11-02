@@ -55,6 +55,12 @@
     <string name="DEALS_FAV_ERR">DEALS_FAV_ERR</string>
     <string name="DEALS_FAV_UNCHECK">DEALS_FAV_UNCHECK</string>
 
+    <string name="ONLINE_FAV_CHECK">ONLINE_FAV_CHECK</string>
+    <string name="ONLINE_FAV_ERR">ONLINE_FAV_ERR</string>
+    <string name="ONLINE_FAV_UNCHECK">ONLINE_FAV_UNCHECK</string>
+
+
+
 
     <string name="FAVOURITES_LIST_OK">FAVOURITES_LIST_OK</string>
 

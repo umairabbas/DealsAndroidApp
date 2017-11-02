@@ -104,6 +104,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
                     FavView = v;
                     Context context = v.getContext();
                     dealId = deals.getDealId();
+                    dealType = deals.getType();
                     if(deals.getFavourite() == null){
                         favChecked = true;
                     } else {
@@ -146,6 +147,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
     private Boolean isSuccess = false;
     private View FavView;
     private Boolean fromFav = false;
+    private String dealType = "";
 
     class favClick extends AsyncTask<String, String, String> {
         @Override
@@ -156,6 +158,14 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
             try {
                 message = "";
                 displayMsg = "";
+                if(dealType == null){
+                    URLFav = "/mobile/api/deals/favourite-click";
+                }
+                else if(dealType.equals("online") || dealType.equals("shopping")){
+                    URLFav = "/mobile/api/onlinedeals/favourite-click";
+                } else {
+                    URLFav = "/mobile/api/deals/favourite-click";
+                }
                 URL url = new URL(context.getString(R.string.apiUrl) + URLFav + "?userid=" + userId +
                         "&dealid=" + Integer.toString(dealId) + "&favcheck=" + Boolean.toString(favChecked));
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -187,6 +197,10 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
                     //onSignupSuccess();
                 }
                 else if(message.equals(activity.getString(R.string.DEALS_FAV_UNCHECK))) {
+                    isSuccess = true;
+                    displayMsg = "Removed from Favourites";
+                }
+                else if(message.equals(activity.getString(R.string.ONLINE_FAV_UNCHECK))) {
                     isSuccess = true;
                     displayMsg = "Removed from Favourites";
                 }

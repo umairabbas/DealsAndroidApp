@@ -46,7 +46,9 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
     JSONParser jsonParser = new JSONParser();
     Context context;
     private final String URL_Fav = "/mobile/api/favourites/list";
-    private JSONArray dealArr = null;
+    //private JSONArray dealArr = null;
+    private JSONArray OnlinedealsArr = null;
+    private JSONArray normalDealsArr = null;
     private RecyclerView songRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String userId;
@@ -137,13 +139,33 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
             Log.d("JSON: ", "> " + json);
 
             try {
+                OnlinedealsArr = null;
+                normalDealsArr = null;
                 JSONObject jO = new JSONObject(json);
-                dealArr = (JSONArray) jO.getJSONArray("data");
+                if(!jO.isNull("data")){
+                    JSONObject Deals = (JSONObject) jO.get("data");
+                    if (Deals.has("ONLINEDEALS_SHOPS"))
+                        OnlinedealsArr = (JSONArray) Deals.getJSONArray("ONLINEDEALS_SHOPS");
+                    if (Deals.has("DEALS"))
+                        normalDealsArr = (JSONArray) Deals.getJSONArray("DEALS");
+                }
+
                 deals.clear();
 //                if(msg.equals(getString(R.string.FAVOURITES_LIST_OK))){
-                    if (dealArr != null) {
-                        for (int i = 0; i < dealArr.length(); i++) {
-                            JSONObject c = dealArr.getJSONObject(i);
+                    if (OnlinedealsArr != null) {
+                        for (int i = 0; i < OnlinedealsArr.length(); i++) {
+                            JSONObject c = OnlinedealsArr.getJSONObject(i);
+                            Gson gson = new GsonBuilder().create();
+                            DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
+                            deals.add(newDeal);
+                        }
+                    } else {
+                        Log.d("Deals: ", "null");
+                    }
+
+                    if (normalDealsArr != null) {
+                        for (int i = 0; i < normalDealsArr.length(); i++) {
+                            JSONObject c = normalDealsArr.getJSONObject(i);
                             Gson gson = new GsonBuilder().create();
                             DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
                             deals.add(newDeal);

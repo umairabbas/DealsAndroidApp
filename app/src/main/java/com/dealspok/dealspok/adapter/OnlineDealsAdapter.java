@@ -47,7 +47,8 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
     private GradientDrawable gradientDrawable;
     private int [] androidColors;
     private Activity activity;
-    private String URLFav = "/mobile/api/deals/favourite-click";//?userid=7&dealid=5&favcheck=true";
+    private String URLFav = "/mobile/api/onlinedeals/favourite-click";
+    private Boolean favChecked = true;
 
     public OnlineDealsAdapter(Context context, List<OnlineDealsObject> allDeals) {
         this.context = context;
@@ -74,36 +75,40 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
         gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         Picasso.with(context).load(deals.getDealImageUrl(context)).placeholder(gradientDrawable).into(holder.dealCoverUrl);
 
-        if(deals.getFavourite() != null) {
-            if(deals.getFavourite()==true) {
-                holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.green));
-                holder.favoriteImageButton.setEnabled(false);
-            }
-        } else {
-//            holder.favoriteImageButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    FavView = v;
-//                    Context context = v.getContext();
-      //      dealId = deals.getDealId();
-//                    SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-//                    String restoredText = prefs.getString("userObject", null);
-//                    if (restoredText != null) {
-//                        try {
-//                            JSONObject obj = new JSONObject(restoredText);
-//                            userId = obj.getString("userId");
-//                            new OnlineDealsAdapter.favClick().execute();
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        } catch (Throwable t) {
-//                        }
-//                    } else {
-//                        Intent intent = new Intent(context, LoginActivity.class);
-//                        context.startActivity(intent);
-//                    }
-//                }
-//            });
+        if(deals.getFavourite() == null) {
+            holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.colorGrey));
+        } else if(deals.getFavourite()==true) {
+            holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.green));
         }
+        holder.favoriteImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FavView = v;
+                Context context = v.getContext();
+                dealId = deals.getDealId();
+                if(deals.getFavourite() == null){
+                    favChecked = true;
+                } else {
+                    favChecked = false;
+                }
+                SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                String restoredText = prefs.getString("userObject", null);
+                if (restoredText != null) {
+                    try {
+                        JSONObject obj = new JSONObject(restoredText);
+                        userId = obj.getString("userId");
+                        new OnlineDealsAdapter.favClick().execute();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (Throwable t) {
+                    }
+                } else {
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    context.startActivity(intent);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -133,7 +138,7 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
                 message = "";
                 displayMsg = "";
                 URL url = new URL(context.getString(R.string.apiUrl) + URLFav + "?userid=" + userId +
-                        "&dealid=" + Integer.toString(dealId) + "&favcheck=true");
+                        "&dealid=" + Integer.toString(dealId) + "&favcheck=" + Boolean.toString(favChecked));
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("PUT");
                 conn.setRequestProperty("Accept","application/json");
@@ -157,14 +162,18 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
                 JSONObject jObject = new JSONObject(res.toString());
                 message = jObject.getString("message");
 
-                if(message.equals(activity.getString(R.string.DEALS_FAV_CHECK))) {
+                if(message.equals(activity.getString(R.string.ONLINE_FAV_CHECK))) {
                     isSuccess = true;
                     displayMsg = "Added to Favourites";
                     //onSignupSuccess();
                 }
-                else if(message.equals(activity.getString(R.string.DEALS_FAV_ERR))) {
+                else if(message.equals(activity.getString(R.string.ONLINE_FAV_UNCHECK))) {
                     isSuccess = true;
-                    displayMsg = "Already added";
+                    displayMsg = "Removed from Favourites";
+                }
+                else if(message.equals(activity.getString(R.string.ONLINE_FAV_ERR))) {
+                    isSuccess = true;
+                    displayMsg = "Error. Cannot do right now.. Try later";
                 }
                 else {
                     isSuccess = false;
@@ -181,13 +190,17 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
         protected void onPostExecute(String file_url) {
             activity.runOnUiThread(new Runnable() {
                 public void run() {
-                    Snackbar.make(FavView, "Added to Favorite",
+                    Snackbar.make(FavView, displayMsg,
                             Snackbar.LENGTH_LONG).show();
                 }
             });
             for(int i=0; i<allDeals.size(); i++){
                 if(allDeals.get(i).getDealId() == dealId){
-                    allDeals.get(i).setFavourite(true);
+                    if (favChecked) {
+                        allDeals.get(i).setFavourite(true);
+                    } else {
+                        allDeals.get(i).setFavourite(null);
+                    }
                     notifyDataSetChanged();
                     break;
                 }

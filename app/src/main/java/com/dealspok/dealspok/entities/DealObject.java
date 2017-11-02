@@ -23,6 +23,15 @@ public class DealObject {
     private String currency;
     private Shop shop;
     private Boolean favourite;
+    private String dealType;
+
+    public String getType() {
+        return dealType;
+    }
+
+    public void setType(String type) {
+        this.dealType = type;
+    }
 
     public Boolean getFavourite() {
         return favourite;
