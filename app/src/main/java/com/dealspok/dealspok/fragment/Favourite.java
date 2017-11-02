@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.Utils.JSONParser;
@@ -43,11 +45,12 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
     private List<DealObject> deals;
     JSONParser jsonParser = new JSONParser();
     Context context;
-    private final String URL_Fav = "/mobile/api/onlinedeals/list";
+    private final String URL_Fav = "/mobile/api/favourites/list";
     private JSONArray dealArr = null;
     private RecyclerView songRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String userId;
+    private DealsAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -135,10 +138,9 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
 
             try {
                 JSONObject jO = new JSONObject(json);
-                String msg = jO.getString("message");
-                if(msg.equals(getString(R.string.FAVOURITES_LIST_OK))){
-                    dealArr = (JSONArray) jO.getJSONArray("data");
-                    deals.clear();
+                dealArr = (JSONArray) jO.getJSONArray("data");
+                deals.clear();
+//                if(msg.equals(getString(R.string.FAVOURITES_LIST_OK))){
                     if (dealArr != null) {
                         for (int i = 0; i < dealArr.length(); i++) {
                             JSONObject c = dealArr.getJSONObject(i);
@@ -149,7 +151,6 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
                     } else {
                         Log.d("Deals: ", "null");
                     }
-                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -162,7 +163,7 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    DealsAdapter mAdapter = new DealsAdapter(getActivity(), deals);
+                    mAdapter = new DealsAdapter(getActivity(), deals, true);
                     songRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                 }

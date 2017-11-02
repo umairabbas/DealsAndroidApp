@@ -1,6 +1,7 @@
 package com.dealspok.dealspok.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dealspok.dealspok.R;
+import com.dealspok.dealspok.Utils.DoubleNameValuePair;
 import com.dealspok.dealspok.Utils.JSONParser;
 import com.dealspok.dealspok.adapter.OnlineDealsAdapter;
 import com.dealspok.dealspok.entities.OnlineDealsObject;
@@ -20,12 +22,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Umi on 30.08.2017.
@@ -40,6 +45,10 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
     private JSONArray dealArr = null;
     private RecyclerView songRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private String userId = "";
+    private Double locationLat = 50.781203;
+    private Double locationLng = 6.078068;
+    private OnlineDealsAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,6 +72,29 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
                     }
                 }
         );
+
+        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+        String restoredText = prefs.getString("locationObject", null);
+        String restoredUser = prefs.getString("userObject", null);
+        try {
+            if (restoredText != null) {
+                JSONObject obj = new JSONObject(restoredText);
+                String Lat = obj.getString("lat");
+                String Lng = obj.getString("lng");
+                if(!Lat.isEmpty() && !Lng.isEmpty()) {
+                    locationLat = Double.parseDouble(Lat);
+                    locationLng = Double.parseDouble(Lng);
+                }
+            }
+            if (restoredUser != null) {
+                JSONObject obj = new JSONObject(restoredUser);
+                userId = obj.getString("userId");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Throwable t) {
+        }
+
         return view;
     }
 
@@ -94,6 +126,9 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new DoubleNameValuePair("lat", locationLat));
+            params.add(new DoubleNameValuePair("long", locationLng));
+            params.add(new BasicNameValuePair("userid", userId));
             params.add(new NameValuePair() {
                 @Override
                 public String getName() {
@@ -147,7 +182,7 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
                     /**
                      * Updating parsed JSON data into ListView
                      * */
-                    OnlineDealsAdapter mAdapter = new OnlineDealsAdapter(getActivity(), deals);
+                    mAdapter = new OnlineDealsAdapter(getActivity(), deals);
                     songRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                 }

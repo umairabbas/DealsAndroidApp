@@ -64,6 +64,7 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
     private Spinner spinner;
     private static final String[] paths = {"1 KM", "2 KM", "5 KM", "10 KM", "50 KM", "100 KM"};
     private SwipeRefreshLayout swipeRefreshLayout;
+    private String userId = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,21 +88,24 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
 
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
-
-        if (restoredText != null) {
-
-            try {
+        String restoredUser = prefs.getString("userObject", null);
+        try {
+            if (restoredText != null) {
                 JSONObject obj = new JSONObject(restoredText);
                 String Lat = obj.getString("lat");
                 String Lng = obj.getString("lng");
                 if(!Lat.isEmpty() && !Lng.isEmpty()) {
                     locationLat = Double.parseDouble(Lat);
                     locationLng = Double.parseDouble(Lng);
-
                 }
-            } catch (Throwable t) {
             }
-
+            if (restoredUser != null) {
+                JSONObject obj = new JSONObject(restoredUser);
+                userId = obj.getString("userId");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Throwable t) {
         }
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
@@ -150,7 +154,7 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
     @Override
     public void onRefresh() {
         // swipe refresh is performed, fetch the messages again
-        new UpdateDeals().execute();
+        new LoadDeals().execute();
     }
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
@@ -163,27 +167,27 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
             switch (position) {
                 case 0:
                     maxDistance = 1;
-                    new UpdateDeals().execute();
+                    new LoadDeals().execute();
                     break;
                 case 1:
                     maxDistance = 2;
-                    new UpdateDeals().execute();
+                    new LoadDeals().execute();
                     break;
                 case 2:
                     maxDistance = 5;
-                    new UpdateDeals().execute();
+                    new LoadDeals().execute();
                     break;
                 case 3:
                     maxDistance = 10;
-                    new UpdateDeals().execute();
+                    new LoadDeals().execute();
                     break;
                 case 4:
                     maxDistance = 50;
-                    new UpdateDeals().execute();
+                    new LoadDeals().execute();
                     break;
                 case 5:
                     maxDistance = 100;
-                    new UpdateDeals().execute();
+                    new LoadDeals().execute();
                     break;
             }
         }
@@ -199,18 +203,10 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
      * */
     class LoadDeals extends AsyncTask<String, String, String> {
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             swipeRefreshLayout.setRefreshing(true);
-//            pDialog = new ProgressDialog(context);
-//            pDialog.setMessage("Loading...");
-//            pDialog.setIndeterminate(false);
-//            pDialog.setCancelable(false);
-//            pDialog.show();
         }
 
         protected String doInBackground(String... args) {
@@ -219,6 +215,7 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
 
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
+            params.add(new BasicNameValuePair("userid", userId));
             params.add(new IntNameValuePair("radius", maxDistance*1000));
 
             // getting JSON string from URL
@@ -246,13 +243,7 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(String file_url) {
-            // dismiss the dialog after getting all albums
-            //pDialog.dismiss();
-            // updating UI from Background Thread
             swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
@@ -269,73 +260,73 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
         }
     }
 
-    class UpdateDeals extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            swipeRefreshLayout.setRefreshing(true);
-//            pDialog = new ProgressDialog(AlbumsActivity.this);
-//            pDialog.setMessage("Listing Albums ...");
-//            pDialog.setIndeterminate(false);
-//            pDialog.setCancelable(false);
-//            pDialog.show();
-        }
-
-        protected String doInBackground(String... args) {
-            // Building Parameters
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-            params.add(new DoubleNameValuePair("lat", 50.781203));
-            params.add(new DoubleNameValuePair("long", 6.078068));
-            params.add(new IntNameValuePair("radius", maxDistance*1000));
-
-            // getting JSON string from URL
-            String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
-                    params);
-
-            Log.d("JSON: ", "> " + json);
-
-            try {
-                dealArr = new JSONArray(json);
-                deals.clear();
-                if (dealArr != null) {
-                    for (int i = 0; i < dealArr.length(); i++) {
-                        JSONObject c = dealArr.getJSONObject(i);
-                        Gson gson = new GsonBuilder().create();
-                        DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
-                        deals.add(newDeal);
-                    }
-                } else {
-                    Log.d("Deals: ", "null");
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog after getting all albums
-            //pDialog.dismiss();
-            // updating UI from Background Thread
-            swipeRefreshLayout.setRefreshing(false);
-            if(getActivity() == null)
-                return;
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
-                    mAdapter.notifyDataSetChanged();
-                }
-            });
-        }
-    }
+//    class UpdateDeals extends AsyncTask<String, String, String> {
+//
+//        /**
+//         * Before starting background thread Show Progress Dialog
+//         */
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            swipeRefreshLayout.setRefreshing(true);
+////            pDialog = new ProgressDialog(AlbumsActivity.this);
+////            pDialog.setMessage("Listing Albums ...");
+////            pDialog.setIndeterminate(false);
+////            pDialog.setCancelable(false);
+////            pDialog.show();
+//        }
+//
+//        protected String doInBackground(String... args) {
+//            // Building Parameters
+//            List<NameValuePair> params = new ArrayList<NameValuePair>();
+//
+//            params.add(new DoubleNameValuePair("lat", 50.781203));
+//            params.add(new DoubleNameValuePair("long", 6.078068));
+//            params.add(new IntNameValuePair("radius", maxDistance*1000));
+//
+//            // getting JSON string from URL
+//            String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
+//                    params);
+//
+//            Log.d("JSON: ", "> " + json);
+//
+//            try {
+//                dealArr = new JSONArray(json);
+//                deals.clear();
+//                if (dealArr != null) {
+//                    for (int i = 0; i < dealArr.length(); i++) {
+//                        JSONObject c = dealArr.getJSONObject(i);
+//                        Gson gson = new GsonBuilder().create();
+//                        DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
+//                        deals.add(newDeal);
+//                    }
+//                } else {
+//                    Log.d("Deals: ", "null");
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        /**
+//         * After completing background task Dismiss the progress dialog
+//         **/
+//        protected void onPostExecute(String file_url) {
+//            // dismiss the dialog after getting all albums
+//            //pDialog.dismiss();
+//            // updating UI from Background Thread
+//            swipeRefreshLayout.setRefreshing(false);
+//            if(getActivity() == null)
+//                return;
+//            getActivity().runOnUiThread(new Runnable() {
+//                public void run() {
+//                    /**
+//                     * Updating parsed JSON data into ListView
+//                     * */
+//                    mAdapter.notifyDataSetChanged();
+//                }
+//            });
+//        }
+//    }
 }
