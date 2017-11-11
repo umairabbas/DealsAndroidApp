@@ -29,8 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/card_image_gut"
-            android:layout_marginTop="@dimen/_4sdp"
             android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_4sdp"
             android:text="deal_title" />
 
         <TextView
@@ -42,16 +42,17 @@
             android:text="deal_description"
             style="@style/DealsDescText" />
 
-        <ImageButton android:layout_marginRight="@dimen/md_keylines"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+        <ImageButton
             android:id="@+id/favorite_button"
-            android:layout_below="@+id/card_image_gut"
-            android:layout_alignRight="@+id/deal_title"
             style="?android:attr/borderlessButtonStyle"
-            android:tint="@color/colorGrey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/deal_title"
+            android:layout_below="@+id/card_image_gut"
             android:layout_marginBottom="@dimen/_30sdp"
-            android:src="@drawable/ic_favorite"/>
+            android:layout_marginRight="@dimen/md_keylines"
+            android:src="@drawable/ic_favorite"
+            android:tint="@color/colorGrey" />
 
         <LinearLayout
             android:layout_width="wrap_content"

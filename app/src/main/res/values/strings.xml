@@ -13,7 +13,7 @@
     <string name="gutscheine">Gutscheine</string>
     <string name="shopping">Shopping</string>
     <string name="max_distance">Entfernung</string>
-    <string name="apiUrl">https://www.regionaldeals.de:80</string>
+    <string name="apiUrl">https://www.regionaldeals.de</string>
 
     <string name="locationErrorMsg">"Bitte wählen Sie einen Standort"</string>
 
@@ -51,6 +51,9 @@
     <string name="SHOPS_UPLOAD_ERR">SHOPS_UPLOAD_ERR</string>
     <string name="SHOPS_UPLOAD_OK">SHOPS_UPLOAD_OK</string>
 
+    <string name="SHOPS_REMOVE_OK">SHOPS_REMOVE_OK</string>
+    <string name="SHOPS_REMOVE_ERR">SHOPS_REMOVE_ERR</string>
+
     <string name="DEALS_FAV_CHECK">DEALS_FAV_CHECK</string>
     <string name="DEALS_FAV_ERR">DEALS_FAV_ERR</string>
     <string name="DEALS_FAV_UNCHECK">DEALS_FAV_UNCHECK</string>
@@ -58,10 +61,6 @@
     <string name="ONLINE_FAV_CHECK">ONLINE_FAV_CHECK</string>
     <string name="ONLINE_FAV_ERR">ONLINE_FAV_ERR</string>
     <string name="ONLINE_FAV_UNCHECK">ONLINE_FAV_UNCHECK</string>
-
-
-
-
     <string name="FAVOURITES_LIST_OK">FAVOURITES_LIST_OK</string>
 
 

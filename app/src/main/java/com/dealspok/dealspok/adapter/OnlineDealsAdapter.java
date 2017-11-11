@@ -43,14 +43,14 @@ import static android.content.Context.MODE_PRIVATE;
 public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHolder>{
 
     private Context context;
-    private List<OnlineDealsObject> allDeals;
+    private List<DealObject> allDeals;
     private GradientDrawable gradientDrawable;
     private int [] androidColors;
     private Activity activity;
-    private String URLFav = "/mobile/api/onlinedeals/favourite-click";
+    private String URLFav = "/mobile/api/deals/favourite-click";
     private Boolean favChecked = true;
 
-    public OnlineDealsAdapter(Context context, List<OnlineDealsObject> allDeals) {
+    public OnlineDealsAdapter(Context context, List<DealObject> allDeals) {
         this.context = context;
         activity = (Activity)context;
         this.allDeals = allDeals;
@@ -67,11 +67,11 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
 
     @Override
     public void onBindViewHolder(OnlineDealsViewHolder holder, int position) {
-        final OnlineDealsObject deals = allDeals.get(position);
+        final DealObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getDealTitle());
         holder.dealDescription.setText(deals.getDealDescription());
-        holder.dealOldPrice.setText(Long.toString(deals.getOriginalPrice()) + " €");
-        holder.dealPrice.setText(Long.toString(deals.getDealPrice()) + " €");
+        holder.dealOldPrice.setText(Double.toString(deals.getOriginalPrice()) + " €");
+        holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + " €");
         gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         Picasso.with(context).load(deals.getDealImageUrl(context)).placeholder(gradientDrawable).into(holder.dealCoverUrl);
 
@@ -162,16 +162,16 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
                 JSONObject jObject = new JSONObject(res.toString());
                 message = jObject.getString("message");
 
-                if(message.equals(activity.getString(R.string.ONLINE_FAV_CHECK))) {
+                if(message.equals(activity.getString(R.string.DEALS_FAV_CHECK))) {
                     isSuccess = true;
                     displayMsg = "Added to Favourites";
                     //onSignupSuccess();
                 }
-                else if(message.equals(activity.getString(R.string.ONLINE_FAV_UNCHECK))) {
+                else if(message.equals(activity.getString(R.string.DEALS_FAV_UNCHECK))) {
                     isSuccess = true;
                     displayMsg = "Removed from Favourites";
                 }
-                else if(message.equals(activity.getString(R.string.ONLINE_FAV_ERR))) {
+                else if(message.equals(activity.getString(R.string.DEALS_FAV_ERR))) {
                     isSuccess = true;
                     displayMsg = "Error. Cannot do right now.. Try later";
                 }
@@ -194,6 +194,7 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
                             Snackbar.LENGTH_LONG).show();
                 }
             });
+            if(isSuccess)
             for(int i=0; i<allDeals.size(); i++){
                 if(allDeals.get(i).getDealId() == dealId){
                     if (favChecked) {

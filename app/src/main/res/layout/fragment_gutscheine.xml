@@ -54,7 +54,6 @@
         android:layout_width="120dp"
         android:visibility="gone"
         android:padding="@dimen/_8sdp"
-
         android:layout_height="wrap_content"
         android:spinnerMode="dropdown" />
 

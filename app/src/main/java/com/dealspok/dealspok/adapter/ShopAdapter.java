@@ -1,12 +1,15 @@
 package com.dealspok.dealspok.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.dealspok.dealspok.AddShopActivity;
+import com.dealspok.dealspok.DealsDetail;
 import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.entities.Shop;
 
@@ -44,9 +47,9 @@ public class ShopAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // Get view for row item
-        View rowView = mInflater.inflate(R.layout.shop_list_row, parent, false);
+        final View rowView = mInflater.inflate(R.layout.shop_list_row, parent, false);
         // Get title element
         TextView serialText =
                 (TextView) rowView.findViewById(R.id.serial);
@@ -58,6 +61,17 @@ public class ShopAdapter extends BaseAdapter {
 // 2
         serialText.setText(Integer.toString(recipe.getShopId()));
         subtitleTextView.setText(recipe.getShopName());
+
+        rowView.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int i = position;
+               Shop s = mDataSource.get(i);
+                Context context = v.getContext();
+                Intent intent = new Intent(context, AddShopActivity.class);
+                intent.putExtra("EXTRA_SHOP_OBJ", s);
+                context.startActivity(intent);
+            }}));
 
         return rowView;
     }

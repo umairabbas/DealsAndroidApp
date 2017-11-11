@@ -60,9 +60,9 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
     private boolean isSpinnerInitial = true;
     private Double locationLat = 50.781203;
     private Double locationLng = 6.078068;
-    private int maxDistance = 1;
+    private int maxDistance = 5;
     private Spinner spinner;
-    private static final String[] paths = {"1 KM", "2 KM", "5 KM", "10 KM", "50 KM", "100 KM"};
+    private static final String[] paths = {"5 KM", "10 KM", "50 KM", "100 KM", "500 KM", "ALL"};
     private SwipeRefreshLayout swipeRefreshLayout;
     private String userId = "";
 
@@ -166,27 +166,27 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
         else  {
             switch (position) {
                 case 0:
-                    maxDistance = 1;
-                    new LoadDeals().execute();
-                    break;
-                case 1:
-                    maxDistance = 2;
-                    new LoadDeals().execute();
-                    break;
-                case 2:
                     maxDistance = 5;
                     new LoadDeals().execute();
                     break;
-                case 3:
+                case 1:
                     maxDistance = 10;
                     new LoadDeals().execute();
                     break;
-                case 4:
+                case 2:
                     maxDistance = 50;
                     new LoadDeals().execute();
                     break;
-                case 5:
+                case 3:
                     maxDistance = 100;
+                    new LoadDeals().execute();
+                    break;
+                case 4:
+                    maxDistance = 500;
+                    new LoadDeals().execute();
+                    break;
+                case 5:
+                    maxDistance = 9999;
                     new LoadDeals().execute();
                     break;
             }
@@ -213,6 +213,7 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
+            params.add(new BasicNameValuePair("dealtype", "TYPE_DEALS"));
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
             params.add(new BasicNameValuePair("userid", userId));

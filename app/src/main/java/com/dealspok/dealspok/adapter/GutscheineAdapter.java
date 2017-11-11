@@ -118,16 +118,9 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
         }
 
         protected String doInBackground(String... args) {
-            String url = "https://www.regionaldeals.de:80/mobile/api/gutschein/gutscheinclick";
+            String url = "https://www.regionaldeals.de/mobile/api/gutschein/gutscheinclick";
 
             try {
-//                    String url = params[0];
-//                    String param1 = params[1];
-//                    String param2 = params[2];
-//                    Bitmap b = BitmapFactory.decodeResource(UploadActivity.this.getResources(), R.drawable.logo);
-//
-//                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//                    b.compress(CompressFormat.PNG, 0, baos);
 
                 com.dealspok.dealspok.Utils.HttpClient client = new com.dealspok.dealspok.Utils.HttpClient(url);
                 client.connectForMultipart();

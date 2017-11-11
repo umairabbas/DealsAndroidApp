@@ -55,13 +55,13 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
                 intent.putExtra("title", currDeal.getDealTitle());
                 intent.putExtra("desc", currDeal.getDealDescription());
                 intent.putExtra("coverImg", currDeal.getDealImageUrl(context));
-                intent.putExtra("lat",  Double.parseDouble(currDeal.getShopObj().getShopLocationLat()));
-                intent.putExtra("long", Double.parseDouble(currDeal.getShopObj().getShopLocationLong()));
-                intent.putExtra("contact", currDeal.getShopObj().getShopContact());
-                intent.putExtra("address", currDeal.getShopObj().getShopAddress());
-                intent.putExtra("shopName", currDeal.getShopObj().getShopName());
-                intent.putExtra("shopCountry", currDeal.getShopObj().getShopCountry());
-                intent.putExtra("shopDetails", currDeal.getShopObj().getShopDetails());
+                intent.putExtra("lat",  Double.parseDouble(currDeal.getShop().getShopLocationLat()));
+                intent.putExtra("long", Double.parseDouble(currDeal.getShop().getShopLocationLong()));
+                intent.putExtra("contact", currDeal.getShop().getShopContact());
+                intent.putExtra("address", currDeal.getShop().getShopAddress());
+                intent.putExtra("shopName", currDeal.getShop().getShopName());
+                intent.putExtra("shopCountry", currDeal.getShop().getShopCountry());
+                intent.putExtra("shopDetails", currDeal.getShop().getShopDetails());
                 intent.putExtra(DealsDetail.EXTRA_POSITION, getAdapterPosition());
                 context.startActivity(intent);
             }

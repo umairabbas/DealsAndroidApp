@@ -18,19 +18,27 @@ public class DealObject {
     private long datePublished;
     private long dateExpire;
     private String timezone;
-    private long originalPrice;
-    private long dealPrice;
+    private double originalPrice;
+    private double dealPrice;
     private String currency;
     private Shop shop;
     private Boolean favourite;
     private String dealType;
 
-    public String getType() {
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
+    public String getDealType() {
         return dealType;
     }
 
-    public void setType(String type) {
-        this.dealType = type;
+    public void setDealType(String dealType) {
+        this.dealType = dealType;
     }
 
     public Boolean getFavourite() {
@@ -53,15 +61,7 @@ public class DealObject {
         this.originalPrice = originalPrice;
         this.dealPrice = dealPrice;
         this.currency = currency;
-        this.setShopObj(shop);
-    }
-
-    public Shop getShopObj() {
-        return shop;
-    }
-
-    public void setShopObj(Shop shopObj) {
-        shop = shopObj;
+        this.setShop(shop);
     }
 
     public String getTimezone() {
@@ -72,19 +72,19 @@ public class DealObject {
         this.timezone = timezone;
     }
 
-    public long getOriginalPrice() {
+    public double getOriginalPrice() {
         return originalPrice;
     }
 
-    public void setOriginalPrice(long originalPrice) {
+    public void setOriginalPrice(double originalPrice) {
         this.originalPrice = originalPrice;
     }
 
-    public long getDealPrice() {
+    public double getDealPrice() {
         return dealPrice;
     }
 
-    public void setDealPrice(long dealPrice) {
+    public void setDealPrice(double dealPrice) {
         this.dealPrice = dealPrice;
     }
 
@@ -113,7 +113,7 @@ public class DealObject {
     }
 
     public String getDealImageUrl(Context c) {
-        return c.getString(R.string.apiUrl) + dealImageUrl + dealId;
+        return c.getString(R.string.apiUrl) + dealImageUrl + dealId + "&" + "dealtype=" + getDealType();
     }
 
     public void setDealImageUrl(String dealImageUrl) {

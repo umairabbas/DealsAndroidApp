@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.dealspok.dealspok.DealsDetail;
 import com.dealspok.dealspok.R;
+import com.dealspok.dealspok.entities.DealObject;
 import com.dealspok.dealspok.entities.OnlineDealsObject;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class OnlineDealsViewHolder extends RecyclerView.ViewHolder{
     public ImageView dealCoverUrl;
     public ImageButton favoriteImageButton;
 
-    public OnlineDealsViewHolder(View itemView, final List<OnlineDealsObject> allDeals) {
+    public OnlineDealsViewHolder(View itemView, final List<DealObject> allDeals) {
         super(itemView);
 
         dealTitle = (TextView)itemView.findViewById(R.id.deal_title);
@@ -44,7 +45,7 @@ public class OnlineDealsViewHolder extends RecyclerView.ViewHolder{
             public void onClick(View v) {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, DealsDetail.class);
-                OnlineDealsObject currDeal = allDeals.get(getAdapterPosition());
+                DealObject currDeal = allDeals.get(getAdapterPosition());
                 intent.putExtra("title", currDeal.getDealTitle());
                 intent.putExtra("desc", currDeal.getDealDescription());
                 intent.putExtra("coverImg", currDeal.getDealImageUrl(context));

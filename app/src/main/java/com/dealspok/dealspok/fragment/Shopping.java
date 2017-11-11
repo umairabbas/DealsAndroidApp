@@ -17,6 +17,7 @@ import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.Utils.DoubleNameValuePair;
 import com.dealspok.dealspok.Utils.JSONParser;
 import com.dealspok.dealspok.adapter.OnlineDealsAdapter;
+import com.dealspok.dealspok.entities.DealObject;
 import com.dealspok.dealspok.entities.OnlineDealsObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,10 +39,10 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshListener{
 
-    private List<OnlineDealsObject> deals;
+    private List<DealObject> deals;
     JSONParser jsonParser = new JSONParser();
     Context context;
-    private final String URL_Online = "/mobile/api/onlinedeals/list";
+    private final String URL_Online = "/mobile/api/deals/list";
     private JSONArray dealArr = null;
     private RecyclerView songRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -126,6 +127,7 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("dealtype", "TYPE_SHOPS"));
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
             params.add(new BasicNameValuePair("userid", userId));
@@ -154,7 +156,7 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
                     for (int i = 0; i < dealArr.length(); i++) {
                         JSONObject c = dealArr.getJSONObject(i);
                         Gson gson = new GsonBuilder().create();
-                        OnlineDealsObject newDeal = gson.fromJson(c.toString(), OnlineDealsObject.class);
+                        DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
                         deals.add(newDeal);
                     }
                 } else {

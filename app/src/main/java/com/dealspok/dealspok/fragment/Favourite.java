@@ -45,7 +45,7 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
     private List<DealObject> deals;
     JSONParser jsonParser = new JSONParser();
     Context context;
-    private final String URL_Fav = "/mobile/api/favourites/list";
+    private final String URL_Fav = "/mobile/api/deals/favourites";
     //private JSONArray dealArr = null;
     private JSONArray OnlinedealsArr = null;
     private JSONArray normalDealsArr = null;
@@ -139,30 +139,11 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
             Log.d("JSON: ", "> " + json);
 
             try {
-                OnlinedealsArr = null;
                 normalDealsArr = null;
-                JSONObject jO = new JSONObject(json);
-                if(!jO.isNull("data")){
-                    JSONObject Deals = (JSONObject) jO.get("data");
-                    if (Deals.has("ONLINEDEALS_SHOPS"))
-                        OnlinedealsArr = (JSONArray) Deals.getJSONArray("ONLINEDEALS_SHOPS");
-                    if (Deals.has("DEALS"))
-                        normalDealsArr = (JSONArray) Deals.getJSONArray("DEALS");
-                }
-
-                deals.clear();
-//                if(msg.equals(getString(R.string.FAVOURITES_LIST_OK))){
-                    if (OnlinedealsArr != null) {
-                        for (int i = 0; i < OnlinedealsArr.length(); i++) {
-                            JSONObject c = OnlinedealsArr.getJSONObject(i);
-                            Gson gson = new GsonBuilder().create();
-                            DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
-                            deals.add(newDeal);
-                        }
-                    } else {
-                        Log.d("Deals: ", "null");
-                    }
-
+                JSONObject data = (JSONObject) new JSONObject(json);
+                if(data.getString("message").equals(getString(R.string.FAVOURITES_LIST_OK))) {
+                    normalDealsArr = (JSONArray) data.getJSONArray("data");
+                    deals.clear();
                     if (normalDealsArr != null) {
                         for (int i = 0; i < normalDealsArr.length(); i++) {
                             JSONObject c = normalDealsArr.getJSONObject(i);
@@ -173,6 +154,7 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
                     } else {
                         Log.d("Deals: ", "null");
                     }
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

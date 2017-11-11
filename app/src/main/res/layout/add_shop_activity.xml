@@ -48,11 +48,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_contact"
+            <EditText android:id="@+id/input_place"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords"
-                android:hint="Shop Contact" />
+                android:lines="3"
+                android:focusable="false"
+                android:inputType="textMultiLine"
+                android:hint="Select Location/Address..." />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -60,12 +64,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_address"
+            <EditText android:id="@+id/input_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
-                android:hint="Shop Address" />
+                android:hint="Shop Contact" />
         </android.support.design.widget.TextInputLayout>
+
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_marginBottom="8dp">-->
+            <!--<EditText android:id="@+id/input_address"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="textCapWords"-->
+                <!--android:hint="Shop Address" />-->
+        <!--</android.support.design.widget.TextInputLayout>-->
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -89,6 +105,18 @@
             android:textColor="@color/colorWhite"
             android:background="@color/colorPrimary"
             android:text="Submit"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_shop_del"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:padding="12dp"
+            android:visibility="gone"
+            android:textColor="@color/colorWhite"
+            android:background="@color/red"
+            android:text="Delete Shop"/>
 
     </LinearLayout>
 </ScrollView>

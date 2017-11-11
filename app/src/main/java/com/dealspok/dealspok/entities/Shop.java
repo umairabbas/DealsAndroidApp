@@ -1,10 +1,12 @@
 package com.dealspok.dealspok.entities;
 
+import java.io.Serializable;
+
 /**
  * Created by Umi on 29.09.2017.
  */
 
-public class Shop {
+public class Shop implements Serializable {
     private int shopId;
     private String shopName;
     private String shopAddress;

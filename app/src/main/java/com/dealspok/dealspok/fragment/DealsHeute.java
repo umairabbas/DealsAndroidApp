@@ -45,7 +45,7 @@ public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedL
     private List<DealObject> deals;
     JSONParser jsonParser = new JSONParser();
     Context context;
-    private final String URL_Deals = "/mobile/api/deals/heute";
+    private final String URL_Deals = "/mobile/api/deals/today";
     private JSONArray dealArr = null;
     private RecyclerView songRecyclerView;
     private DealsAdapter mAdapter;
