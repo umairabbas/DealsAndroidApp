@@ -2,26 +2,62 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
+    android:layout_centerVertical="true"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/serial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="25dp"
-        android:layout_margin="5dp"
-        android:layout_alignParentLeft="true"
-        android:textSize="20dp"
-        android:textStyle="bold" />
+    <!--<TextView-->
+        <!--android:id="@+id/serial"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="25dp"-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:textSize="20dp"-->
+        <!--android:textStyle="bold" />-->
 
     <TextView
         android:id="@+id/title"
-        android:layout_toRightOf="@id/serial"
-        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/DealsHeaderText"
+        android:layout_marginTop="10dp"
+        android:textStyle="bold"
+        android:paddingLeft="20dp" />
+
+    <TextView
+        android:id="@+id/title2"
+        android:layout_below="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
         android:textStyle="bold"
         android:paddingLeft="20dp"
-        android:textSize="18dp" />
+        style="@style/DealsDescText" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_below="@+id/title2"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/edit_shop_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="1"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="?attr/colorAccent"
+            android:text="EDIT" />
+        <Button
+            android:id="@+id/add_deal_button"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/borderlessButtonStyle"
+            android:textColor="?attr/colorAccent"
+            android:text="DEALS" />
+
+    </LinearLayout>
 
 </RelativeLayout>

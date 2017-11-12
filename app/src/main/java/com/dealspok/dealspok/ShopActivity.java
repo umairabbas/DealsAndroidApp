@@ -7,11 +7,13 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.dealspok.dealspok.Utils.BoolNameValuePair;
@@ -20,6 +22,7 @@ import com.dealspok.dealspok.adapter.DealsAdapter;
 import com.dealspok.dealspok.adapter.ShopAdapter;
 import com.dealspok.dealspok.entities.DealObject;
 import com.dealspok.dealspok.entities.Shop;
+import com.dealspok.dealspok.fragment.Gutscheine;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -36,19 +39,20 @@ import java.util.List;
  * Created by Umi on 28.10.2017.
  */
 
-public class ShopActivity extends AppCompatActivity {
+public class ShopActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private Toolbar toolbar;
     private ListView mListView;
     private List<Shop> shopList;
     private JSONArray shopArr = null;
     private Context context;
-    private ProgressDialog pDialog;
     private String userId = "";
     JSONParser jsonParser = new JSONParser();
     private ShopAdapter mAdapter;
     private final String URL_Deals = "/mobile/api/shops/list";
     private Boolean isFirst = true;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
 
     @Override
     protected void onPostResume() {
@@ -72,6 +76,9 @@ public class ShopActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mListView = (ListView) findViewById(R.id.shop_list_view);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +105,14 @@ public class ShopActivity extends AppCompatActivity {
         new LoadShop().execute();
     }
 
+    @Override
+    public void onRefresh() {
+        // swipe refresh is performed, fetch the messages again
+        new LoadShop().execute();
+        return;
+    }
+
+
     class LoadShop extends AsyncTask<String, String, String> {
 
         /**
@@ -106,11 +121,7 @@ public class ShopActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(context);
-            pDialog.setMessage("Loading...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
+            swipeRefreshLayout.setRefreshing(true);
         }
 
         protected String doInBackground(String... args) {
@@ -150,7 +161,7 @@ public class ShopActivity extends AppCompatActivity {
          **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all albums
-            pDialog.dismiss();
+            swipeRefreshLayout.setRefreshing(false);
             // updating UI from Background Thread
             runOnUiThread(new Runnable() {
                 public void run() {

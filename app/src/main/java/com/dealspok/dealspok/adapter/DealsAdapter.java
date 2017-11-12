@@ -198,7 +198,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
                     displayMsg = "Removed from Favourites";
                 }
                 else if(message.equals(activity.getString(R.string.DEALS_FAV_ERR))) {
-                    isSuccess = true;
+                    isSuccess = false;
                     displayMsg = "Error. Cannot do right now.. Try later";
                 }
                 else {

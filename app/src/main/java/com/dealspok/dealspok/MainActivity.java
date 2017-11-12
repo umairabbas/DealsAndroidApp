@@ -2,6 +2,7 @@ package com.dealspok.dealspok;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -81,8 +82,15 @@ public class MainActivity extends AppCompatActivity {
                 //    fragment = new Deals();
                 }
                 else if (id == R.id.nav_selbstandige) {
-                    Intent startActivityIntent = new Intent(MainActivity.this, ShopActivity.class);
-                    startActivity(startActivityIntent);
+                    SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                    String restoredText = prefs.getString("userObject", null);
+                    if (restoredText != null) {
+                        Intent startActivityIntent = new Intent(MainActivity.this, ShopActivity.class);
+                        startActivity(startActivityIntent);
+                    } else {
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        context.startActivity(intent);
+                    }
                 }
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.main_container_wrapper, fragment);

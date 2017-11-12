@@ -64,7 +64,6 @@ public class AddShopActivity extends AppCompatActivity {
     @BindView(R.id.input_place)
     EditText _placeText;
 
-
     private final String URL_Login = "/mobile/api/shops/upload-shop";
     private final String URL_ShopDel = "/mobile/api/shops/deactivate";
     private ProgressDialog progressDialog;
@@ -240,7 +239,7 @@ public class AddShopActivity extends AppCompatActivity {
                 URL url = new URL(getString(R.string.apiUrl) + URL_Login + "?userid=" + userId);
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Content-Type", "application/json;charset=iso-8859-1");
                 conn.setRequestProperty("Accept","application/json");
                 conn.setDoOutput(true);
                 conn.setDoInput(true);

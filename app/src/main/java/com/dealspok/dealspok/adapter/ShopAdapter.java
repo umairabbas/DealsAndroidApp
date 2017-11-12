@@ -2,10 +2,12 @@ package com.dealspok.dealspok.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.dealspok.dealspok.AddShopActivity;
@@ -51,22 +53,40 @@ public class ShopAdapter extends BaseAdapter {
         // Get view for row item
         final View rowView = mInflater.inflate(R.layout.shop_list_row, parent, false);
         // Get title element
-        TextView serialText =
-                (TextView) rowView.findViewById(R.id.serial);
+//        TextView serialText =
+//                (TextView) rowView.findViewById(R.id.serial);
         TextView subtitleTextView =
                 (TextView) rowView.findViewById(R.id.title);
+        TextView detailTextView =
+                (TextView) rowView.findViewById(R.id.title2);
+        Button add_deal_button =
+                (Button) rowView.findViewById(R.id.add_deal_button);
+        Button edit_shop_button =
+                (Button) rowView.findViewById(R.id.edit_shop_button);
 
         Shop recipe = (Shop) getItem(position);
 
-// 2
-        serialText.setText(Integer.toString(recipe.getShopId()));
+//        serialText.setText(Integer.toString(recipe.getShopId()));
         subtitleTextView.setText(recipe.getShopName());
+        detailTextView.setText(recipe.getShopAddress());
 
-        rowView.setOnClickListener((new View.OnClickListener() {
+        add_deal_button.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int j = position;
+                Shop s = mDataSource.get(j);
+                Context context = v.getContext();
+                Snackbar.make(v, "COMING SOON", Snackbar.LENGTH_SHORT).show();
+//                Intent intent = new Intent(context, AddDealActivity.class);
+//                intent.putExtra("EXTRA_SHOP_OBJ", s);
+//                context.startActivity(intent);
+            }}));
+
+        edit_shop_button.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int i = position;
-               Shop s = mDataSource.get(i);
+                Shop s = mDataSource.get(i);
                 Context context = v.getContext();
                 Intent intent = new Intent(context, AddShopActivity.class);
                 intent.putExtra("EXTRA_SHOP_OBJ", s);

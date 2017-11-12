@@ -4,31 +4,31 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_favourite"
-            android:icon="@drawable/ic_menu_rh"
+            android:icon="@drawable/ic_favorite"
             android:title="Favoriten" />
         <item
             android:id="@+id/nav_ort"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_place_black_24dp"
             android:title="Standort Ändern" />
         <item
             android:id="@+id/nav_benachrichtigungen"
-            android:icon="@drawable/ic_menu_view"
+            android:icon="@drawable/ic_notifications_black_24dp"
             android:title="Benachrichtigungen" />
         <item
             android:id="@+id/nav_einstellungen"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_settings_black_24dp"
             android:title="Einstellungen" />
         <item
             android:id="@+id/nav_hilfe"
-            android:icon="@drawable/ic_menu_help"
+            android:icon="@drawable/ic_help_black_24dp"
             android:title="Hilfe" />
         <item
             android:id="@+id/nav_uberDealSpok"
-            android:icon="@drawable/ic_menu_info"
+            android:icon="@drawable/ic_location_city_black_24dp"
             android:title="Über DealSpok" />
         <item
             android:id="@+id/nav_appTeilen"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@drawable/ic_share_black_24dp"
             android:title="App Teilen" />
     </group>
 
@@ -36,7 +36,7 @@
         <menu>
             <item
                 android:id="@+id/nav_selbstandige"
-                android:icon="@drawable/ic_menu_agenda"
+                android:icon="@drawable/ic_shopping_basket_black_24dp"
                 android:title="Selbständige" />
         </menu>
     </item>
