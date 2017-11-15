@@ -1,6 +1,7 @@
 package com.dealspok.dealspok.adapter;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,8 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.dealspok.dealspok.LoginActivity;
+import com.dealspok.dealspok.MainActivity;
 import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.entities.GutscheineObject;
+import com.dealspok.dealspok.fragment.Gutscheine;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -36,8 +39,10 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
     private List<GutscheineObject> allDeals;
     private GradientDrawable gradientDrawable;
     private int [] androidColors;
+    private Gutscheine fragment;
 
-    public GutscheineAdapter(Context context, List<GutscheineObject> allDeals) {
+    public GutscheineAdapter(Context context, List<GutscheineObject> allDeals, Gutscheine frag) {
+        fragment = frag;
         this.context = context;
         activity = (Activity)context;
         this.allDeals = allDeals;
@@ -83,6 +88,7 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
                     } else {
                         Intent intent = new Intent(context, LoginActivity.class);
                         context.startActivity(intent);
+                        ((MainActivity) fragment.getActivity()).setShouldRefresh(true);
                     }
 
                 }

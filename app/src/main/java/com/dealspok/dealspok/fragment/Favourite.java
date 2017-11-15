@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.dealspok.dealspok.MainActivity;
 import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.Utils.JSONParser;
 import com.dealspok.dealspok.adapter.DealsAdapter;
@@ -108,6 +109,26 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
         new Favourite.LoadDeals().execute();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(((MainActivity) this.getActivity()).getShouldRefresh()) {
+            SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+            String restoredUser = prefs.getString("userObject", null);
+            try {
+                if (restoredUser != null) {
+                    JSONObject obj = new JSONObject(restoredUser);
+                    userId = obj.getString("userId");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Throwable t) {
+            }
+            onRefresh();
+            ((MainActivity) this.getActivity()).setShouldRefresh(false);
+        }
+    }
+
     /**
      * Background Async Task to Load all Albums by making http request
      * */
@@ -140,10 +161,10 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
 
             try {
                 normalDealsArr = null;
+                deals.clear();
                 JSONObject data = (JSONObject) new JSONObject(json);
                 if(data.getString("message").equals(getString(R.string.FAVOURITES_LIST_OK))) {
                     normalDealsArr = (JSONArray) data.getJSONArray("data");
-                    deals.clear();
                     if (normalDealsArr != null) {
                         for (int i = 0; i < normalDealsArr.length(); i++) {
                             JSONObject c = normalDealsArr.getJSONObject(i);

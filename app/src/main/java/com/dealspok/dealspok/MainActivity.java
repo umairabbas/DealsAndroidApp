@@ -1,12 +1,15 @@
 package com.dealspok.dealspok;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
     private Fragment fragment = null;
     private Context context;
     private int userId = 0;
+    public static final int LOGIN_REQUEST_CODE = 1;
+    private TextView emailMenu;
+    private static boolean shouldRefresh = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,18 +65,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, LoginActivity.class);
-                context.startActivity(intent);
+                startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                shouldRefresh = true;
             }
         });
 
-        TextView emailMenu = (TextView)header.findViewById(R.id.textemail);
+        emailMenu = (TextView)header.findViewById(R.id.textemail);
 
         SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("userObject", null);
         if (restoredText != null) {
             try {
                 JSONObject obj = new JSONObject(restoredText);
-                userId = Integer.getInteger(obj.getString("userId"));
+                userId = obj.getInt("userId");
                 String email = obj.getString("email");
                 emailMenu.setText(email);
             } catch (JSONException e) {
@@ -83,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.nav_favourite) {
-                    fragment = new Main();
+                    ViewPager vp = fragment.getView().findViewById(R.id.view_pager);
+                    vp.setCurrentItem(5);
                 } else if (id == R.id.nav_ort) {
                     Intent startActivityIntent = new Intent(MainActivity.this, GooglePlacesAutocompleteActivity.class);
                     startActivity(startActivityIntent);
@@ -111,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(startActivityIntent);
                     } else {
                         Intent intent = new Intent(context, LoginActivity.class);
-                        context.startActivity(intent);
+                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
                     }
                 }
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -128,7 +137,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(shouldRefresh){
+            SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+            String restoredText = prefs.getString("userObject", null);
+            if (restoredText != null) {
+                try {
+                    JSONObject obj = new JSONObject(restoredText);
+                    userId = obj.getInt("userId");
+                    String email = obj.getString("email");
+                    emailMenu.setText(email);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (Throwable t) {
+                }
+            }
+        }
 
+    }
+
+
+    public void setShouldRefresh(boolean val) {
+        shouldRefresh = val;
+    }
+
+
+    public boolean getShouldRefresh() {
+        return shouldRefresh;
     }
 
     @Override
@@ -161,6 +195,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LOGIN_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                String email = data.getStringExtra("userEmail");
+                emailMenu.setText(email);
+            }
+        }
     }
 
 //    @SuppressWarnings("StatementWithEmptyBody")

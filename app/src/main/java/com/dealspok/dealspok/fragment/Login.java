@@ -1,7 +1,9 @@
 package com.dealspok.dealspok.fragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dealspok.dealspok.MainActivity;
 import com.dealspok.dealspok.R;
 import org.json.JSONObject;
 
@@ -210,7 +213,14 @@ public class Login extends Fragment {
                         editor.commit();
 
                         Toast.makeText(context, "Welcome " + name, Toast.LENGTH_LONG).show();
-                        getActivity().finish();
+                        try {
+                            Intent intent = getActivity().getIntent();
+                            intent.putExtra("userEmail", jObject.getString("email"));
+                            getActivity().setResult(Activity.RESULT_OK, intent);
+                            getActivity().finish();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         Toast.makeText(context,  "Login failed\n" + message, Toast.LENGTH_LONG).show();
                     }

@@ -152,6 +152,26 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if(((MainActivity) this.getActivity()).getShouldRefresh()) {
+            SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+            String restoredUser = prefs.getString("userObject", null);
+            try {
+                if (restoredUser != null) {
+                    JSONObject obj = new JSONObject(restoredUser);
+                    userId = obj.getString("userId");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Throwable t) {
+            }
+            onRefresh();
+            ((MainActivity) this.getActivity()).setShouldRefresh(false);
+        }
+    }
+
+    @Override
     public void onRefresh() {
         // swipe refresh is performed, fetch the messages again
         new LoadDeals().execute();
@@ -226,8 +246,8 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
             Log.d("JSON: ", "> " + json);
 
             try {
-                dealArr = new JSONArray(json);
                 deals.clear();
+                dealArr = new JSONArray(json);
                 if (dealArr != null) {
                     for (int i = 0; i < dealArr.length(); i++) {
                         JSONObject c = dealArr.getJSONObject(i);

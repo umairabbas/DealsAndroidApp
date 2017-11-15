@@ -1,6 +1,8 @@
 package com.dealspok.dealspok.fragment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -17,7 +19,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.dealspok.dealspok.MainActivity;
 import com.dealspok.dealspok.R;
+import com.dealspok.dealspok.ShopActivity;
 import com.dealspok.dealspok.Utils.DoubleNameValuePair;
 import com.dealspok.dealspok.Utils.IntNameValuePair;
 import com.dealspok.dealspok.Utils.JSONParser;
@@ -165,6 +169,26 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if(((MainActivity) this.getActivity()).getShouldRefresh()) {
+            SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+            String restoredUser = prefs.getString("userObject", null);
+            try {
+                if (restoredUser != null) {
+                    JSONObject obj = new JSONObject(restoredUser);
+                    userId = obj.getString("userId");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Throwable t) {
+            }
+            onRefresh();
+            ((MainActivity) this.getActivity()).setShouldRefresh(false);
+        }
+    }
+
+    @Override
     public void onRefresh() {
         // swipe refresh is performed, fetch the messages again
         new Gutscheine.UpdateDeals().execute();
@@ -182,11 +206,6 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
         protected void onPreExecute() {
             super.onPreExecute();
             swipeRefreshLayout.setRefreshing(true);
-//            pDialog = new ProgressDialog(AlbumsActivity.this);
-//            pDialog.setMessage("Listing Albums ...");
-//            pDialog.setIndeterminate(false);
-//            pDialog.setCancelable(false);
-//            pDialog.show();
         }
 
         protected String doInBackground(String... args) {
@@ -234,7 +253,7 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
                     /**
                      * Updating parsed JSON data into ListView
                      * */
-                    mAdapter = new GutscheineAdapter(getActivity(), deals);
+                    mAdapter = new GutscheineAdapter(getActivity(), deals, Gutscheine.this);
                     songRecyclerView.setAdapter(mAdapter);
                 }
             });
@@ -251,25 +270,21 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
         protected void onPreExecute() {
             super.onPreExecute();
             swipeRefreshLayout.setRefreshing(true);
-//            pDialog = new ProgressDialog(AlbumsActivity.this);
-//            pDialog.setMessage("Listing Albums ...");
-//            pDialog.setIndeterminate(false);
-//            pDialog.setCancelable(false);
-//            pDialog.show();
         }
 
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("userid", userId));
 
-            String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals + "?userid=" + userId, "GET",
+            String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
                     params);
 
             Log.d("JSON: ", "> " + json);
 
             try {
-                dealArr = new JSONArray(json);
                 deals.clear();
+                dealArr = new JSONArray(json);
                 if (dealArr != null) {
                     for (int i = 0; i < dealArr.length(); i++) {
                         JSONObject c = dealArr.getJSONObject(i);
@@ -290,17 +305,11 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
          * After completing background task Dismiss the progress dialog
          **/
         protected void onPostExecute(String file_url) {
-            // dismiss the dialog after getting all albums
-            //pDialog.dismiss();
-            // updating UI from Background Thread
             swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
                     mAdapter.notifyDataSetChanged();
                 }
             });
