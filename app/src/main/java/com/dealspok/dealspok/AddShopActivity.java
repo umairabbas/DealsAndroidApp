@@ -33,6 +33,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
 
@@ -239,7 +240,7 @@ public class AddShopActivity extends AppCompatActivity {
                 URL url = new URL(getString(R.string.apiUrl) + URL_Login + "?userid=" + userId);
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json;charset=iso-8859-1");
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 conn.setRequestProperty("Accept","application/json");
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
@@ -265,9 +266,12 @@ public class AddShopActivity extends AppCompatActivity {
 
                 Log.i("JSON", jsonParam.toString());
 
+                String normalizedString = jsonParam.toString();
+                //normalizedString = Normalizer.normalize(normalizedString, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+
                 DataOutputStream os = new DataOutputStream(conn.getOutputStream());
                 //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
-                os.writeBytes(jsonParam.toString());
+                os.write(normalizedString.getBytes("UTF-8"));
 
                 os.flush();
                 os.close();

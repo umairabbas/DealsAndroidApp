@@ -17,14 +17,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.dealspok.dealspok.adapter.GutscheineAdapter;
 import com.dealspok.dealspok.fragment.Main;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager;
     private Fragment fragment = null;
     private Context context;
-
+    private int userId = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +61,22 @@ public class MainActivity extends AppCompatActivity {
                 context.startActivity(intent);
             }
         });
+
+        TextView emailMenu = (TextView)header.findViewById(R.id.textemail);
+
+        SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+        String restoredText = prefs.getString("userObject", null);
+        if (restoredText != null) {
+            try {
+                JSONObject obj = new JSONObject(restoredText);
+                userId = Integer.getInteger(obj.getString("userId"));
+                String email = obj.getString("email");
+                emailMenu.setText(email);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Throwable t) {
+            }
+        }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -101,6 +123,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @Override

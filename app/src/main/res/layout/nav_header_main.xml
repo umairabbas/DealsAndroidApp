@@ -31,7 +31,7 @@
         <!--android:textAppearance="@style/TextAppearance.AppCompat.Body1" />-->
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textemail"
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
@@ -42,6 +42,6 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
-        android:text="umairabbas@hotmail.com" />
+        android:text="LOGIN/SIGNUP" />
 
 </RelativeLayout>
