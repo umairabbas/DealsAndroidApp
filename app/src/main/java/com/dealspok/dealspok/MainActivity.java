@@ -107,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
                 //    fragment = new Deals();
                 }
                 else if (id == R.id.nav_uberDealSpok) {
-                //    fragment = new Deals();
+                    Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+                    startActivity(intent);
                 }
                 else if (id == R.id.nav_appTeilen) {
                 //    fragment = new Deals();
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         Intent intent = new Intent(context, LoginActivity.class);
                         startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                        shouldRefresh = true;
                     }
                 }
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
