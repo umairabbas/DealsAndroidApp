@@ -67,6 +67,11 @@
     <string name="copy_right" translatable="false" >Copyrights © %1$d</string>
 
 
+    <string name="failed_token">Client Failed to retrieve token from server</string>
+    <string name="BraintreeFragment_initialized">BraintreeFragment is ready to use</string>
+    <string name="issues_with_authorization">There was an issue with your authorization string</string>
+    <string name="token_failed">Fail to retrieve client token </string>
+
 
 
 
