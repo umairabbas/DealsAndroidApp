@@ -39,8 +39,13 @@
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"
+            android:name=".SubscribeActivity"
+            android:label="Abo Buchen"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:allowBackup="true"
             android:name=".AboutActivity"
-            android:label="About Us"
+            android:label="Über Uns"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"

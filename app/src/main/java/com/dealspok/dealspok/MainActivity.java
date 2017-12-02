@@ -113,7 +113,24 @@ public class MainActivity extends AppCompatActivity {
                 else if (id == R.id.nav_appTeilen) {
                 //    fragment = new Deals();
                 }
-                else if (id == R.id.nav_selbstandige) {
+                else if (id == R.id.abo_buchen) {
+                    Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
+                    startActivity(intent);
+
+                }
+                else if (id == R.id.meine_anzeigen) {
+                    SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                    String restoredText = prefs.getString("userObject", null);
+                    if (restoredText != null) {
+                        Intent startActivityIntent = new Intent(MainActivity.this, ShopActivity.class);
+                        startActivity(startActivityIntent);
+                    } else {
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                        shouldRefresh = true;
+                    }
+                }
+                else if (id == R.id.anzeigen_erstellen) {
                     SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
                     String restoredText = prefs.getString("userObject", null);
                     if (restoredText != null) {

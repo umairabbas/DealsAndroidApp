@@ -35,9 +35,17 @@
     <item android:title="Gewerbetreibende">
         <menu>
             <item
-                android:id="@+id/nav_selbstandige"
+                android:id="@+id/abo_buchen"
+                android:icon="@drawable/ic_local_offer_black_24dp"
+                android:title="Abo Buchen" />
+            <item
+                android:id="@+id/meine_anzeigen"
                 android:icon="@drawable/ic_shopping_basket_black_24dp"
-                android:title="Selbständige" />
+                android:title="Meine Anzeigen" />
+            <item
+                android:id="@+id/anzeigen_erstellen"
+                android:icon="@drawable/ic_add_shopping_cart_black_24dp"
+                android:title="Anzeigen Erstellen" />
         </menu>
     </item>
 
