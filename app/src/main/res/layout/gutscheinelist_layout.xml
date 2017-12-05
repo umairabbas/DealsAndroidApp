@@ -50,7 +50,7 @@
             android:layout_below="@+id/deal_description"
             android:layout_alignParentRight="true"
             style="?android:attr/borderlessButtonStyle"
-            android:textColor="?attr/colorAccent"
+            android:textColor="@color/colorPrimaryDark"
             android:text="MITMACHEN" />
 
     </RelativeLayout>

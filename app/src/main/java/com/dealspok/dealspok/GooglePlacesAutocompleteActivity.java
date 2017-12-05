@@ -83,9 +83,9 @@ public class GooglePlacesAutocompleteActivity extends LocationActivityBase {
             public void onClick(View view) {
                 Snackbar mySnackbar = Snackbar.make(view, "Kindly select", Snackbar.LENGTH_SHORT);
                 mySnackbar.show();
-//                Intent startActivityIntent = new Intent(GooglePlacesAutocompleteActivity.this, LocationManual.class);
-//                startActivity(startActivityIntent);
-//                GooglePlacesAutocompleteActivity.this.finish();
+                Intent startActivityIntent = new Intent(GooglePlacesAutocompleteActivity.this, LocationManual.class);
+                startActivity(startActivityIntent);
+                GooglePlacesAutocompleteActivity.this.finish();
             }
         });
         // Retrieve the TextViews that will display details about the selected place.

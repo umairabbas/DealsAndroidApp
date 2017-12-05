@@ -114,8 +114,16 @@ public class MainActivity extends AppCompatActivity {
                 //    fragment = new Deals();
                 }
                 else if (id == R.id.abo_buchen) {
-                    Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
-                    startActivity(intent);
+                    SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                    String restoredText = prefs.getString("userObject", null);
+                    if (restoredText != null) {
+                        Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                        shouldRefresh = true;
+                    }
 
                 }
                 else if (id == R.id.meine_anzeigen) {

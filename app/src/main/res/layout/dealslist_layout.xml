@@ -47,12 +47,11 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/deal_title"
-            android:layout_below="@+id/card_image_gut"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="@dimen/_30sdp"
             android:layout_marginBottom="@dimen/_30sdp"
-            android:layout_marginRight="@dimen/md_keylines"
             android:src="@drawable/ic_favorite"
-            android:tint="@color/colorGrey" />
+            android:tint="@color/colorPrimaryDark" />
 
         <LinearLayout
             android:layout_width="wrap_content"

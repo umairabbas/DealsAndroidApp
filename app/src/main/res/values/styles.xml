@@ -90,7 +90,7 @@
         <item name="android:shadowDx">0.0</item>
         <item name="android:shadowDy">0.0</item>
         <item name="android:shadowRadius">1</item>
-        <item name="android:textColor">@color/colorRedPrimary</item>
+        <item name="android:textColor">@color/red</item>
     </style>
 
 
