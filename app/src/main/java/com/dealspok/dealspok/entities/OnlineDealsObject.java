@@ -12,7 +12,7 @@ public class OnlineDealsObject {
 
     private String dealTitle;
     private int dealId;
-    private String dealImageUrl;
+    //private String dealImageUrl;
     private String dealDescription;
     private long createDate;
     private long publishDate;
@@ -26,6 +26,7 @@ public class OnlineDealsObject {
     private CategoryObject category;
     private Shop shop;
     private Boolean favourite;
+    private int dealImageCount;
 
     public Boolean getFavourite() {
         return favourite;
@@ -52,12 +53,12 @@ public class OnlineDealsObject {
     }
 
     public String getDealImageUrl(Context c) {
-        return c.getString(R.string.apiUrl) + dealImageUrl + dealId;
+        return c.getString(R.string.apiUrl) + "/mobile/api/deals/dealimage?dealid=" + dealId;
     }
 
-    public void setDealImageUrl(String dealImageUrl) {
-        this.dealImageUrl = dealImageUrl;
-    }
+//    public void setDealImageUrl(String dealImageUrl) {
+//        this.dealImageUrl = dealImageUrl;
+//    }
 
     public String getDealDescription() {
         return dealDescription;

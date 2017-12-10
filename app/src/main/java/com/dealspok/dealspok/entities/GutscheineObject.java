@@ -24,6 +24,7 @@ public class GutscheineObject {
     private boolean gutscheinAvailed;
     private boolean gutscheinWin;
     private CategoryObject category;
+    private int gutscheinImageCount;
 
     public GutscheineObject(int gutscheinId, Shop shop, long createDate, long publishDate, long expiryDate, int timezone, String gutscheinTitle, String gutscheinImageUrl, String gutscheinDescription, long gutscheinPrice, String currency, boolean gutscheinAvailed, boolean gutscheinWin, CategoryObject category) {
         this.gutscheinId = gutscheinId;

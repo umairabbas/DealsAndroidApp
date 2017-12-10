@@ -63,7 +63,8 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
         holder.dealTitle.setText(deals.getGutscheinTitle());
         holder.dealDescription.setText(deals.getGutscheinDescription());
         gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
-        Picasso.with(context).load(deals.getGutscheinImageUrl(context)).placeholder(gradientDrawable).into(holder.dealCoverUrl);
+        String imgUrl = deals.getGutscheinImageUrl(context) + "&imagecount=1";
+        Picasso.with(context).load(imgUrl).placeholder(gradientDrawable).into(holder.dealCoverUrl);
         dealPosition = position;
         if(deals.isGutscheinAvailed()){
             holder.mitMachenBtn.setEnabled(false);

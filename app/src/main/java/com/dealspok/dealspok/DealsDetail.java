@@ -21,6 +21,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.Indicators.PagerIndicator;
+import com.daimajia.slider.library.SliderLayout;
+
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.daimajia.slider.library.Tricks.ViewPagerEx;
+
+import java.util.HashMap;
+
 /**
  * Created by Umi on 13.09.2017.
  */
@@ -34,6 +44,7 @@ public class DealsDetail extends AppCompatActivity implements
     private LatLng LOCATIONCORDINATE = new LatLng(-50.7753, 6.0839);
     String title = "";
     private Marker mPerth;
+    private SliderLayout mDemoSlider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +66,7 @@ public class DealsDetail extends AppCompatActivity implements
         String coverUrl = intent.getStringExtra("coverImg");
         Double locationLat = intent.getDoubleExtra("lat", -50.7753);
         Double locationLong = intent.getDoubleExtra("long", 6.0839);
+        int imgCount = intent.getIntExtra("imgCount", 1);
         String contact = "";
         if(intent.hasExtra("contact")){
             contact = intent.getStringExtra("contact");
@@ -84,11 +96,41 @@ public class DealsDetail extends AppCompatActivity implements
         TextView placeDetail = (TextView) findViewById(R.id.place_detail);
         placeDetail.setText(desc);
 
+        //ImageView placePicutre = (ImageView) findViewById(R.id.image);
+        //Picasso.with(this).load(coverUrl).into(placePicutre);
+        mDemoSlider = (SliderLayout)findViewById(R.id.image);
 
-        ImageView placePicutre = (ImageView) findViewById(R.id.image);
+        HashMap<String,String> url_maps = new HashMap<String, String>();
+        String[] imgTitle = {
+                shopName,
+                address,
+                contact,
+                shopName+" ",
+                address + " "
+        };
+        for(int a=1; a <= imgCount; a++){
+            url_maps.put(imgTitle[a-1], coverUrl + Integer.toString(a));
+        }
+        for(String name : url_maps.keySet()){
+            TextSliderView textSliderView = new TextSliderView(this);
+            textSliderView
+                    .description(name)
+                    .image(url_maps.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit);
+            //add your extra information
+            textSliderView.bundle(new Bundle());
+            textSliderView.getBundle()
+                    .putString("extra",name);
+            mDemoSlider.addSlider(textSliderView);
+        }
 
-        Picasso.with(this).load(coverUrl).into(placePicutre);
-        //placePicutre.setImageResource(R.drawable.adele);
+        //mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
+        mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+        if(imgCount==1) {
+            mDemoSlider.setCustomAnimation(new DescriptionAnimation());
+            mDemoSlider.setDuration(600000);
+        }
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);

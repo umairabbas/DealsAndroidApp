@@ -54,7 +54,8 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
                 DealObject currDeal = allDeals.get(getAdapterPosition());
                 intent.putExtra("title", currDeal.getDealTitle());
                 intent.putExtra("desc", currDeal.getDealDescription());
-                intent.putExtra("coverImg", currDeal.getDealImageUrl(context));
+                intent.putExtra("coverImg", currDeal.getDealImageUrl(context) + "&imagecount=");
+                intent.putExtra("imgCount", currDeal.getDealImageCount());
                 intent.putExtra("lat",  Double.parseDouble(currDeal.getShop().getShopLocationLat()));
                 intent.putExtra("long", Double.parseDouble(currDeal.getShop().getShopLocationLong()));
                 intent.putExtra("contact", currDeal.getShop().getShopContact());

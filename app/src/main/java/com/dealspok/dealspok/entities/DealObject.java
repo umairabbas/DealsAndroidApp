@@ -12,7 +12,7 @@ public class DealObject {
 
     private int dealId;
     private String dealTitle;
-    private String dealImageUrl;
+    //private String dealImageUrl;
     private String dealDescription;
     private long dateCreated;
     private long datePublished;
@@ -24,6 +24,15 @@ public class DealObject {
     private Shop shop;
     private Boolean favourite;
     private String dealType;
+    private int dealImageCount;
+
+    public int getDealImageCount() {
+        return dealImageCount;
+    }
+
+    public void setDealImageCount(int dealImageCount) {
+        this.dealImageCount = dealImageCount;
+    }
 
     public Shop getShop() {
         return shop;
@@ -49,10 +58,10 @@ public class DealObject {
         this.favourite = favourite;
     }
 
-    public DealObject(int dealId, String dealTitle, String dealImageUrl, String dealDescription, long dateCreated, long datePublished, long dateExpire, String timezone, long originalPrice, long dealPrice, String currency, Shop shop) {
+    public DealObject(int dealId, String dealTitle, String dealDescription, long dateCreated, long datePublished, long dateExpire, String timezone, long originalPrice, long dealPrice, String currency, Shop shop) {
         this.dealId = dealId;
         this.dealTitle = dealTitle;
-        this.dealImageUrl = dealImageUrl;
+        //this.dealImageUrl = dealImageUrl;
         this.dealDescription = dealDescription;
         this.dateCreated = dateCreated;
         this.datePublished = datePublished;
@@ -113,12 +122,12 @@ public class DealObject {
     }
 
     public String getDealImageUrl(Context c) {
-        return c.getString(R.string.apiUrl) + dealImageUrl + dealId + "&" + "dealtype=" + getDealType();
+        return c.getString(R.string.apiUrl) + "/mobile/api/deals/dealimage?dealid=" + dealId + "&" + "dealtype=" + getDealType();
     }
 
-    public void setDealImageUrl(String dealImageUrl) {
-        this.dealImageUrl = dealImageUrl;
-    }
+    //public void setDealImageUrl(String dealImageUrl) {
+    //    this.dealImageUrl = dealImageUrl;
+    //}
 
     public String getDealDescription() {
         return dealDescription;

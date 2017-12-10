@@ -91,7 +91,8 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
         holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + " €");
         //int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
-        Picasso.with(context).load(deals.getDealImageUrl(context)).placeholder(gradientDrawable).into(holder.dealCoverUrl);
+        String imgUrl = deals.getDealImageUrl(context) + "&imagecount=1";
+        Picasso.with(context).load(imgUrl).placeholder(gradientDrawable).into(holder.dealCoverUrl);
 
         if(deals.getFavourite() == null) {
             holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.colorGrey));
