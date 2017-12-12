@@ -19,10 +19,7 @@ import com.dealspok.dealspok.MainActivity;
 import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.Utils.JSONParser;
 import com.dealspok.dealspok.adapter.DealsAdapter;
-import com.dealspok.dealspok.adapter.OnlineDealsAdapter;
 import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.entities.GutscheineObject;
-import com.dealspok.dealspok.entities.OnlineDealsObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

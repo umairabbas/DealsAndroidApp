@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.dealspok.dealspok.DealsDetail;
 import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.entities.OnlineDealsObject;
 
 import java.util.List;
 
@@ -49,6 +48,7 @@ public class OnlineDealsViewHolder extends RecyclerView.ViewHolder{
                 intent.putExtra("title", currDeal.getDealTitle());
                 intent.putExtra("desc", currDeal.getDealDescription());
                 intent.putExtra("coverImg", currDeal.getDealImageUrl(context));
+                intent.putExtra("imgCount", currDeal.getDealImageCount() + "&imagecount=");
                 intent.putExtra("lat",  Double.parseDouble(currDeal.getShop().getShopLocationLat()));
                 intent.putExtra("long", Double.parseDouble(currDeal.getShop().getShopLocationLong()));
                 intent.putExtra("contact", currDeal.getShop().getShopContact());

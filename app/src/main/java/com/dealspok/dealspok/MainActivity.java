@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
                     String restoredText = prefs.getString("userObject", null);
                     if (restoredText != null) {
-                        Intent startActivityIntent = new Intent(MainActivity.this, ShopActivity.class);
+                        Intent startActivityIntent = new Intent(MainActivity.this, CreateDealsActivity.class);
                         startActivity(startActivityIntent);
                     } else {
                         Intent intent = new Intent(context, LoginActivity.class);

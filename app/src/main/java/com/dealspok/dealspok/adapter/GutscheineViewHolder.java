@@ -82,9 +82,10 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder {
                 GutscheineObject currDeal = allDeals.get(getAdapterPosition());
                 intent.putExtra("title", currDeal.getGutscheinTitle());
                 intent.putExtra("desc", currDeal.getGutscheinDescription());
-                intent.putExtra("coverImg", currDeal.getGutscheinImageUrl(context).toString());
+                intent.putExtra("coverImg", currDeal.getGutscheinImageUrl(context) + "&imagecount=");
                 intent.putExtra("lat", Double.parseDouble(currDeal.getShop().getShopLocationLat()));
                 intent.putExtra("long", Double.parseDouble(currDeal.getShop().getShopLocationLong()));
+                intent.putExtra("imgCount", currDeal.getGutscheinImageCount());
                 intent.putExtra("contact", currDeal.getShop().getShopContact());
                 intent.putExtra("address", currDeal.getShop().getShopAddress());
                 intent.putExtra("shopName", currDeal.getShop().getShopName());

@@ -79,6 +79,16 @@ public class HttpClient {
     public void addFormPart(String paramName, String value) throws Exception {
         writeParamData(paramName, value);
     }
+    public void addFormPartLong(String paramName, long value) throws Exception {
+        writeParamDataLong(paramName, value);
+    }
+    public void addFormPartDouble(String paramName, double value) throws Exception {
+        writeParamDataDouble(paramName, value);
+    }
+    public void addFormPartInt(String paramName, int value) throws Exception {
+        writeParamDataInt(paramName, value);
+    }
+
 
     public void addFilePart(String paramName, String fileName, byte[] data) throws Exception {
         os.write( (delimiter + boundary + "\r\n").getBytes());
@@ -122,4 +132,38 @@ public class HttpClient {
 
 
     }
+
+    private void writeParamDataLong(String paramName, long value) throws Exception {
+
+
+        os.write( (delimiter + boundary + "\r\n").getBytes());
+        os.write( "Content-Type: text/plain\r\n".getBytes());
+        os.write( ("Content-Disposition: form-data; name=\"" + paramName + "\"\r\n").getBytes());;
+        os.write( ("\r\n" + value + "\r\n").getBytes());
+
+
+    }
+
+    private void writeParamDataDouble(String paramName, double value) throws Exception {
+
+
+        os.write( (delimiter + boundary + "\r\n").getBytes());
+        os.write( "Content-Type: text/plain\r\n".getBytes());
+        os.write( ("Content-Disposition: form-data; name=\"" + paramName + "\"\r\n").getBytes());;
+        os.write( ("\r\n" + value + "\r\n").getBytes());
+
+
+    }
+    private void writeParamDataInt(String paramName, int value) throws Exception {
+
+
+        os.write( (delimiter + boundary + "\r\n").getBytes());
+        os.write( "Content-Type: text/plain\r\n".getBytes());
+        os.write( ("Content-Disposition: form-data; name=\"" + paramName + "\"\r\n").getBytes());;
+        os.write( ("\r\n" + value + "\r\n").getBytes());
+
+
+    }
+
+
 }

@@ -28,6 +28,9 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:design:26.+'
+    //upload pic
+    compile 'com.zhihu.android:matisse:0.5.0-beta2'
+    compile 'it.sephiroth.android.library.imagezoom:library:1.0.4'
     //image slider cover
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.slider:library:1.1.5@aar'

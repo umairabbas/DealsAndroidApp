@@ -13,8 +13,6 @@ import android.widget.TextView;
 import com.dealspok.dealspok.DealsDetail;
 import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.entities.OnlineDealsObject;
-import com.dealspok.dealspok.fragment.OnlineDeals;
 
 import java.util.List;
 

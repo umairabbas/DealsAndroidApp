@@ -26,6 +26,14 @@ public class GutscheineObject {
     private CategoryObject category;
     private int gutscheinImageCount;
 
+    public int getGutscheinImageCount() {
+        return gutscheinImageCount;
+    }
+
+    public void setGutscheinImageCount(int gutscheinImageCount) {
+        this.gutscheinImageCount = gutscheinImageCount;
+    }
+
     public GutscheineObject(int gutscheinId, Shop shop, long createDate, long publishDate, long expiryDate, int timezone, String gutscheinTitle, String gutscheinImageUrl, String gutscheinDescription, long gutscheinPrice, String currency, boolean gutscheinAvailed, boolean gutscheinWin, CategoryObject category) {
         this.gutscheinId = gutscheinId;
         this.shop = shop;
@@ -100,7 +108,7 @@ public class GutscheineObject {
     }
 
     public String getGutscheinImageUrl(Context c) {
-        return c.getString(R.string.apiUrl) + gutscheinImageUrl + gutscheinId;
+        return c.getString(R.string.apiUrl) + "/mobile/api/gutschein/gutscheinimage?gutscheinid=" + gutscheinId;
     }
 
     public void setGutscheinImageUrl(String gutscheinImageUrl) {

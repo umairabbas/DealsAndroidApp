@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-sdk android:minSdkVersion="8" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
@@ -46,6 +47,16 @@
             android:name=".MainActivity"
             android:label="Deals"
             android:launchMode="singleTask"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:allowBackup="true"
+            android:name=".AddDealActivity"
+            android:label="Create Deals"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:allowBackup="true"
+            android:name=".CreateDealsActivity"
+            android:label="Create Deals"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"

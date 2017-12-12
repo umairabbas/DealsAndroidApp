@@ -18,7 +18,6 @@ import com.dealspok.dealspok.LoginActivity;
 import com.dealspok.dealspok.R;
 import com.dealspok.dealspok.Utils.JSONParser;
 import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.entities.OnlineDealsObject;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;

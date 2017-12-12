@@ -18,7 +18,6 @@ import com.dealspok.dealspok.Utils.DoubleNameValuePair;
 import com.dealspok.dealspok.Utils.JSONParser;
 import com.dealspok.dealspok.adapter.OnlineDealsAdapter;
 import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.entities.OnlineDealsObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

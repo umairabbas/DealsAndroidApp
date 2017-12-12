@@ -38,6 +38,30 @@
                 <!--android:layout_marginBottom="24dp"-->
                 <!--android:layout_gravity="center_horizontal" />-->
 
+            <!--<android.support.design.widget.TextInputLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginBottom="8dp">-->
+                <!--<EditText android:id="@+id/input_t1"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:inputType="textCapWords"-->
+                    <!--android:hint="SERVER payment/client_token" />-->
+            <!--</android.support.design.widget.TextInputLayout>-->
+
+            <!--<android.support.design.widget.TextInputLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="8dp"-->
+                <!--android:layout_marginBottom="8dp">-->
+                <!--<EditText android:id="@+id/input_t2"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:inputType="textCapWords"-->
+                    <!--android:hint="CHECKOUT payment/checkout" />-->
+            <!--</android.support.design.widget.TextInputLayout>-->
+
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_1"
                 android:layout_width="fill_parent"

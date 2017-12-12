@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.braintreepayments.api.dropin.DropInActivity;
@@ -44,6 +45,8 @@ public class SubscribeActivity extends AppCompatActivity {
     private static final int BRAINTREE_REQUEST_CODE = 4949;
     private String paymentNonce = "";
     private String msg = "";
+//    EditText e1;
+//    EditText e2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,12 @@ public class SubscribeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+//        e1 = (EditText)findViewById(R.id.input_t1);
+//        e2 = (EditText)findViewById(R.id.input_t2);
+
+//        e1.setText("https://regionaldeals.de/mobile/api/payment/client_token");
+//        e2.setText("https://regionaldeals.de/mobile/api/payment/checkout");
 
         context = this;
         activity = this;
@@ -118,11 +127,6 @@ public class SubscribeActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-//            pDialog = new ProgressDialog(AlbumsActivity.this);
-//            pDialog.setMessage("Listing Albums ...");
-//            pDialog.setIndeterminate(false);
-//            pDialog.setCancelable(false);
-//            pDialog.show();
         }
 
         protected String doInBackground(String... args) {
@@ -158,23 +162,6 @@ public class SubscribeActivity extends AppCompatActivity {
     private void sendPaymentNonceToServer(String paymentNonce){
         this.paymentNonce = paymentNonce;
         new checkout().execute();
-//        RequestParams params = new RequestParams("payment_method_nonce", paymentNonce);
-//        //params.add("AMOUNT", "49.99");
-//        AsyncHttpClient androidClient = new AsyncHttpClient();
-        //androidClient.post(PATH_TO_SERVER_CHECKOUT, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                Snackbar.make(v, "Failed\n" + responseString, Snackbar.LENGTH_LONG ).show();
-//                //Toast.makeText(context, "Failed\n" + responseString, Toast.LENGTH_SHORT).show();
-//                Log.d(TAG, "Error: Failed to create a transaction");
-//            }
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                //Toast.makeText(context, "Success\n"+responseString, Toast.LENGTH_SHORT).show();
-//                Snackbar.make(v, "Success\n"+responseString, Snackbar.LENGTH_LONG ).show();
-//                Log.d(TAG, "Output " + responseString);
-//            }
-//        });
     }
 
     @Override
