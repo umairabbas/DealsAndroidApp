@@ -1,6 +1,5 @@
 package com.dealspok.dealspok;
 
-import android.*;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -38,7 +38,9 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.dealspok.dealspok.Utils.RealPathUtil;
+import com.dealspok.dealspok.entities.CategoryObject;
 import com.dealspok.dealspok.entities.Shop;
+import com.dealspok.dealspok.fragment.Deals;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
@@ -53,12 +55,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,48 +73,72 @@ import cz.msebera.android.httpclient.Header;
 
 public class AddDealActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
-    private Spinner spinner;
-    private boolean isSpinnerInitial = true;
-    private final String URL_Shops = "/mobile/api/shops/list";
     private List<Shop> shopList;
+    private List<CategoryObject> catList;
     private JSONArray shopArr = null;
+    private JSONArray catArr = null;
     private SpinAdapter adapter;
+    private SpinAdapterCat adapterCat;
     private String userId = "";
     private EditText expiry;
     private Calendar calendarDate;
     private Context context;
+    private Activity activity;
 
-    private static final int PICK_FILE_REQUEST = 1;
     private static final String TAG = MainActivity.class.getSimpleName();
     private String selectedFilePath;
     private List<String> selectedFilePathList;
-    private String SERVER_URL = "https://www.regionaldeals.de/mobile/api/deals/upload-deal";
-    ImageView ivAttachment;
-    Button bUpload;
-    TextView tvFileName;
-    ProgressDialog dialog;
-    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
-    public static final int REQUEST_CODE_CHOOSE = 1234;
-    private SliderLayout mDemoSlider;
     private String resultData = "";
     private int shopId = -1;
+    private String dealTypeValue = "TYPE_DEALS";
+    private String catShortName = "essen";
+
+    private SliderLayout mDemoSlider;
+    private Button bUpload;
+    private ProgressDialog dialog;
+    private Spinner spinnerShop;
+    private Spinner spinnerDeals;
+    private Spinner spinnerCat;
+    private EditText inputUrl;
+    private EditText inputTitle;
+    private EditText inputDesc;
+    private EditText inputOPrice;
+    private EditText inputDPrice;
+    private ImageView attachImg;
+
+    private static final int PICK_FILE_REQUEST = 1;
+    private final String URL_Shops = "/mobile/api/shops/list";
+    private final String URL_Cat = "/mobile/api/categories/list";
+    private String SERVER_URL = "https://www.regionaldeals.de/mobile/api/deals/upload-deal";
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+    public static final int REQUEST_CODE_CHOOSE = 1234;
+    private static final String[] dealTypes = {"Deals", "Online Deals"};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_deals_activity);
         context = this;
-        expiry = (EditText)findViewById(R.id.input_expiry);
+        activity = this;
+
+        //CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        expiry = (EditText) findViewById(R.id.input_expiry);
         calendarDate = Calendar.getInstance();
         selectedFilePathList = new ArrayList<>();
-        ivAttachment = (ImageView) findViewById(R.id.ivAttachment);
         bUpload = (Button) findViewById(R.id.b_upload);
-        tvFileName = (TextView) findViewById(R.id.tv_file_name);
-        ivAttachment.setOnClickListener(this);
+        mDemoSlider = (SliderLayout) findViewById(R.id.image);
+        spinnerShop = (Spinner) findViewById(R.id.spinner_shops);
+        spinnerDeals = (Spinner) findViewById(R.id.spinner_dealType);
+        spinnerCat = (Spinner) findViewById(R.id.spinner_cat);
+        inputTitle = (EditText) findViewById(R.id.input_title);
+        inputDesc = (EditText) findViewById(R.id.input_desc);
+        inputOPrice = (EditText) findViewById(R.id.input_oprice);
+        inputDPrice = (EditText) findViewById(R.id.input_dprice);
+        inputUrl = (EditText) findViewById(R.id.input_url);
+        attachImg = (ImageView) findViewById(R.id.ivAttachment);
+
+        attachImg.setOnClickListener(this);
         bUpload.setOnClickListener(this);
-        CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        mDemoSlider = (SliderLayout)findViewById(R.id.image);
 
         expiry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,10 +151,10 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                         calendarDate.set(Calendar.MINUTE, 0);
                         expiry.setText(day + "/" + month + "/" + year);
                     }
-                }, calendarDate.get(Calendar.YEAR), calendarDate.get(Calendar.MONTH),calendarDate.get(Calendar.DAY_OF_MONTH));
-            dp.setTitle("Select Expiry Date");
-            dp.getDatePicker().setMinDate(System.currentTimeMillis() + 86400000);//add 1 day
-            dp.show();
+                }, calendarDate.get(Calendar.YEAR), calendarDate.get(Calendar.MONTH), calendarDate.get(Calendar.DAY_OF_MONTH));
+                dp.setTitle("Select Expiry Date");
+                dp.getDatePicker().setMinDate(System.currentTimeMillis() + 86400000);//add 1 day
+                dp.show();
             }
         });
 
@@ -145,20 +169,36 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
             e.printStackTrace();
         } catch (Throwable t) {
         }
+
+        //Adapter Deals
+        ArrayAdapter<String>adapterDeals = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, dealTypes);
+        adapterDeals.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDeals.setAdapter(adapterDeals);
+        spinnerDeals.setOnItemSelectedListener(this);
+
+        //Adapter Shops
         shopList = new ArrayList<>();
-        spinner = (Spinner)findViewById(R.id.spinner_shops);
-        spinner.setVisibility(View.VISIBLE);
         adapter = new SpinAdapter(this,
                 R.layout.custom_spinner_item,
                 shopList);
-        spinner.setAdapter(adapter);
+        spinnerShop.setAdapter(adapter);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setOnItemSelectedListener(this);
+        spinnerShop.setOnItemSelectedListener(this);
         getShopsFromServer();
 
+        //Adapter Category
+        catList = new ArrayList<>();
+        adapterCat = new SpinAdapterCat(this,
+                R.layout.custom_spinner_item,
+                catList);
+        spinnerCat.setAdapter(adapterCat);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCat.setOnItemSelectedListener(this);
+        getCatFromServer();
     }
 
-    private void getShopsFromServer(){
+    private void getShopsFromServer() {
         AsyncHttpClient androidClient = new AsyncHttpClient();
         RequestParams params = new RequestParams("userid", userId);
         androidClient.get(this.getString(R.string.apiUrl) + URL_Shops, params, new TextHttpResponseHandler() {
@@ -166,6 +206,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("TAG", getString(R.string.token_failed) + responseString);
             }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseToken) {
                 Log.d("TAG", "Client token: " + responseToken);
@@ -180,11 +221,10 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                             Shop newDeal = gson.fromJson(c.toString(), Shop.class);
                             shopList.add(newDeal);
                         }
-                        isSpinnerInitial = true;
                         adapter.notifyDataSetChanged();
 
-                        if(shopList.size()<=0){
-                            Toast.makeText(context, "Kindly add shop first", Toast.LENGTH_SHORT).show();
+                        if (shopList.size() <= 0) {
+                            Toast.makeText(context, "Kindly add a shop first", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     } else {
@@ -198,113 +238,96 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         });
     }
 
+    private void getCatFromServer() {
+        AsyncHttpClient androidClient = new AsyncHttpClient();
+        RequestParams params = new RequestParams("userid", userId);
+        androidClient.get(this.getString(R.string.apiUrl) + URL_Cat, params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("TAG", getString(R.string.token_failed) + responseString);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseToken) {
+                Log.d("TAG", "Client token: " + responseToken);
+                try {
+                    catList.clear();
+                    catArr = new JSONArray(responseToken);
+                    if (catArr != null) {
+                        for (int i = 0; i < catArr.length(); i++) {
+                            JSONObject c = catArr.getJSONObject(i);
+                            Gson gson = new GsonBuilder().create();
+                            CategoryObject newDeal = gson.fromJson(c.toString(), CategoryObject.class);
+                            catList.add(newDeal);
+                        }
+                        adapterCat.notifyDataSetChanged();
+
+                        if (catList.size() <= 0) {
+                            Toast.makeText(context, "No categories found", Toast.LENGTH_SHORT).show();
+                            //finish();
+                        }
+                    } else {
+                        Log.d("Deals: ", "null");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (Throwable t) {
+                }
+            }
+        });
+    }
+
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-        Shop tmp=(Shop) parent.getItemAtPosition(position);
-        shopId = tmp.getShopId();
-//        if(isSpinnerInitial)
-//        {
-//            isSpinnerInitial = false;
-//        }
-//        else  {
-//        }
+        switch (parent.getId()) {
+            case R.id.spinner_shops:
+                Shop tmp = (Shop) parent.getItemAtPosition(position);
+                shopId = tmp.getShopId();
+                break;
+            case R.id.spinner_dealType:
+                switch (position) {
+                    case 0:
+                        dealTypeValue = "TYPE_DEALS";
+                        inputUrl.setVisibility(View.GONE);
+                        break;
+                    case 1:
+                        dealTypeValue = "TYPE_ONLINE_DEALS";
+                        inputUrl.setVisibility(View.VISIBLE);
+                        break;
+                }
+                break;
+            case R.id.spinner_cat:
+                CategoryObject tmp2 = (CategoryObject) parent.getItemAtPosition(position);
+                catShortName = tmp2.getCatShortName();
+                break;
+        }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
-
-    public class SpinAdapter extends ArrayAdapter<Shop>{
-
-        // Your sent context
-        private Context context;
-        // Your custom values for the spinner (User)
-        private List<Shop> values;
-
-        public SpinAdapter(Context context, int textViewResourceId,
-                           List<Shop> values) {
-            super(context, textViewResourceId, values);
-            this.context = context;
-            this.values = values;
-        }
-
-        @Override
-        public int getCount(){
-            return values.size();
-        }
-
-        @Override
-        public Shop getItem(int position){
-            return values.get(position);
-        }
-
-        @Override
-        public long getItemId(int position){
-            return position;
-        }
-
-
-        // And the "magic" goes here
-        // This is for the "passive" state of the spinner
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // I created a dynamic TextView here, but you can reference your own  custom layout for each spinner item
-            TextView label = new TextView(context);
-            label.setTextColor(Color.BLACK);
-            // Then you can get the current item using the values array (Users array) and the current position
-            // You can NOW reference each method you has created in your bean object (User class)
-            label.setText(values.get(position).getShopName());
-            label.setGravity(Gravity.LEFT);
-            label.setTextSize(18);
-            label.setPadding(0,10,0,10);
-            label.setAllCaps(true);
-
-            // And finally return your dynamic (or custom) view for each spinner item
-            return label;
-        }
-
-        // And here is when the "chooser" is popped up
-        // Normally is the same view, but you can customize it if you want
-        @Override
-        public View getDropDownView(int position, View convertView,
-                                    ViewGroup parent) {
-            TextView label = new TextView(context);
-            label.setTextColor(getResources().getColor(R.color.colorGrey));
-            label.setText(values.get(position).getShopName());
-            label.setGravity(Gravity.LEFT);
-            label.setTextSize(18);
-            label.setPadding(0,10,0,10);
-            label.setAllCaps(true);
-            return label;
-        }
     }
 
     @Override
     public void onClick(View v) {
-        if(v == ivAttachment){
-
-            //on attachment icon click
+        if (v == attachImg) {
             showFileChooser();
         }
-        if(v == bUpload){
-
-            //on upload button Click
-            if(selectedFilePath != null){
-                dialog = ProgressDialog.show(AddDealActivity.this,"","Uploading File...",true);
-
+        if (v == bUpload) {
+            if (selectedFilePath != null) {
+                dialog = ProgressDialog.show(AddDealActivity.this, "", "Uploading File...", true);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        //creating new thread to handle Http Operations
-                        uploadFile(selectedFilePath);
+                        uploadFile();
                     }
                 }).start();
-            }else{
-                Toast.makeText(AddDealActivity.this,"Please choose a File First",Toast.LENGTH_SHORT).show();
+            } else {
+                Snackbar.make(v, "Please choose a picture first", Snackbar.LENGTH_SHORT).show();
             }
 
         }
     }
+
+    //Get User permissions
     @SuppressLint("NewApi")
     private void showFileChooser() {
         if (Build.VERSION.SDK_INT >= 19) {
@@ -312,13 +335,29 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-            }else {
+            } else {
                 proceedFileChooser();
             }
         }
     }
 
-    private void proceedFileChooser(){
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay!
+                    proceedFileChooser();
+                } else {
+                    Toast.makeText(context, "Cannot add pictures without user permission", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+    private void proceedFileChooser() {
 //        Intent chooseIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 //        chooseIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 //        startActivityForResult(Intent.createChooser(chooseIntent,"Choose File to Upload.."), PICK_FILE_REQUEST);
@@ -335,48 +374,17 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    proceedFileChooser();
-                    // permission was granted, yay!
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-        }
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Activity.RESULT_OK) {
-            if (requestCode == PICK_FILE_REQUEST) {
-                if (data == null) {
-                    //no data present
-                    return;
-                }
-                Uri selectedFileUri = data.getData();
-                selectedFilePath = RealPathUtil.getRealPath(this, selectedFileUri);
-                Log.i(TAG, "Selected File Path:" + selectedFilePath);
-
-                if (selectedFilePath != null && !selectedFilePath.equals("")) {
-                    tvFileName.setText(selectedFilePath);
-                } else {
-                    Toast.makeText(this, "Cannot upload file to server", Toast.LENGTH_SHORT).show();
-                }
-            } else if (requestCode == REQUEST_CODE_CHOOSE) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_CHOOSE) {
                 if (data != null) {
                     List<Uri> mSelected = Matisse.obtainResult(data);
                     Log.d("Matisse", "mSelected: " + mSelected);
+                    //Remove pervious pictures
                     mDemoSlider.removeAllSliders();
                     selectedFilePathList.clear();
+
                     HashMap<String, String> url_maps = new HashMap<String, String>();
                     for (int a = 0; a < mSelected.size(); a++) {
                         selectedFilePath = RealPathUtil.getRealPath(this, mSelected.get(a));
@@ -397,31 +405,22 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                                 .putString("extra", name);
                         mDemoSlider.addSlider(textSliderView);
                     }
-
-                    //mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
                     mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
                     mDemoSlider.setCustomAnimation(new DescriptionAnimation());
                     mDemoSlider.setDuration(6000);
                 }
             }
         }
-
     }
 
     private static byte[] readBytesFromFile(String filePath) {
-
         FileInputStream fileInputStream = null;
         byte[] bytesArray = null;
-
         try {
-
             File file = new File(filePath);
             bytesArray = new byte[(int) file.length()];
-
-            //read file into bytes[]
             fileInputStream = new FileInputStream(file);
             fileInputStream.read(bytesArray);
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -432,95 +431,205 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                     e.printStackTrace();
                 }
             }
-
         }
-
         return bytesArray;
-
     }
 
     //android upload file to server
-    public int uploadFile(final String selectedFilePath){
-
+    public void uploadFile() {
         int serverResponseCode = 0;
-        HttpURLConnection connection;
-        DataOutputStream dataOutputStream;
-        String lineEnd = "\r\n";
-        String twoHyphens = "--";
-        String boundary = "*****";
-
-        int bytesRead,bytesAvailable,bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1 * 1024 * 1024;
         List<File> selectedFile = new ArrayList<>();
-        List<String> fileName =  new ArrayList<>();
-        for(int i=0; i< selectedFilePathList.size(); i++){
+        List<String> fileName = new ArrayList<>();
+        for (int i = 0; i < selectedFilePathList.size(); i++) {
             selectedFile.add(new File(selectedFilePathList.get(i)));
             String[] parts = selectedFilePathList.get(i).split("/");
-            fileName.add(parts[parts.length-1]);
-            if (!selectedFile.get(i).isFile()){
+            fileName.add(parts[parts.length - 1]);
+            if (!selectedFile.get(i).isFile()) {
                 dialog.dismiss();
                 final int finalI = i;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        tvFileName.setText("Source File Doesn't Exist: " + selectedFilePathList.get(finalI));
+                        Toast.makeText(context, "Source File Doesn't Exist: " + selectedFilePathList.get(finalI), Toast.LENGTH_SHORT).show();
                     }
                 });
-                return 0;
+                return;
             }
         }
 
-            try{
+        try {
+            com.dealspok.dealspok.Utils.HttpClient client = new com.dealspok.dealspok.Utils.HttpClient(SERVER_URL);
+            client.connectForMultipart();
+            int userIdInt = Integer.valueOf(userId);
+            client.addFormPartInt("userid", userIdInt);
+            client.addFormPartInt("shopid", shopId);
+            client.addFormPart("cat", catShortName);
+            client.addFormPart("dealtitle", inputTitle.getText().toString());
+            client.addFormPart("dealdesc", inputDesc.getText().toString());
+            client.addFormPartLong("createdate", System.currentTimeMillis());
+            client.addFormPartLong("publishdate", System.currentTimeMillis());
+            client.addFormPartLong("expirydate", calendarDate.getTimeInMillis());
+            //60 is gor DE
+            client.addFormPartInt("tz", 60);
+            client.addFormPartDouble("origprice", Double.valueOf(inputOPrice.getText().toString()));
+            client.addFormPartDouble("dealprice", Double.valueOf(inputDPrice.getText().toString()));
+            client.addFormPart("currency", "EUR");
+            client.addFormPart("dealtype", dealTypeValue);
+            client.addFormPart("dealurl", inputUrl.getText().toString());
 
-                com.dealspok.dealspok.Utils.HttpClient client = new com.dealspok.dealspok.Utils.HttpClient(SERVER_URL);
-                client.connectForMultipart();
-                client.addFormPartInt("userid",17);
-                client.addFormPartInt("shopid", shopId);
-                client.addFormPart("cat", "auto");
-                client.addFormPart("dealtitle", "Title1");
-                client.addFormPart("dealdesc", "Desc1");
-                client.addFormPartLong("createdate", System.currentTimeMillis());       //must
-                client.addFormPartLong("publishdate", System.currentTimeMillis());
-                client.addFormPartLong("expirydate", calendarDate.getTimeInMillis());       //must
-                //client.addFormPart("tz", 0);
-                client.addFormPartDouble("origprice", 20);
-                client.addFormPartDouble("dealprice", 10);
-                client.addFormPart("currency", "EUR");
-                client.addFormPart("dealtype", "TYPE_DEALS");
-                //client.addFormPart("dealurl", "TYPE_DEALS");
+            for (int j = 0; j < selectedFilePathList.size(); j++) {
+                byte[] bData = readBytesFromFile(selectedFilePathList.get(j));
+                int count = j + 1;
+                client.addFilePart("dealimg_" + Integer.toString(count), fileName.get(j), bData);
+            }
 
-
-                for(int j=0; j<selectedFilePathList.size(); j++) {
-                    byte[] bData = readBytesFromFile(selectedFilePathList.get(j));
-                    client.addFilePart("dealimg_1", fileName.get(j), bData);
-                }
-
-                client.finishMultipart();
-                resultData = client.getResponse();
-                resultData.toString();
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            client.finishMultipart();
+            resultData = client.getResponse();
+            resultData.toString();
+            JSONObject jRes = new JSONObject(resultData);
+            final String res = jRes.getString("message");
+            if(res=="DEALS_UPLOAD_OK"){
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(AddDealActivity.this,"File Not Found",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Success "+ res, Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 });
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                Toast.makeText(AddDealActivity.this, "URL error!", Toast.LENGTH_SHORT).show();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(AddDealActivity.this, "Cannot Read/Write File!", Toast.LENGTH_SHORT).show();
-            } catch(Throwable t) {
-                t.printStackTrace();
+            }else{
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "Failed " + res, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-            dialog.dismiss();
-            return serverResponseCode;
 
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+             Toast.makeText(AddDealActivity.this, "File Not Found", Toast.LENGTH_SHORT).show();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            Toast.makeText(AddDealActivity.this, "URL error!", Toast.LENGTH_SHORT).show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(AddDealActivity.this, "Cannot Read/Write File!", Toast.LENGTH_SHORT).show();
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+        dialog.dismiss();
+    }
+
+    //Adapter for getting shops data
+    public class SpinAdapter extends ArrayAdapter<Shop> {
+        // Your sent context
+        private Context context;
+        // Your custom values for the spinner (User)
+        private List<Shop> values;
+
+        public SpinAdapter(Context context, int textViewResourceId,
+                           List<Shop> values) {
+            super(context, textViewResourceId, values);
+            this.context = context;
+            this.values = values;
+        }
+
+        @Override
+        public int getCount() {
+            return values.size();
+        }
+
+        @Override
+        public Shop getItem(int position) {
+            return values.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // I created a dynamic TextView here, but you can reference your own  custom layout for each spinner item
+            TextView label = new TextView(context);
+            label.setTextColor(Color.BLACK);
+            label.setText(values.get(position).getShopName());
+            label.setGravity(Gravity.LEFT);
+            label.setTextSize(18);
+            label.setPadding(20, 10, 0, 10);
+            return label;
+        }
+
+        // And here is when the "chooser" is popped up
+        @Override
+        public View getDropDownView(int position, View convertView,
+                                    ViewGroup parent) {
+            TextView label = new TextView(context);
+            label.setTextColor(Color.BLACK);
+            label.setText(values.get(position).getShopName());
+            label.setGravity(Gravity.LEFT);
+            label.setTextSize(18);
+            label.setPadding(20, 15, 0, 15);
+            return label;
+        }
+    }
+
+    //Adapter for getting Category data
+    public class SpinAdapterCat extends ArrayAdapter<CategoryObject> {
+        // Your sent context
+        private Context context;
+        // Your custom values for the spinner (User)
+        private List<CategoryObject> values;
+
+        public SpinAdapterCat(Context context, int textViewResourceId,
+                           List<CategoryObject> values) {
+            super(context, textViewResourceId, values);
+            this.context = context;
+            this.values = values;
+        }
+
+        @Override
+        public int getCount() {
+            return values.size();
+        }
+
+        @Override
+        public CategoryObject getItem(int position) {
+            return values.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // I created a dynamic TextView here, but you can reference your own  custom layout for each spinner item
+            TextView label = new TextView(context);
+            label.setTextColor(Color.BLACK);
+            label.setText(values.get(position).getCatName());
+            label.setGravity(Gravity.LEFT);
+            label.setTextSize(18);
+            label.setPadding(20, 10, 0, 10);
+            return label;
+        }
+
+        // And here is when the "chooser" is popped up
+        @Override
+        public View getDropDownView(int position, View convertView,
+                                    ViewGroup parent) {
+            TextView label = new TextView(context);
+            label.setTextColor(Color.BLACK);
+            label.setText(values.get(position).getCatName());
+            label.setGravity(Gravity.LEFT);
+            label.setTextSize(18);
+            label.setPadding(20, 15, 0, 15);
+            return label;
+        }
     }
 
 }
