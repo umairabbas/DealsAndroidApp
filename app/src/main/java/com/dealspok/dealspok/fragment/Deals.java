@@ -138,6 +138,9 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
 
         deals = new ArrayList<>();
 
+        mAdapter = new DealsAdapter(getActivity(), deals);
+        songRecyclerView.setAdapter(mAdapter);
+
         swipeRefreshLayout.post(
                 new Runnable() {
                     @Override
@@ -273,81 +276,9 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
                     /**
                      * Updating parsed JSON data into ListView
                      * */
-                    mAdapter = new DealsAdapter(getActivity(), deals);
-                    songRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                 }
             });
         }
     }
-
-//    class UpdateDeals extends AsyncTask<String, String, String> {
-//
-//        /**
-//         * Before starting background thread Show Progress Dialog
-//         */
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            swipeRefreshLayout.setRefreshing(true);
-////            pDialog = new ProgressDialog(AlbumsActivity.this);
-////            pDialog.setMessage("Listing Albums ...");
-////            pDialog.setIndeterminate(false);
-////            pDialog.setCancelable(false);
-////            pDialog.show();
-//        }
-//
-//        protected String doInBackground(String... args) {
-//            // Building Parameters
-//            List<NameValuePair> params = new ArrayList<NameValuePair>();
-//
-//            params.add(new DoubleNameValuePair("lat", 50.781203));
-//            params.add(new DoubleNameValuePair("long", 6.078068));
-//            params.add(new IntNameValuePair("radius", maxDistance*1000));
-//
-//            // getting JSON string from URL
-//            String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
-//                    params);
-//
-//            Log.d("JSON: ", "> " + json);
-//
-//            try {
-//                dealArr = new JSONArray(json);
-//                deals.clear();
-//                if (dealArr != null) {
-//                    for (int i = 0; i < dealArr.length(); i++) {
-//                        JSONObject c = dealArr.getJSONObject(i);
-//                        Gson gson = new GsonBuilder().create();
-//                        DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
-//                        deals.add(newDeal);
-//                    }
-//                } else {
-//                    Log.d("Deals: ", "null");
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        /**
-//         * After completing background task Dismiss the progress dialog
-//         **/
-//        protected void onPostExecute(String file_url) {
-//            // dismiss the dialog after getting all albums
-//            //pDialog.dismiss();
-//            // updating UI from Background Thread
-//            swipeRefreshLayout.setRefreshing(false);
-//            if(getActivity() == null)
-//                return;
-//            getActivity().runOnUiThread(new Runnable() {
-//                public void run() {
-//                    /**
-//                     * Updating parsed JSON data into ListView
-//                     * */
-//                    mAdapter.notifyDataSetChanged();
-//                }
-//            });
-//        }
-//    }
 }

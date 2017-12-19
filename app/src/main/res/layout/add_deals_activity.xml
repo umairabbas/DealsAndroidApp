@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Deal Type"
-            android:textColor="#777777"
+            android:textColor="@color/colorLightGrey"
             android:textSize="26px"
             />
         <Spinner

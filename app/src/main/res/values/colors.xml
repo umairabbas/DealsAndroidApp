@@ -13,6 +13,8 @@
     <color name="colorLightWhite">#E4DCEF</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGreen">#008744</color>
+    <color name="colorLightGrey">#777777</color>
+
 
     <!--RANDOM COLORS FOR LISTVIEW BACKGROUND-->
     <item name="blue" type="color">#FF33B5E5</item>

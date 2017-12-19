@@ -102,11 +102,11 @@ public class DealsDetail extends AppCompatActivity implements
 
         HashMap<String,String> url_maps = new HashMap<String, String>();
         String[] imgTitle = {
-                shopName,
-                address,
-                contact,
-                shopName+" ",
-                address + " "
+                " ",
+                "  ",
+                "   ",
+                "    ",
+                "     ",
         };
         for(int a=1; a <= imgCount; a++){
             url_maps.put(imgTitle[a-1], coverUrl + Integer.toString(a));
@@ -122,6 +122,8 @@ public class DealsDetail extends AppCompatActivity implements
             textSliderView.getBundle()
                     .putString("extra",name);
             mDemoSlider.addSlider(textSliderView);
+            mDemoSlider.stopAutoCycle();
+
         }
 
         //mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
