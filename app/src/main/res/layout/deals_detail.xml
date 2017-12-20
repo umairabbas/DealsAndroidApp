@@ -143,6 +143,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+
+            <TextView
+                android:id="@+id/expLabel"
+                android:layout_marginTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expiry Date"
+                android:textColor="@color/red"
+                android:textSize="26px"
+                />
+            <TextView android:id="@+id/exp_date"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text=""
+                android:gravity="left"
+                android:textSize="16dip"/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_deal_del"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="24dp"
+                android:padding="12dp"
+                android:visibility="gone"
+                android:textColor="@color/colorWhite"
+                android:background="@color/red"
+                android:text="Delete Deal"/>
+
         </LinearLayout>
 
         </LinearLayout>

@@ -55,6 +55,11 @@
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"
+            android:name=".CreateGutscheineActivity"
+            android:label="Create Gutscheine"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:allowBackup="true"
             android:name=".CreateDealsActivity"
             android:label="Create Deals"
             android:theme="@style/AppTheme"></activity>

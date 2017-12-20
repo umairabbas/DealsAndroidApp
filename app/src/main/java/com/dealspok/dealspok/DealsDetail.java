@@ -1,16 +1,26 @@
 package com.dealspok.dealspok;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dealspok.dealspok.entities.DealObject;
+import com.dealspok.dealspok.entities.GutscheineObject;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -29,7 +39,16 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Umi on 13.09.2017.
@@ -46,6 +65,20 @@ public class DealsDetail extends AppCompatActivity implements
     private Marker mPerth;
     private SliderLayout mDemoSlider;
 
+    //For deal deletion
+    private Button delBtn;
+    private ProgressDialog progressDialog;
+    private Context context;
+    private String message;
+    private Boolean isSuccess = false;
+    private String URL_DealDel = "/mobile/api/deals/deactivate";
+    private int dealId = -1;
+    private int shopId = -1;
+    private String userId = "";
+
+    //for gutscheien del
+    private Boolean isGutschein = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +88,26 @@ public class DealsDetail extends AppCompatActivity implements
         // Set Collapsing Toolbar layout to the screen
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        delBtn = (Button)findViewById(R.id.btn_deal_del);
+        TextView exp = (TextView)findViewById(R.id.exp_date);
         // Set title of Detail page
         // collapsingToolbar.setTitle(getString(R.string.item_title));
-
+        context = this;
         Intent intent = getIntent();
         int postion = intent.getIntExtra(EXTRA_POSITION, 0);
+        if(intent.hasExtra("currDeal")) {
+            DealObject currDeal = (DealObject) getIntent().getSerializableExtra("currDeal");
+            dealId = currDeal.getDealId();
+            shopId = currDeal.getShop().getShopId();
+            exp.setText(DateFormat.format("dd/MM/yyyy", new Date(currDeal.getDateExpire())).toString());
+        }
+
+        if(intent.hasExtra("currGut")) {
+            GutscheineObject currGut = (GutscheineObject) getIntent().getSerializableExtra("currGut");
+            dealId = currGut.getGutscheinId();
+            shopId = currGut.getShop().getShopId();
+            exp.setText(DateFormat.format("dd/MM/yyyy", new Date(currGut.getExpiryDate())).toString());
+        }
 
         title = intent.getStringExtra("title");
         String desc = intent.getStringExtra("desc");
@@ -78,6 +126,42 @@ public class DealsDetail extends AppCompatActivity implements
         String address = "";
         if(intent.hasExtra("address")){
             address = intent.getStringExtra("address");
+        }
+
+        Boolean enableDeleteBtn = false;
+        if(intent.hasExtra("deleteEnable")) {
+            enableDeleteBtn = intent.getBooleanExtra("deleteEnable", false);
+        }
+        if(intent.hasExtra("isGutschein")) {
+            isGutschein = intent.getBooleanExtra("isGutschein", false);
+        }
+
+
+        if(enableDeleteBtn){
+            delBtn.setVisibility(View.VISIBLE);
+            SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+            String restoredUser = prefs.getString("userObject", null);
+            try {
+                if (restoredUser != null) {
+                    JSONObject obj = new JSONObject(restoredUser);
+                    userId = obj.getString("userId");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Throwable t) {
+            }
+            delBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    progressDialog = new ProgressDialog(context,
+                            R.style.ThemeOverlay_AppCompat_Dialog);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setMessage("Removing...");
+                    progressDialog.show();
+                    delBtn.setEnabled(false);
+                    new DealDeleteCall().execute();
+                }
+            });
         }
 
         TextView shopNameText = (TextView) findViewById(R.id.shopName);
@@ -109,7 +193,7 @@ public class DealsDetail extends AppCompatActivity implements
                 "     ",
         };
         for(int a=1; a <= imgCount; a++){
-            url_maps.put(imgTitle[a-1], coverUrl + Integer.toString(a));
+            url_maps.put(imgTitle[a-1], coverUrl + Integer.toString(a) + "&res=470x320");
         }
         for(String name : url_maps.keySet()){
             TextSliderView textSliderView = new TextSliderView(this);
@@ -178,5 +262,80 @@ public class DealsDetail extends AppCompatActivity implements
         // for the default behavior to occur (which is for the camera to move such that the
         // marker is centered and for the marker's info window to open, if it has one).
         return false;
+    }
+
+    class DealDeleteCall extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected String doInBackground(String... args) {
+            try {
+                message = "";
+                URL url;
+                if(isGutschein){
+                    URL_DealDel = "/mobile/api/gutschein/deactivate";
+                    url = new URL(getString(R.string.apiUrl) + URL_DealDel + "?gutscheinid="+ dealId + "&userid=" + userId +
+                            "&shopid=" + shopId);
+                } else {
+                    url = new URL(getString(R.string.apiUrl) + URL_DealDel + "?dealid=" + dealId + "&userid=" + userId +
+                            "&shopid=" + shopId);
+                }
+                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+                conn.setRequestMethod("PUT");
+                conn.setRequestProperty("Accept","application/json");
+                conn.setDoOutput(true);
+
+                Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+                Log.i("MSG" , conn.getResponseMessage());
+
+                String response = conn.getResponseMessage();
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                        conn.getInputStream()));
+                String inputLine;
+                StringBuffer res = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    res.append(inputLine);
+                }
+                in.close();
+
+                JSONObject jObject = new JSONObject(res.toString());
+                message = jObject.getString("message");
+
+                if(message.equals(getString(R.string.DEALS_REMOVE_OK)) || message.equals(getString(R.string.GUTSCHEIN_REMOVE_OK))) {
+                    isSuccess = true;
+                }
+                else if (message.equals(getString(R.string.DEALS_REMOVE_ERR)) || message.equals(getString(R.string.GUTSCHEIN_REMOVE_ERR))){
+                    isSuccess = false;
+                    message = "Cannot remove deal";
+                }
+                else {
+                    isSuccess = false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         **/
+        protected void onPostExecute(String file_url) {
+            progressDialog.dismiss();
+            delBtn.setEnabled(true);
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    if(isSuccess) {
+                        Toast.makeText(context, "Deal Removed\n", Toast.LENGTH_LONG).show();
+                        finish();
+                    } else {
+                        Toast.makeText(context,  "Failed\n" + message, Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
     }
 }

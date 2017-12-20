@@ -1,14 +1,11 @@
 package com.dealspok.dealspok.entities;
 
 import android.content.Context;
-import android.location.Location;
-import android.net.Uri;
 
 import com.dealspok.dealspok.R;
+import java.io.Serializable;
 
-import java.util.Date;
-
-public class GutscheineObject {
+public class GutscheineObject implements Serializable {
 
     private int gutscheinId;
     private Shop shop;

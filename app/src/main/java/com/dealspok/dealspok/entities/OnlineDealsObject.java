@@ -4,12 +4,14 @@ import android.content.Context;
 
 import com.dealspok.dealspok.R;
 
+import java.io.Serializable;
+
 /**
  * Created by Umi on 07.10.2017.
  * Depreciated
  */
 
-public class OnlineDealsObject {
+public class OnlineDealsObject implements Serializable {
 
 //    private String dealTitle;
 //    private int dealId;

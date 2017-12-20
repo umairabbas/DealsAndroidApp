@@ -43,6 +43,10 @@
                 android:icon="@drawable/ic_shopping_basket_black_24dp"
                 android:title="Meine Anzeigen" />
             <item
+                android:id="@+id/meine_gutscheien"
+                android:icon="@drawable/ic_shopping_basket_black_24dp"
+                android:title="Meine Gutscheine" />
+            <item
                 android:id="@+id/anzeigen_erstellen"
                 android:icon="@drawable/ic_add_shopping_cart_black_24dp"
                 android:title="Anzeigen Erstellen" />

@@ -53,6 +53,8 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
     private int [] androidColors;
     private String URLFav = "/mobile/api/deals/favourite-click";
     private Boolean favChecked = true;
+    private Boolean skipFav = false;
+
 
     public DealsAdapter(Context context, List<DealObject> allDeals) {
         this.context = context;
@@ -63,7 +65,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
         androidColors = context.getResources().getIntArray(R.array.androidcolors);
     }
 
-    public DealsAdapter(Context context, List<DealObject> allDeals, Boolean isFromFav) {
+    public DealsAdapter(Context context, List<DealObject> allDeals, Boolean isFromFav, Boolean skipFavBtn) {
         this.context = context;
         activity = (Activity)context;
         this.allDeals = allDeals;
@@ -71,12 +73,14 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
         androidColors = context.getResources().getIntArray(R.array.androidcolors);
         fromFav = isFromFav;
+        skipFav = skipFavBtn;
     }
 
     @Override
     public DealsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.dealslist_layout, parent, false);
-        return new DealsViewHolder(view, allDeals);
+        //skipFav is true from create deals only (used to delete deal). Should be changed later
+        return new DealsViewHolder(view, allDeals, skipFav);
     }
 
     @Override
@@ -90,13 +94,17 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
         holder.dealOldPrice.setText(Double.toString(deals.getOriginalPrice()) + " €");
         holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + " €");
 //        gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
-        String imgUrl = deals.getDealImageUrl(context) + "&imagecount=1";
+        String imgUrl = deals.getDealImageUrl(context) + "&imagecount=1&res=470x320";
         Picasso.with(context).load(imgUrl).placeholder(R.drawable.placeholder_2_300x200).into(holder.dealCoverUrl);
 
-        if(deals.getFavourite() == null) {
-            holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.colorGrey));
-        } else if(deals.getFavourite()==true) {
-            holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.green));
+        if(!skipFav) {
+            if (deals.getFavourite() == null) {
+                holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.colorGrey));
+            } else if (deals.getFavourite() == true) {
+                holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.green));
+            }
+        } else {
+            holder.favoriteImageButton.setVisibility(View.GONE);
         }
             holder.favoriteImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override

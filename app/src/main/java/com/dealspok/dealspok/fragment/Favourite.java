@@ -185,7 +185,7 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    mAdapter = new DealsAdapter(getActivity(), deals, true);
+                    mAdapter = new DealsAdapter(getActivity(), deals, true, false);
                     songRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                 }

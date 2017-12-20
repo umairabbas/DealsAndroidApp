@@ -4,19 +4,21 @@ import android.content.Context;
 
 import com.dealspok.dealspok.R;
 
+import java.io.Serializable;
+
 /**
  * Created by Umi on 25.09.2017.
  */
 
-public class DealObject {
+public class DealObject implements Serializable {
 
     private int dealId;
     private String dealTitle;
     //private String dealImageUrl;
     private String dealDescription;
-    private long dateCreated;
-    private long datePublished;
-    private long dateExpire;
+    private long createDate;
+    private long publishDate;
+    private long expiryDate;
     private String timezone;
     private double originalPrice;
     private double dealPrice;
@@ -63,9 +65,9 @@ public class DealObject {
         this.dealTitle = dealTitle;
         //this.dealImageUrl = dealImageUrl;
         this.dealDescription = dealDescription;
-        this.dateCreated = dateCreated;
-        this.datePublished = datePublished;
-        this.dateExpire = dateExpire;
+        this.createDate = dateCreated;
+        this.publishDate = datePublished;
+        this.expiryDate = dateExpire;
         this.timezone = timezone;
         this.originalPrice = originalPrice;
         this.dealPrice = dealPrice;
@@ -138,26 +140,26 @@ public class DealObject {
     }
 
     public long getDateCreated() {
-        return dateCreated;
+        return createDate;
     }
 
     public void setDateCreated(long dateCreated) {
-        this.dateCreated = dateCreated;
+        this.createDate = dateCreated;
     }
 
     public long getDatePublished() {
-        return datePublished;
+        return publishDate;
     }
 
     public void setDatePublished(long datePublished) {
-        this.datePublished = datePublished;
+        this.publishDate = datePublished;
     }
 
     public long getDateExpire() {
-        return dateExpire;
+        return expiryDate;
     }
 
     public void setDateExpire(long dateExpire) {
-        this.dateExpire = dateExpire;
+        this.expiryDate = dateExpire;
     }
 }

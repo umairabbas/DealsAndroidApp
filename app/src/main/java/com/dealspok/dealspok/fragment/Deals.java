@@ -76,7 +76,22 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
-        spinner = (Spinner)view.findViewById(R.id.spinnerInput);
+        songRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrollStateChanged(RecyclerView view, int scrollState) {
+
+            }
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int topRowVerticalPosition =(recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+                }
+            }
+        );
+
+
+
+        spinner = (Spinner) view.findViewById(R.id.spinnerInput);
         spinner.setVisibility(View.VISIBLE);
         ArrayAdapter<String>adapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, paths);
@@ -268,7 +283,6 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
         }
 
         protected void onPostExecute(String file_url) {
-            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
@@ -279,6 +293,7 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
                     mAdapter.notifyDataSetChanged();
                 }
             });
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 }

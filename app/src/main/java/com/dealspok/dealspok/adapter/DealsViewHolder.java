@@ -33,7 +33,7 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
 //        this.dealCoverUrl = dealCoverUrl;
 //    }
 
-    public DealsViewHolder(View itemView, final List<DealObject> allDeals) {
+    public DealsViewHolder(View itemView, final List<DealObject> allDeals, final boolean canEdit) {
         super(itemView);
 
         dealTitle = (TextView)itemView.findViewById(R.id.deal_title);
@@ -50,6 +50,8 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
                 Context context = v.getContext();
                 Intent intent = new Intent(context, DealsDetail.class);
                 DealObject currDeal = allDeals.get(getAdapterPosition());
+                //Not added because activity also supports gutscheine
+                intent.putExtra("currDeal", currDeal);
                 intent.putExtra("title", currDeal.getDealTitle());
                 intent.putExtra("desc", currDeal.getDealDescription());
                 intent.putExtra("coverImg", currDeal.getDealImageUrl(context) + "&imagecount=");
@@ -61,6 +63,7 @@ public class DealsViewHolder extends RecyclerView.ViewHolder{
                 intent.putExtra("shopName", currDeal.getShop().getShopName());
                 intent.putExtra("shopCountry", currDeal.getShop().getShopCountry());
                 intent.putExtra("shopDetails", currDeal.getShop().getShopDetails());
+                intent.putExtra("deleteEnable", canEdit);
                 intent.putExtra(DealsDetail.EXTRA_POSITION, getAdapterPosition());
                 context.startActivity(intent);
             }

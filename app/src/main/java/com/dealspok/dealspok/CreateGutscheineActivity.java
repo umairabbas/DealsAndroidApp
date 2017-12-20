@@ -17,13 +17,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.dealspok.dealspok.Utils.DoubleNameValuePair;
-import com.dealspok.dealspok.Utils.IntNameValuePair;
 import com.dealspok.dealspok.Utils.JSONParser;
 import com.dealspok.dealspok.adapter.DealsAdapter;
+import com.dealspok.dealspok.adapter.GutscheineAdapter;
 import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.fragment.Deals;
-import com.dealspok.dealspok.fragment.Favourite;
+import com.dealspok.dealspok.entities.GutscheineObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -37,10 +35,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Umi on 10.12.2017.
+ * Created by Umi on 19.12.2017.
  */
 
-public class CreateDealsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class CreateGutscheineActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private Toolbar toolbar;
     private Context context;
@@ -48,11 +46,11 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
     private RecyclerView songRecyclerView;
     private String userId = "";
     private SwipeRefreshLayout swipeRefreshLayout;
-    private List<DealObject> deals;
-    private final String URL_Deals = "/mobile/api/deals/list-owner";
+    private List<GutscheineObject> deals;
+    private final String URL_Deals = "/mobile/api/gutschein/list-owner";
     private JSONArray dealArr = null;
     JSONParser jsonParser = new JSONParser();
-    private DealsAdapter mAdapter;
+    private GutscheineAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,7 +88,8 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent startActivityIntent = new Intent(CreateDealsActivity.this, AddDealActivity.class);
+                Intent startActivityIntent = new Intent(CreateGutscheineActivity.this, AddDealActivity.class);
+                startActivityIntent.putExtra("isGutscheine", true);
                 startActivityIntent.putExtra("userId", userId);
                 startActivity(startActivityIntent);
             }
@@ -102,7 +101,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                 new Runnable() {
                     @Override
                     public void run() {
-                        new CreateDealsActivity.LoadDeals().execute();
+                        new CreateGutscheineActivity.LoadDeals().execute();
                     }
                 }
         );
@@ -127,7 +126,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
     @Override
     public void onRefresh() {
         // swipe refresh is performed, fetch the messages again
-        new CreateDealsActivity.LoadDeals().execute();
+        new CreateGutscheineActivity.LoadDeals().execute();
     }
 
     class LoadDeals extends AsyncTask<String, String, String> {
@@ -141,8 +140,6 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-            params.add(new BasicNameValuePair("dealtype", "TYPE_DEALS"));
             params.add(new BasicNameValuePair("userid", userId));
 
             // getting JSON string from URL
@@ -159,7 +156,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                     for (int i = 0; i < dealArr.length(); i++) {
                         JSONObject c = dealArr.getJSONObject(i);
                         Gson gson = new GsonBuilder().create();
-                        DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
+                        GutscheineObject newDeal = gson.fromJson(c.toString(), GutscheineObject.class);
                         deals.add(newDeal);
                     }
                 } else {
@@ -180,7 +177,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                     /**
                      * Updating parsed JSON data into ListView
                      * */
-                    mAdapter = new DealsAdapter(activity, deals, false, true);
+                    mAdapter = new GutscheineAdapter(activity, deals, true);
                     songRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                 }

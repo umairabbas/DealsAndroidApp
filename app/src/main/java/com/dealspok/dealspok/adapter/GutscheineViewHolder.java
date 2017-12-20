@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,10 +55,10 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder {
     public TextView dealTitle;
     public TextView dealDescription;
     public ImageView dealCoverUrl;
-    public Button mitMachenBtn;
+    public ImageButton mitMachenBtn;
     private Activity context;
 
-    public GutscheineViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl, Button mitBtn) {
+    public GutscheineViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl, ImageButton mitBtn) {
         super(itemView);
         this.dealTitle = dealTitle;
         this.dealDescription = dealDescription;
@@ -66,13 +67,13 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public GutscheineViewHolder(View itemView, final List<GutscheineObject> allDeals) {
+    public GutscheineViewHolder(View itemView, final List<GutscheineObject> allDeals, final boolean canEdit) {
         super(itemView);
         context = (Activity) itemView.getContext();
         dealTitle = (TextView) itemView.findViewById(R.id.deal_title);
         dealDescription = (TextView) itemView.findViewById(R.id.deal_description);
         dealCoverUrl = (ImageView) itemView.findViewById(R.id.card_image_gut);
-        mitMachenBtn = (Button) itemView.findViewById(R.id.action_button);
+        mitMachenBtn = (ImageButton) itemView.findViewById(R.id.action_button);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +81,7 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, DealsDetail.class);
                 GutscheineObject currDeal = allDeals.get(getAdapterPosition());
+                intent.putExtra("currGut", currDeal);
                 intent.putExtra("title", currDeal.getGutscheinTitle());
                 intent.putExtra("desc", currDeal.getGutscheinDescription());
                 intent.putExtra("coverImg", currDeal.getGutscheinImageUrl(context) + "&imagecount=");
@@ -91,6 +93,8 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder {
                 intent.putExtra("shopName", currDeal.getShop().getShopName());
                 intent.putExtra("shopCountry", currDeal.getShop().getShopCountry());
                 intent.putExtra("shopDetails", currDeal.getShop().getShopDetails());
+                intent.putExtra("deleteEnable", canEdit);
+                intent.putExtra("isGutschein", true);
                 intent.putExtra(DealsDetail.EXTRA_POSITION, getAdapterPosition());
                 context.startActivity(intent);
             }

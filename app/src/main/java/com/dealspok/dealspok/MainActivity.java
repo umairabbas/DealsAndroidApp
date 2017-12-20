@@ -138,6 +138,18 @@ public class MainActivity extends AppCompatActivity {
                         shouldRefresh = true;
                     }
                 }
+                else if (id == R.id.meine_gutscheien) {
+                    SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                    String restoredText = prefs.getString("userObject", null);
+                    if (restoredText != null) {
+                        Intent startActivityIntent = new Intent(MainActivity.this, CreateGutscheineActivity.class);
+                        startActivity(startActivityIntent);
+                    } else {
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                        shouldRefresh = true;
+                    }
+                }
                 else if (id == R.id.anzeigen_erstellen) {
                     SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
                     String restoredText = prefs.getString("userObject", null);

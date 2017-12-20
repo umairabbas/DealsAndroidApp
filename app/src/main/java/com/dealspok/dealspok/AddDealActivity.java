@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -113,6 +114,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int REQUEST_CODE_CHOOSE = 1234;
     private static final String[] dealTypes = {"Deals", "Online Deals"};
+    private Boolean isGutscheine = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,6 +122,13 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         setContentView(R.layout.add_deals_activity);
         context = this;
         activity = this;
+
+        if(getIntent().hasExtra("isGutscheine")) {
+            isGutscheine = getIntent().getBooleanExtra("isGutscheine", false);
+        }
+        if(getIntent().hasExtra("userId")) {
+            userId = getIntent().getStringExtra("userId");
+        }
 
         //CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         expiry = (EditText) findViewById(R.id.input_expiry);
@@ -136,6 +145,13 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         inputDPrice = (EditText) findViewById(R.id.input_dprice);
         inputUrl = (EditText) findViewById(R.id.input_url);
         attachImg = (ImageView) findViewById(R.id.ivAttachment);
+        LinearLayout dealType = (LinearLayout)findViewById(R.id.deal_type_layout);
+
+        if(isGutscheine){
+            inputOPrice.setVisibility(View.GONE);
+            dealType.setVisibility(View.GONE);
+            SERVER_URL = "https://www.regionaldeals.de/mobile/api/gutschein/upload-gutschein";
+        }
 
         attachImg.setOnClickListener(this);
         bUpload.setOnClickListener(this);
@@ -157,18 +173,6 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                 dp.show();
             }
         });
-
-        SharedPreferences prefs = this.getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
-        String restoredUser = prefs.getString("userObject", null);
-        try {
-            if (restoredUser != null) {
-                JSONObject obj = new JSONObject(restoredUser);
-                userId = obj.getString("userId");
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Throwable t) {
-        }
 
         //Adapter Deals
         ArrayAdapter<String>adapterDeals = new ArrayAdapter<String>(this,
@@ -464,23 +468,34 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
             client.addFormPartInt("userid", userIdInt);
             client.addFormPartInt("shopid", shopId);
             client.addFormPart("cat", catShortName);
-            client.addFormPart("dealtitle", inputTitle.getText().toString());
-            client.addFormPart("dealdesc", inputDesc.getText().toString());
             client.addFormPartLong("createdate", System.currentTimeMillis());
             client.addFormPartLong("publishdate", System.currentTimeMillis());
             client.addFormPartLong("expirydate", calendarDate.getTimeInMillis());
             //60 is gor DE
             client.addFormPartInt("tz", 60);
-            client.addFormPartDouble("origprice", Double.valueOf(inputOPrice.getText().toString()));
-            client.addFormPartDouble("dealprice", Double.valueOf(inputDPrice.getText().toString()));
             client.addFormPart("currency", "EUR");
-            client.addFormPart("dealtype", dealTypeValue);
-            client.addFormPart("dealurl", inputUrl.getText().toString());
+
+            if(isGutscheine){
+                client.addFormPart("gutscheintitle", inputTitle.getText().toString());
+                client.addFormPart("gutscheindesc", inputDesc.getText().toString());
+                client.addFormPartDouble("gutscheinprice", Double.valueOf(inputDPrice.getText().toString()));
+            } else {
+                client.addFormPart("dealtitle", inputTitle.getText().toString());
+                client.addFormPart("dealdesc", inputDesc.getText().toString());
+                client.addFormPartDouble("origprice", Double.valueOf(inputOPrice.getText().toString()));
+                client.addFormPartDouble("dealprice", Double.valueOf(inputDPrice.getText().toString()));
+                client.addFormPart("dealtype", dealTypeValue);
+                client.addFormPart("dealurl", inputUrl.getText().toString());
+            }
 
             for (int j = 0; j < selectedFilePathList.size(); j++) {
                 byte[] bData = readBytesFromFile(selectedFilePathList.get(j));
                 int count = j + 1;
-                client.addFilePart("dealimg_" + Integer.toString(count), fileName.get(j), bData);
+                if(isGutscheine) {
+                    client.addFilePart("gutscheinimg_" + Integer.toString(count), fileName.get(j), bData);
+                } else {
+                    client.addFilePart("dealimg_" + Integer.toString(count), fileName.get(j), bData);
+                }
             }
 
             client.finishMultipart();
@@ -488,7 +503,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
             resultData.toString();
             JSONObject jRes = new JSONObject(resultData);
             final String res = jRes.getString("message");
-            if(res=="DEALS_UPLOAD_OK"){
+            if(res.equals("DEALS_UPLOAD_OK") || res.equals("GUTSCHEIN_UPLOAD_OK")){
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

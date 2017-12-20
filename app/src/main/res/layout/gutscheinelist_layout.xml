@@ -43,15 +43,16 @@
             android:text="deal_description"
             style="@style/DealsDescText" />
 
-        <Button
+
+        <ImageButton
             android:id="@+id/action_button"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/deal_description"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            style="?android:attr/borderlessButtonStyle"
-            android:textColor="@color/colorPrimaryDark"
-            android:text="MITMACHEN" />
+            android:layout_below="@+id/deal_description"
+            android:src="@drawable/ic_shopping_basket_black_24dp" />
 
     </RelativeLayout>
 

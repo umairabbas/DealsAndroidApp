@@ -53,6 +53,12 @@
     <string name="SHOPS_UPLOAD_ERR">SHOPS_UPLOAD_ERR</string>
     <string name="SHOPS_UPLOAD_OK">SHOPS_UPLOAD_OK</string>
 
+    <string name="DEALS_REMOVE_OK">DEALS_REMOVE_OK</string>
+    <string name="DEALS_REMOVE_ERR">DEALS_REMOVE_ERR</string>
+
+    <string name="GUTSCHEIN_REMOVE_OK">GUTSCHEIN_REMOVE_OK</string>
+    <string name="GUTSCHEIN_REMOVE_ERR">GUTSCHEIN_REMOVE_ERR</string>
+
     <string name="SHOPS_REMOVE_OK">SHOPS_REMOVE_OK</string>
     <string name="SHOPS_REMOVE_ERR">SHOPS_REMOVE_ERR</string>
 
@@ -73,8 +79,6 @@
     <string name="BraintreeFragment_initialized">BraintreeFragment is ready to use</string>
     <string name="issues_with_authorization">There was an issue with your authorization string</string>
     <string name="token_failed">Fail to retrieve client token </string>
-
-
 
 
 </resources>

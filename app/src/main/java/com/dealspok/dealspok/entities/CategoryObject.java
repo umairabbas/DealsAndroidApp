@@ -1,10 +1,12 @@
 package com.dealspok.dealspok.entities;
 
+import java.io.Serializable;
+
 /**
  * Created by Umi on 24.09.2017.
  */
 
-public class CategoryObject {
+public class CategoryObject implements Serializable {
 
     private String catName;
     private String catShortName;
