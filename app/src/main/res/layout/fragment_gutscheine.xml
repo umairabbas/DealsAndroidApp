@@ -49,20 +49,20 @@
             <!--</LinearLayout>-->
         <!--</RelativeLayout>-->
 
-    <Spinner
-        android:id="@+id/spinnerInput"
-        android:layout_width="120dp"
-        android:visibility="gone"
-        android:padding="@dimen/_8sdp"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dropdown" />
+    <!--<Spinner-->
+        <!--android:id="@+id/spinnerInput"-->
+        <!--android:layout_width="120dp"-->
+        <!--android:visibility="gone"-->
+        <!--android:padding="@dimen/_8sdp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:spinnerMode="dropdown" />-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/song_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/md_keylines"
+        android:paddingBottom="50dp"
         android:paddingTop="@dimen/md_keylines"
         android:scrollbars="vertical"
 />

@@ -21,8 +21,8 @@
 
     <dimen name="grid_expected_size">120dp</dimen>
 
-        <dimen name="card_height">300dp</dimen>
-        <dimen name="card_height_gut">300dp</dimen>
+        <dimen name="card_height">220dp</dimen>
+        <dimen name="card_height_gut">220dp</dimen>
         <dimen name="md_keylines">8dp</dimen>
         <dimen name="tile_padding">8dp</dimen>
         <dimen name="tile_height">160dp</dimen>
@@ -34,7 +34,7 @@
         <dimen name="cards_button_width">48dp</dimen>
         <dimen name="cards_button_height">48dp</dimen>
         <dimen name="article_subheading">16sp</dimen>
-        <dimen name="card_image_height">200dp</dimen>
+        <dimen name="card_image_height">220dp</dimen>
         <dimen name="list_body">14sp</dimen>
         <dimen name="navheader_height">222dp</dimen>
 

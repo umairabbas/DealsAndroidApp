@@ -1,8 +1,10 @@
 package com.dealspok.dealspok.fragment;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -17,7 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dealspok.dealspok.MainActivity;
 import com.dealspok.dealspok.R;
@@ -47,7 +52,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Umi on 28.08.2017.
  */
 
-public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private List<GutscheineObject> deals;
     JSONParser jsonParser = new JSONParser();
@@ -60,10 +65,29 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
     private Double locationLat = 50.781203;
     private Double locationLng = 6.078068;
     private int maxDistance = 5;
-    private Spinner spinner;
-    private static final String[] paths = {"5 KM", "10 KM", "50 KM", "100 KM", "500 KM", "ALL"};
+    //private Spinner spinner;
+    //private static final String[] paths = {"5 KM", "10 KM", "50 KM", "100 KM", "500 KM", "ALL"};
     private String userId = "";
     private SwipeRefreshLayout swipeRefreshLayout;
+    private SeekBar seekControl2 = null;
+    private MyReceiver myReceiver;
+    private IntentFilter filter;
+
+    public class MyReceiver extends BroadcastReceiver {
+        public MyReceiver() {
+        }
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            maxDistance = intent.getIntExtra("distance", maxDistance);
+            new Gutscheine.UpdateDeals().execute();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        context.unregisterReceiver(myReceiver);
+        super.onPause();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,15 +99,18 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
-        spinner = (Spinner)view.findViewById(R.id.spinnerInput);
-        spinner.setVisibility(View.VISIBLE);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, paths);
+        filter = new IntentFilter("BroadcastReceiver");
+        myReceiver = new MyReceiver();
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        isSpinnerInitial = true;
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        //spinner = (Spinner)view.findViewById(R.id.spinnerInput);
+        //spinner.setVisibility(View.VISIBLE);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+//                android.R.layout.simple_spinner_item, paths);
+//
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        isSpinnerInitial = true;
+//        spinner.setAdapter(adapter);
+//        spinner.setOnItemSelectedListener(this);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
@@ -127,50 +154,51 @@ public class Gutscheine extends Fragment implements AdapterView.OnItemSelectedLi
         return view;
     }
 
-    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-
-        if(isSpinnerInitial)
-        {
-            isSpinnerInitial = false;
-        }
-        else  {
-            switch (position) {
-                case 0:
-                    maxDistance = 5;
-                    new Gutscheine.UpdateDeals().execute();
-                    break;
-                case 1:
-                    maxDistance = 10;
-                    new Gutscheine.UpdateDeals().execute();
-                    break;
-                case 2:
-                    maxDistance = 50;
-                    new Gutscheine.UpdateDeals().execute();
-                    break;
-                case 3:
-                    maxDistance = 100;
-                    new Gutscheine.UpdateDeals().execute();
-                    break;
-                case 4:
-                    maxDistance = 500;
-                    new Gutscheine.UpdateDeals().execute();
-                    break;
-                case 5:
-                    maxDistance = 9999;
-                    new Gutscheine.UpdateDeals().execute();
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
+//    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+//
+//        if(isSpinnerInitial)
+//        {
+//            isSpinnerInitial = false;
+//        }
+//        else  {
+//            switch (position) {
+//                case 0:
+//                    maxDistance = 5;
+//                    new Gutscheine.UpdateDeals().execute();
+//                    break;
+//                case 1:
+//                    maxDistance = 10;
+//                    new Gutscheine.UpdateDeals().execute();
+//                    break;
+//                case 2:
+//                    maxDistance = 50;
+//                    new Gutscheine.UpdateDeals().execute();
+//                    break;
+//                case 3:
+//                    maxDistance = 100;
+//                    new Gutscheine.UpdateDeals().execute();
+//                    break;
+//                case 4:
+//                    maxDistance = 500;
+//                    new Gutscheine.UpdateDeals().execute();
+//                    break;
+//                case 5:
+//                    maxDistance = 9999;
+//                    new Gutscheine.UpdateDeals().execute();
+//                    break;
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//    }
 
     @Override
     public void onResume() {
         super.onResume();
+        context.registerReceiver(myReceiver, filter);
         if(((MainActivity) this.getActivity()).getShouldRefresh()) {
             SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
             String restoredUser = prefs.getString("userObject", null);

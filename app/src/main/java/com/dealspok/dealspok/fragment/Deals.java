@@ -1,7 +1,10 @@
 package com.dealspok.dealspok.fragment;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dealspok.dealspok.MainActivity;
 import com.dealspok.dealspok.R;
@@ -47,7 +51,8 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Umi on 28.08.2017.
  */
 
-public class Deals extends Fragment implements AdapterView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+public class Deals extends Fragment implements //AdapterView.OnItemSelectedListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     private List<DealObject> deals;
     JSONParser jsonParser = new JSONParser();
@@ -61,10 +66,23 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
     private Double locationLat = 50.781203;
     private Double locationLng = 6.078068;
     private int maxDistance = 5;
-    private Spinner spinner;
-    private static final String[] paths = {"5 KM", "10 KM", "50 KM", "100 KM", "500 KM", "ALL"};
+    //private Spinner spinner;
+    //private static final String[] paths = {"5 KM", "10 KM", "50 KM", "100 KM", "500 KM", "ALL"};
     private SwipeRefreshLayout swipeRefreshLayout;
     private String userId = "";
+    private MyReceiver myReceiver;
+    private IntentFilter filter;
+    //private SeekBar seekControl = null;
+
+    public class MyReceiver extends BroadcastReceiver {
+        public MyReceiver() {
+        }
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            maxDistance = intent.getIntExtra("distance", maxDistance);
+            new Deals.LoadDeals().execute();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,17 +107,15 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
             }
         );
 
-
-
-        spinner = (Spinner) view.findViewById(R.id.spinnerInput);
-        spinner.setVisibility(View.VISIBLE);
-        ArrayAdapter<String>adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, paths);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        isSpinnerInitial = true;
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+//        spinner = (Spinner) view.findViewById(R.id.spinnerInput);
+//        spinner.setVisibility(View.VISIBLE);
+//        ArrayAdapter<String>adapter = new ArrayAdapter<String>(getContext(),
+//                android.R.layout.simple_spinner_item, paths);
+//
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        isSpinnerInitial = true;
+//        spinner.setAdapter(adapter);
+//        spinner.setOnItemSelectedListener(this);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
@@ -125,6 +141,9 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        filter = new IntentFilter("BroadcastReceiver");
+        myReceiver = new MyReceiver();
 
 //        view.findViewById(R.id.distanceInput).setVisibility(View.VISIBLE);
 //        SeekBar seek = (SeekBar) view.findViewById(R.id.select_distance);
@@ -165,13 +184,19 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
                 }
         );
 
-
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        context.unregisterReceiver(myReceiver);
+        super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        context.registerReceiver(myReceiver, filter);
         if(((MainActivity) this.getActivity()).getShouldRefresh()) {
             SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
             String restoredUser = prefs.getString("userObject", null);
@@ -195,46 +220,46 @@ public class Deals extends Fragment implements AdapterView.OnItemSelectedListene
         new LoadDeals().execute();
     }
 
-    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-
-        if(isSpinnerInitial)
-        {
-            isSpinnerInitial = false;
-        }
-        else  {
-            switch (position) {
-                case 0:
-                    maxDistance = 5;
-                    new LoadDeals().execute();
-                    break;
-                case 1:
-                    maxDistance = 10;
-                    new LoadDeals().execute();
-                    break;
-                case 2:
-                    maxDistance = 50;
-                    new LoadDeals().execute();
-                    break;
-                case 3:
-                    maxDistance = 100;
-                    new LoadDeals().execute();
-                    break;
-                case 4:
-                    maxDistance = 500;
-                    new LoadDeals().execute();
-                    break;
-                case 5:
-                    maxDistance = 9999;
-                    new LoadDeals().execute();
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
+//    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+//
+//        if(isSpinnerInitial)
+//        {
+//            isSpinnerInitial = false;
+//        }
+//        else  {
+//            switch (position) {
+//                case 0:
+//                    maxDistance = 5;
+//                    new LoadDeals().execute();
+//                    break;
+//                case 1:
+//                    maxDistance = 10;
+//                    new LoadDeals().execute();
+//                    break;
+//                case 2:
+//                    maxDistance = 50;
+//                    new LoadDeals().execute();
+//                    break;
+//                case 3:
+//                    maxDistance = 100;
+//                    new LoadDeals().execute();
+//                    break;
+//                case 4:
+//                    maxDistance = 500;
+//                    new LoadDeals().execute();
+//                    break;
+//                case 5:
+//                    maxDistance = 9999;
+//                    new LoadDeals().execute();
+//                    break;
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//    }
 
     /**
      * Background Async Task to Load all Albums by making http request

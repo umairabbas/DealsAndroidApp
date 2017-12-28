@@ -17,6 +17,17 @@
     <color name="colorGreen">#008744</color>
     <color name="colorLightGrey">#777777</color>
 
+    <color name="pantone0">#523551</color>
+    <color name="pantone1">#6e425d</color>
+    <color name="pantone2">#745785</color>
+    <color name="pantone3">#b16476</color>
+    <color name="pantone4">#ee7f4a</color>
+    <color name="pantone5">#ec6e60</color>
+    <color name="pantone6">#f4a465</color>
+    <color name="pantone7">#f9bd5d</color>
+    <color name="pantone8">#24857e</color>
+    <color name="pantone9">#37b29d</color>
+
 
     <!--RANDOM COLORS FOR LISTVIEW BACKGROUND-->
     <item name="blue" type="color">#FF33B5E5</item>

@@ -40,7 +40,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Umi on 28.08.2017.
  */
 
-public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
+public class DealsHeute  extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private List<DealObject> deals;
     JSONParser jsonParser = new JSONParser();
@@ -68,15 +68,15 @@ public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedL
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
-        spinner = (Spinner)view.findViewById(R.id.spinnerInput);
-        spinner.setVisibility(View.VISIBLE);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, paths);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        isSpinnerInitial = true;
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+//        spinner = (Spinner)view.findViewById(R.id.spinnerInput);
+//        spinner.setVisibility(View.VISIBLE);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+//                android.R.layout.simple_spinner_item, paths);
+//
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        isSpinnerInitial = true;
+//        spinner.setAdapter(adapter);
+//        spinner.setOnItemSelectedListener(this);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
@@ -121,46 +121,46 @@ public class DealsHeute  extends Fragment implements AdapterView.OnItemSelectedL
         new UpdateDeals().execute();
     }
 
-    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-
-        if(isSpinnerInitial)
-        {
-            isSpinnerInitial = false;
-        }
-        else  {
-            switch (position) {
-                case 0:
-                    maxDistance = 1;
-                    new DealsHeute.UpdateDeals().execute();
-                    break;
-                case 1:
-                    maxDistance = 2;
-                    new DealsHeute.UpdateDeals().execute();
-                    break;
-                case 2:
-                    maxDistance = 5;
-                    new DealsHeute.UpdateDeals().execute();
-                    break;
-                case 3:
-                    maxDistance = 10;
-                    new DealsHeute.UpdateDeals().execute();
-                    break;
-                case 4:
-                    maxDistance = 50;
-                    new DealsHeute.UpdateDeals().execute();
-                    break;
-                case 5:
-                    maxDistance = 100;
-                    new DealsHeute.UpdateDeals().execute();
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
+//    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+//
+//        if(isSpinnerInitial)
+//        {
+//            isSpinnerInitial = false;
+//        }
+//        else  {
+//            switch (position) {
+//                case 0:
+//                    maxDistance = 1;
+//                    new DealsHeute.UpdateDeals().execute();
+//                    break;
+//                case 1:
+//                    maxDistance = 2;
+//                    new DealsHeute.UpdateDeals().execute();
+//                    break;
+//                case 2:
+//                    maxDistance = 5;
+//                    new DealsHeute.UpdateDeals().execute();
+//                    break;
+//                case 3:
+//                    maxDistance = 10;
+//                    new DealsHeute.UpdateDeals().execute();
+//                    break;
+//                case 4:
+//                    maxDistance = 50;
+//                    new DealsHeute.UpdateDeals().execute();
+//                    break;
+//                case 5:
+//                    maxDistance = 100;
+//                    new DealsHeute.UpdateDeals().execute();
+//                    break;
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//    }
 
     /**
      * Background Async Task to Load all Albums by making http request

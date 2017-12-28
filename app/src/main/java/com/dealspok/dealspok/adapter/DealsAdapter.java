@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.dealspok.dealspok.LoginActivity;
 import com.dealspok.dealspok.R;
+import com.dealspok.dealspok.Utils.ColorUtility;
 import com.dealspok.dealspok.Utils.DoubleNameValuePair;
 import com.dealspok.dealspok.Utils.IntNameValuePair;
 import com.dealspok.dealspok.Utils.JSONParser;
@@ -95,7 +96,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
         holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + " €");
 //        gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         String imgUrl = deals.getDealImageUrl(context) + "&imagecount=1&res=470x320";
-        Picasso.with(context).load(imgUrl).placeholder(R.drawable.placeholder_2_300x200).into(holder.dealCoverUrl);
+        Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl);
 
         if(!skipFav) {
             if (deals.getFavourite() == null) {
