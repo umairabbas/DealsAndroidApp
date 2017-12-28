@@ -21,7 +21,8 @@
 
     <dimen name="grid_expected_size">120dp</dimen>
 
-        <dimen name="card_height">314dp</dimen>
+        <dimen name="card_height">300dp</dimen>
+        <dimen name="card_height_gut">300dp</dimen>
         <dimen name="md_keylines">8dp</dimen>
         <dimen name="tile_padding">8dp</dimen>
         <dimen name="tile_height">160dp</dimen>

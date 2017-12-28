@@ -65,7 +65,7 @@
         android:paddingBottom="@dimen/md_keylines"
         android:paddingTop="@dimen/md_keylines"
         android:scrollbars="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+/>
 </LinearLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>

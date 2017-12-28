@@ -12,12 +12,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabMode="scrollable"
-        app:tabTextColor="@color/colorLightWhite"
+        app:tabIndicatorHeight="0dp"
+        app:tabTextColor="@color/colorPrimaryLight"
         app:tabSelectedTextColor="@color/colorWhite"
         android:background="@color/colorPrimary"/>
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+        </android.support.v4.view.ViewPager>
+s
+        <!--<SeekBar-->
+            <!--android:id="@+id/fontSeekBar"-->
+            <!--android:layout_width="320dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_marginBottom="@dimen/_20sdp"-->
+            <!--android:indeterminate="false"-->
+            <!--android:maxHeight="4dip"-->
+            <!--android:minHeight="4dip"/>-->
+    </RelativeLayout>
+
 </LinearLayout>
