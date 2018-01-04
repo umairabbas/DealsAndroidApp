@@ -71,23 +71,23 @@
                 android:padding="12dp"
                 android:background="@drawable/button_round_trans"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/_18sdp"
-                android:text="CLEVER SPAR TARIF"/>
+                android:textSize="@dimen/_18sdp"/>
+                <!--android:text="CLEVER SPAR TARIF"/>-->
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tv1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/_13sdp"
-                android:text=
-                    " + 49,99 pro Monat\n
-+ 24 Monate Laufzeit\n
-+ Kontenloser Support\n
-+ 4 Anzeigen pro Monat\n
-+ Eintrag unter Brauchen\n
-+ Bis zu 5 Fotos pro Anzeige hochladen\n
-+ Offunggzeiten, Telefonummer,\n    Location, Addresse, Webseite,\n    Facebook/Social media verlinkung" />
+                android:textSize="@dimen/_13sdp" />
+                <!--android:text=-->
+                    <!--" + 49,99 pro Monat\n-->
+<!--+ 24 Monate Laufzeit\n-->
+<!--+ Kontenloser Support\n-->
+<!--+ 4 Anzeigen pro Monat\n-->
+<!--+ Eintrag unter Brauchen\n-->
+<!--+ Bis zu 5 Fotos pro Anzeige hochladen\n-->
+<!--+ Offunggzeiten, Telefonummer,\n    Location, Addresse, Webseite,\n    Facebook/Social media verlinkung" />-->
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_2"
@@ -98,25 +98,25 @@
                 android:padding="12dp"
                 android:background="@drawable/button_round_trans"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/_18sdp"
-                android:text="SMALL TARIF"/>
+                android:textSize="@dimen/_18sdp"/>
+                <!--android:text="SMALL TARIF"/>-->
 
             <TextView
-                android:id="@+id/textViewSmall"
+                android:id="@+id/tv2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/_13sdp"
-                android:text=
-                    " + 69,99 pro Monat\n
-+ 12 Monat Laufzeit\n
-+ Kontenloser Support\n
-+ 4 Anzeigen pro Monat\n
-+ Eintrag unter Brauchen\n
-+ Bis zu 5 Fotos pro Anzeige hochladen\n
-+ Offunggzeiten, Telefonummer,\n    Location, Addresse, Webseite,\n    Facebook/Social media verlinkung\n
-+ Beachreibung ihre Gewerbetreibende\n
-+ Proffessionalle Darstellung" />
+                android:textSize="@dimen/_13sdp"/>
+                <!--android:text=-->
+                    <!--" + 69,99 pro Monat\n-->
+<!--+ 12 Monat Laufzeit\n-->
+<!--+ Kontenloser Support\n-->
+<!--+ 4 Anzeigen pro Monat\n-->
+<!--+ Eintrag unter Brauchen\n-->
+<!--+ Bis zu 5 Fotos pro Anzeige hochladen\n-->
+<!--+ Offunggzeiten, Telefonummer,\n    Location, Addresse, Webseite,\n    Facebook/Social media verlinkung\n-->
+<!--+ Beachreibung ihre Gewerbetreibende\n-->
+<!--+ Proffessionalle Darstellung" />-->
 
             <!--<TextView android:id="@+id/link_signup"-->
                 <!--android:layout_width="fill_parent"-->
