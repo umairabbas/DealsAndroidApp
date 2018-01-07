@@ -1,6 +1,5 @@
-package com.dealspok.dealspok;
+package com.regionaldeals.de;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,16 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.dealspok.dealspok.Utils.BoolNameValuePair;
-import com.dealspok.dealspok.Utils.JSONParser;
-import com.dealspok.dealspok.adapter.DealsAdapter;
-import com.dealspok.dealspok.adapter.ShopAdapter;
-import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.entities.Shop;
-import com.dealspok.dealspok.fragment.Gutscheine;
+import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.adapter.ShopAdapter;
+import com.regionaldeals.de.entities.Shop;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

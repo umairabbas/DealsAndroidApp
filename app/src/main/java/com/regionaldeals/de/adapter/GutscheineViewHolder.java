@@ -1,53 +1,20 @@
-package com.dealspok.dealspok.adapter;
+package com.regionaldeals.de.adapter;
 
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.net.http.HttpsConnection;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.dealspok.dealspok.DealsDetail;
-import com.dealspok.dealspok.GooglePlacesAutocompleteActivity;
-import com.dealspok.dealspok.LoginActivity;
-import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.SplashActivity;
-import com.dealspok.dealspok.entities.GutscheineObject;
-import com.dealspok.dealspok.fragment.Gutscheine;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.regionaldeals.de.DealsDetail;
+import com.regionaldeals.de.R;
+import com.regionaldeals.de.entities.GutscheineObject;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
 
 
 public class GutscheineViewHolder extends RecyclerView.ViewHolder {

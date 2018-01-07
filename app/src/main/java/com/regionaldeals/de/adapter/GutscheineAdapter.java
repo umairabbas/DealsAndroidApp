@@ -1,11 +1,9 @@
-package com.dealspok.dealspok.adapter;
+package com.regionaldeals.de.adapter;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
@@ -14,21 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.dealspok.dealspok.LoginActivity;
-import com.dealspok.dealspok.MainActivity;
-import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.entities.GutscheineObject;
-import com.dealspok.dealspok.fragment.Gutscheine;
+import com.regionaldeals.de.LoginActivity;
+import com.regionaldeals.de.MainActivity;
+import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.HttpClient;
+import com.regionaldeals.de.entities.GutscheineObject;
+import com.regionaldeals.de.fragment.Gutscheine;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
-import java.net.HttpURLConnection;
 import java.util.List;
-import java.util.Random;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -136,7 +131,7 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
 
             try {
 
-                com.dealspok.dealspok.Utils.HttpClient client = new com.dealspok.dealspok.Utils.HttpClient(url);
+                HttpClient client = new HttpClient(url);
                 client.connectForMultipart();
                 client.addFormPart("gutscheinid", Integer.toString(gutId));
                 client.addFormPart("userid", userId);

@@ -1,8 +1,4 @@
-package com.dealspok.dealspok.entities;
-
-import android.content.Context;
-
-import com.dealspok.dealspok.R;
+package com.regionaldeals.de.entities;
 
 import java.io.Serializable;
 

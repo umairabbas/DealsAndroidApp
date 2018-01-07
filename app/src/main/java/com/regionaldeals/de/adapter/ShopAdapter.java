@@ -1,4 +1,4 @@
-package com.dealspok.dealspok.adapter;
+package com.regionaldeals.de.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +10,9 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.dealspok.dealspok.AddShopActivity;
-import com.dealspok.dealspok.DealsDetail;
-import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.entities.Shop;
+import com.regionaldeals.de.AddShopActivity;
+import com.regionaldeals.de.R;
+import com.regionaldeals.de.entities.Shop;
 
 import java.util.List;
 

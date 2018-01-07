@@ -1,4 +1,4 @@
-package com.dealspok.dealspok.adapter;
+package com.regionaldeals.de.adapter;
 
 /**
  * Created by Umi on 28.08.2017.
@@ -8,12 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.dealspok.dealspok.fragment.Deals;
-import com.dealspok.dealspok.fragment.DealsHeute;
-import com.dealspok.dealspok.fragment.Favourite;
-import com.dealspok.dealspok.fragment.Gutscheine;
-import com.dealspok.dealspok.fragment.OnlineDeals;
-import com.dealspok.dealspok.fragment.Shopping;
+import com.regionaldeals.de.fragment.Deals;
+import com.regionaldeals.de.fragment.Favourite;
+import com.regionaldeals.de.fragment.Gutscheine;
+import com.regionaldeals.de.fragment.OnlineDeals;
+import com.regionaldeals.de.fragment.Shopping;
 
 public class CustomFragmentPageAdapter extends FragmentPagerAdapter{
     private static final String TAG = CustomFragmentPageAdapter.class.getSimpleName();

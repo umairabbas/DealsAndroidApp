@@ -1,11 +1,10 @@
-package com.dealspok.dealspok;
+package com.regionaldeals.de;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -23,8 +22,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dealspok.dealspok.adapter.GutscheineAdapter;
-import com.dealspok.dealspok.fragment.Main;
+import com.regionaldeals.de.fragment.Main;
 
 import org.json.JSONException;
 import org.json.JSONObject;

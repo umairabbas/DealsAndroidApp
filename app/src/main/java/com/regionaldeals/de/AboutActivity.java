@@ -1,4 +1,4 @@
-package com.dealspok.dealspok;
+package com.regionaldeals.de;
 
 /**
  * Created by Umi on 15.11.2017.
@@ -34,16 +34,16 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.aboutus_main);
+        setContentView(com.regionaldeals.de.R.layout.aboutus_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbarAbout);
+        toolbar = (Toolbar) findViewById(com.regionaldeals.de.R.id.toolbarAbout);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         activity = this;
 
-        LinearLayout ly = (LinearLayout) findViewById(R.id.linear_about_us);
+        LinearLayout ly = (LinearLayout) findViewById(com.regionaldeals.de.R.id.linear_about_us);
 
         simulateDayNight(/* DAY */ 0);
         Element adsElement = new Element();

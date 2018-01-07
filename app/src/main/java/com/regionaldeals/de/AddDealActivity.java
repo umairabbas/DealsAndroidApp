@@ -1,4 +1,4 @@
-package com.dealspok.dealspok;
+package com.regionaldeals.de;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -7,7 +7,6 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -15,7 +14,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -38,10 +36,10 @@ import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.dealspok.dealspok.Utils.RealPathUtil;
-import com.dealspok.dealspok.entities.CategoryObject;
-import com.dealspok.dealspok.entities.Shop;
-import com.dealspok.dealspok.fragment.Deals;
+import com.regionaldeals.de.Utils.RealPathUtil;
+import com.regionaldeals.de.Utils.HttpClient;
+import com.regionaldeals.de.entities.CategoryObject;
+import com.regionaldeals.de.entities.Shop;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
@@ -462,7 +460,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         }
 
         try {
-            com.dealspok.dealspok.Utils.HttpClient client = new com.dealspok.dealspok.Utils.HttpClient(SERVER_URL);
+            HttpClient client = new HttpClient(SERVER_URL);
             client.connectForMultipart();
             int userIdInt = Integer.valueOf(userId);
             client.addFormPartInt("userid", userIdInt);

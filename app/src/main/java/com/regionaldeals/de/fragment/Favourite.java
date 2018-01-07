@@ -1,4 +1,4 @@
-package com.dealspok.dealspok.fragment;
+package com.regionaldeals.de.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,14 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
-import com.dealspok.dealspok.MainActivity;
-import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.Utils.JSONParser;
-import com.dealspok.dealspok.adapter.DealsAdapter;
-import com.dealspok.dealspok.entities.DealObject;
+import com.regionaldeals.de.MainActivity;
+import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.adapter.DealsAdapter;
+import com.regionaldeals.de.entities.DealObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

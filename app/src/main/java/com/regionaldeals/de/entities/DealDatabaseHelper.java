@@ -1,4 +1,4 @@
-package com.dealspok.dealspok.entities;
+package com.regionaldeals.de.entities;
 
 import android.content.ContentValues;
 import android.content.Context;

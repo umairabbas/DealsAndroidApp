@@ -1,4 +1,4 @@
-package com.dealspok.dealspok;
+package com.regionaldeals.de;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,11 +17,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.dealspok.dealspok.Utils.JSONParser;
-import com.dealspok.dealspok.adapter.DealsAdapter;
-import com.dealspok.dealspok.adapter.GutscheineAdapter;
-import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.entities.GutscheineObject;
+import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.adapter.GutscheineAdapter;
+import com.regionaldeals.de.entities.GutscheineObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

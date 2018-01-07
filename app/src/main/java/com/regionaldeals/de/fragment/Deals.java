@@ -1,4 +1,4 @@
-package com.dealspok.dealspok.fragment;
+package com.regionaldeals.de.fragment;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -16,22 +16,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.dealspok.dealspok.MainActivity;
-import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.Utils.DoubleNameValuePair;
-import com.dealspok.dealspok.Utils.IntNameValuePair;
-import com.dealspok.dealspok.Utils.JSONParser;
-import com.dealspok.dealspok.adapter.DealsAdapter;
-import com.dealspok.dealspok.entities.DealObject;
+import com.regionaldeals.de.MainActivity;
+import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.DoubleNameValuePair;
+import com.regionaldeals.de.Utils.IntNameValuePair;
+import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.adapter.DealsAdapter;
+import com.regionaldeals.de.entities.DealObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -43,7 +35,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static android.content.Context.MODE_PRIVATE;
 

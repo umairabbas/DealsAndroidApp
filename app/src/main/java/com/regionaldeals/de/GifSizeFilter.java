@@ -1,4 +1,4 @@
-package com.dealspok.dealspok;
+package com.regionaldeals.de;
 
 /**
  * Created by Umi on 12.12.2017.

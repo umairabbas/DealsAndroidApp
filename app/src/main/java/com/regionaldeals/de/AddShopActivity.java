@@ -1,4 +1,4 @@
-package com.dealspok.dealspok;
+package com.regionaldeals.de;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-import com.dealspok.dealspok.entities.Shop;
+import com.regionaldeals.de.entities.Shop;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -33,7 +33,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,21 +47,21 @@ import butterknife.ButterKnife;
 
 public class AddShopActivity extends AppCompatActivity {
 
-    @BindView(R.id.input_name)
+    @BindView(com.regionaldeals.de.R.id.input_name)
     EditText _nameText;
-    @BindView(R.id.input_details)
+    @BindView(com.regionaldeals.de.R.id.input_details)
     EditText _detailText;
-    @BindView(R.id.input_contact)
+    @BindView(com.regionaldeals.de.R.id.input_contact)
     EditText _contactText;
 //    @BindView(R.id.input_address)
 //    EditText _addressText;
-    @BindView(R.id.input_tax)
+    @BindView(com.regionaldeals.de.R.id.input_tax)
     EditText _taxText;
-    @BindView(R.id.btn_shop_submit)
+    @BindView(com.regionaldeals.de.R.id.btn_shop_submit)
     Button _shopButton;
-    @BindView(R.id.btn_shop_del)
+    @BindView(com.regionaldeals.de.R.id.btn_shop_del)
     Button _delButton;
-    @BindView(R.id.input_place)
+    @BindView(com.regionaldeals.de.R.id.input_place)
     EditText _placeText;
 
     private final String URL_Login = "/mobile/api/shops/upload-shop";
@@ -93,7 +92,7 @@ public class AddShopActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_shop_activity);
+        setContentView(com.regionaldeals.de.R.layout.add_shop_activity);
         context = this;
         activity = this;
         isEdit = false;
@@ -121,7 +120,7 @@ public class AddShopActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     progressDialog = new ProgressDialog(context,
-                            R.style.ThemeOverlay_AppCompat_Dialog);
+                            com.regionaldeals.de.R.style.ThemeOverlay_AppCompat_Dialog);
                     progressDialog.setIndeterminate(true);
                     progressDialog.setMessage("Removing...");
                     progressDialog.show();
@@ -163,7 +162,7 @@ public class AddShopActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences prefs = this.getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+        SharedPreferences prefs = this.getSharedPreferences(getString(com.regionaldeals.de.R.string.sharedPredName), MODE_PRIVATE);
         String restoredUser = prefs.getString("userObject", null);
         try {
             if (restoredUser != null) {
@@ -215,7 +214,7 @@ public class AddShopActivity extends AppCompatActivity {
         _shopButton.setEnabled(false);
 
         progressDialog = new ProgressDialog(this,
-                R.style.ThemeOverlay_AppCompat_Dialog);
+                com.regionaldeals.de.R.style.ThemeOverlay_AppCompat_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Adding...");
         progressDialog.show();
@@ -237,7 +236,7 @@ public class AddShopActivity extends AppCompatActivity {
         protected String doInBackground(String... args) {
             try {
                 message = "";
-                URL url = new URL(getString(R.string.apiUrl) + URL_Login + "?userid=" + userId);
+                URL url = new URL(getString(com.regionaldeals.de.R.string.apiUrl) + URL_Login + "?userid=" + userId);
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -299,7 +298,7 @@ public class AddShopActivity extends AppCompatActivity {
 
                 conn.disconnect();
 
-                if(message.equals(getString(R.string.SHOPS_UPLOAD_OK))) {
+                if(message.equals(getString(com.regionaldeals.de.R.string.SHOPS_UPLOAD_OK))) {
                     isSuccess = true;
                 }
 //                else if (message.equals(getString(R.string.LOGIN_ERR_INVALID_CREDENTIALS))){
@@ -344,7 +343,7 @@ public class AddShopActivity extends AppCompatActivity {
         protected String doInBackground(String... args) {
             try {
                 message = "";
-                URL url = new URL(getString(R.string.apiUrl) + URL_ShopDel + "?userid=" + userId +
+                URL url = new URL(getString(com.regionaldeals.de.R.string.apiUrl) + URL_ShopDel + "?userid=" + userId +
                         "&shopid=" + shopId);
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("PUT");
@@ -369,10 +368,10 @@ public class AddShopActivity extends AppCompatActivity {
                 JSONObject jObject = new JSONObject(res.toString());
                 message = jObject.getString("message");
 
-                if(message.equals(getString(R.string.SHOPS_REMOVE_OK))) {
+                if(message.equals(getString(com.regionaldeals.de.R.string.SHOPS_REMOVE_OK))) {
                     isSuccess = true;
                 }
-                else if (message.equals(getString(R.string.SHOPS_REMOVE_ERR))){
+                else if (message.equals(getString(com.regionaldeals.de.R.string.SHOPS_REMOVE_ERR))){
                     isSuccess = false;
                     message = "Cannot remove shop";
                 }

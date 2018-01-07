@@ -1,4 +1,4 @@
-package com.dealspok.dealspok.fragment;
+package com.regionaldeals.de.fragment;
 
 import android.content.Intent;
 import android.os.Build;
@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.adapter.CustomFragmentPageAdapter;
+import com.regionaldeals.de.R;
+import com.regionaldeals.de.adapter.CustomFragmentPageAdapter;
 
 /**
  * Created by Umi on 28.08.2017.

@@ -1,10 +1,8 @@
-package com.dealspok.dealspok.Utils;
+package com.regionaldeals.de.Utils;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;

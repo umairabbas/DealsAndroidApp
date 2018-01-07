@@ -1,4 +1,4 @@
-package com.dealspok.dealspok.Utils;
+package com.regionaldeals.de.Utils;
 
 /*
  * Copyright (C) 2013 Surviving with Android (http://www.survivingwithandroid.com)
@@ -21,10 +21,6 @@ package com.dealspok.dealspok.Utils;
         import java.io.OutputStream;
         import java.net.HttpURLConnection;
         import java.net.URL;
-
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
-        import android.graphics.Bitmap.CompressFormat;
 
 public class HttpClient {
     private String url;

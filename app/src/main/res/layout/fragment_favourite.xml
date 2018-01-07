@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorLightWhite"
-    tools:context="com.dealspok.dealspok.fragment.Favourite">
+    tools:context="com.regionaldeals.de.fragment.Favourite">
 
     <TextView
         android:layout_width="wrap_content"

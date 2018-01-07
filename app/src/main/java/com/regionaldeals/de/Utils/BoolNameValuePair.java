@@ -1,4 +1,4 @@
-package com.dealspok.dealspok.Utils;
+package com.regionaldeals.de.Utils;
 
 import org.apache.http.NameValuePair;
 

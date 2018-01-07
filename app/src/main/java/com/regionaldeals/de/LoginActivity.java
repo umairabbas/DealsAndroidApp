@@ -1,4 +1,4 @@
-package com.dealspok.dealspok;
+package com.regionaldeals.de;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.dealspok.dealspok.fragment.Login;
-import com.dealspok.dealspok.fragment.SignUp;
+import com.regionaldeals.de.fragment.Login;
+import com.regionaldeals.de.fragment.SignUp;
 
 import java.util.ArrayList;
 import java.util.List;

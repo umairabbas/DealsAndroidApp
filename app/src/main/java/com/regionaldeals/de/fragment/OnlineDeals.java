@@ -1,12 +1,10 @@
-package com.dealspok.dealspok.fragment;
+package com.regionaldeals.de.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,11 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.Utils.DoubleNameValuePair;
-import com.dealspok.dealspok.Utils.JSONParser;
-import com.dealspok.dealspok.adapter.OnlineDealsAdapter;
-import com.dealspok.dealspok.entities.DealObject;
+import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.DoubleNameValuePair;
+import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.adapter.OnlineDealsAdapter;
+import com.regionaldeals.de.entities.DealObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

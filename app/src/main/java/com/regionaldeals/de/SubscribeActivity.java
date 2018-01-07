@@ -1,4 +1,4 @@
-package com.dealspok.dealspok;
+package com.regionaldeals.de;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,27 +6,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
-import com.dealspok.dealspok.adapter.GutscheineAdapter;
-import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.entities.Plans;
+import com.regionaldeals.de.Utils.HttpClient;
+import com.regionaldeals.de.entities.Plans;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -234,7 +230,7 @@ public class SubscribeActivity extends AppCompatActivity {
         protected String doInBackground(String... args) {
             try {
                 String resultData = "";
-                com.dealspok.dealspok.Utils.HttpClient client = new com.dealspok.dealspok.Utils.HttpClient(PATH_TO_SERVER_CHECKOUT);
+                HttpClient client = new HttpClient(PATH_TO_SERVER_CHECKOUT);
                 client.connectForMultipart();
                 client.addFormPart("payment_method_nonce", paymentNonce);
                 client.addFormPart("userid", userId);

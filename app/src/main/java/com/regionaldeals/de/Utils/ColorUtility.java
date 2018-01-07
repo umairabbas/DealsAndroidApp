@@ -1,9 +1,9 @@
-package com.dealspok.dealspok.Utils;
+package com.regionaldeals.de.Utils;
 
 /**
  * Created by Umi on 28.12.2017.
  */
-import com.dealspok.dealspok.R;
+import com.regionaldeals.de.R;
 
 import java.util.ArrayList;
 import java.util.List;

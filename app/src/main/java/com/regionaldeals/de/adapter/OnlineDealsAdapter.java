@@ -1,10 +1,9 @@
-package com.dealspok.dealspok.adapter;
+package com.regionaldeals.de.adapter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
@@ -14,10 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dealspok.dealspok.LoginActivity;
-import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.Utils.JSONParser;
-import com.dealspok.dealspok.entities.DealObject;
+import com.regionaldeals.de.LoginActivity;
+import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.entities.DealObject;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -29,7 +28,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-import java.util.Random;
 
 import javax.net.ssl.HttpsURLConnection;
 

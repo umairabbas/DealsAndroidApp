@@ -1,12 +1,10 @@
-package com.dealspok.dealspok.fragment;
+package com.regionaldeals.de.fragment;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,23 +15,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.dealspok.dealspok.MainActivity;
-import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.ShopActivity;
-import com.dealspok.dealspok.Utils.DoubleNameValuePair;
-import com.dealspok.dealspok.Utils.IntNameValuePair;
-import com.dealspok.dealspok.Utils.JSONParser;
-import com.dealspok.dealspok.adapter.DealsAdapter;
-import com.dealspok.dealspok.adapter.GutscheineAdapter;
-import com.dealspok.dealspok.entities.DealObject;
-import com.dealspok.dealspok.entities.GutscheineObject;
+import com.regionaldeals.de.MainActivity;
+import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.adapter.GutscheineAdapter;
+import com.regionaldeals.de.entities.GutscheineObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

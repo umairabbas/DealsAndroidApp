@@ -1,10 +1,9 @@
-package com.dealspok.dealspok.fragment;
+package com.regionaldeals.de.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -20,8 +19,9 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import com.dealspok.dealspok.R;
-import com.dealspok.dealspok.Utils.JSONParser;
+import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.JSONParser;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;

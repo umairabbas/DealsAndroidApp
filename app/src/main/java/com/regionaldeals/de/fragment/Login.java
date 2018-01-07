@@ -1,4 +1,4 @@
-package com.dealspok.dealspok.fragment;
+package com.regionaldeals.de.fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -18,8 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dealspok.dealspok.MainActivity;
-import com.dealspok.dealspok.R;
+import com.regionaldeals.de.R;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -32,7 +31,6 @@ import javax.net.ssl.HttpsURLConnection;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
