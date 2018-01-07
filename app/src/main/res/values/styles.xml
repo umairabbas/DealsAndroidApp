@@ -41,7 +41,7 @@
     <!--<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />-->
 
     <style name="DealsHeaderText">
-        <item name="android:textSize">@dimen/_15sdp</item>
+        <item name="android:textSize">@dimen/_14sdp</item>
         <item name="android:shadowColor">@color/colorPrimaryDark</item>
         <item name="android:singleLine">true</item>
         <item name="android:maxLines">1</item>
@@ -63,7 +63,7 @@
     </style>
 
     <style name="DealsDescText">
-        <item name="android:textSize">@dimen/_11sdp</item>
+        <item name="android:textSize">@dimen/_10sdp</item>
         <item name="android:singleLine">false</item>
         <item name="android:maxLines">2</item>
         <item name="android:lines">2</item>
@@ -76,7 +76,7 @@
     </style>
 
     <style name="DealsPriceText">
-        <item name="android:textSize">@dimen/_19sdp</item>
+        <item name="android:textSize">@dimen/_13sdp</item>
         <item name="android:shadowColor">@color/colorGrey</item>
         <item name="android:shadowDx">0.0</item>
         <item name="android:shadowDy">0.0</item>
@@ -85,12 +85,12 @@
     </style>
 
     <style name="DealsOldPriceText">
-        <item name="android:textSize">@dimen/_17sdp</item>
+        <item name="android:textSize">@dimen/_11sdp</item>
         <item name="android:shadowColor">@color/colorGrey</item>
         <item name="android:shadowDx">0.0</item>
         <item name="android:shadowDy">0.0</item>
         <item name="android:shadowRadius">1</item>
-        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:textColor">@color/red</item>
     </style>
 
 

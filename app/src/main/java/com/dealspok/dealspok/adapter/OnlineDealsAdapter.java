@@ -76,9 +76,11 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
         Picasso.with(context).load(imgUrl).placeholder(R.drawable.placeholder_2_300x200).into(holder.dealCoverUrl);
 
         if(deals.getFavourite() == null) {
-            holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.colorGrey));
+            holder.favoriteImageButton.setImageResource(R.drawable.not_favorite);
+            //holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.colorGrey));
         } else if(deals.getFavourite()==true) {
-            holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.green));
+            holder.favoriteImageButton.setImageResource(R.drawable.favorite);
+            //holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.green));
         }
         holder.favoriteImageButton.setOnClickListener(new View.OnClickListener() {
             @Override

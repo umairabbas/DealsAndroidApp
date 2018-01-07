@@ -84,7 +84,7 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
         if(!isEdit){
             if(deals.isGutscheinAvailed()){
                 holder.mitMachenBtn.setEnabled(false);
-                holder.mitMachenBtn.setColorFilter(activity.getResources().getColor(R.color.green));
+                holder.mitMachenBtn.setColorFilter(activity.getResources().getColor(R.color.colorAccent));
             } else {
                 holder.mitMachenBtn.setOnClickListener(new View.OnClickListener() {
                     @Override

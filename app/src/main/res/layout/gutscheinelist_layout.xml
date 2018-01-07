@@ -22,7 +22,6 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/app_name"
             android:foreground="@drawable/gradient_shape"
-            android:src="@drawable/logo_320_trans"
             android:scaleType="fitXY" />
 
         <LinearLayout
@@ -43,14 +42,34 @@
                 android:layout_marginTop="@dimen/_4sdp"
                 android:text="deal_title" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/deal_description"
                 style="@style/DealsDescText"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="0.80"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
                 android:text="deal_description" />
+
+                <ImageButton
+                    android:id="@+id/action_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_gravity="top"
+                    android:layout_weight="0.2"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/_40sdp"
+                    android:tint="@color/colorLightWhite"
+                    android:src="@drawable/ic_local_offer_black_24dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -61,14 +80,7 @@
             <!--android:layout_alignParentBottom="true"-->
             <!--android:layout_height="wrap_content">-->
 
-        <ImageButton
-            android:id="@+id/action_button"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/ic_local_offer_black_24dp" />
+
 
         <!--</LinearLayout>-->
 

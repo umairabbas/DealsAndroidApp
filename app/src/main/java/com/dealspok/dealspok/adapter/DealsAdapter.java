@@ -92,17 +92,20 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
         final DealObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getDealTitle());
         holder.dealDescription.setText(deals.getDealDescription());
-        holder.dealOldPrice.setText(Double.toString(deals.getOriginalPrice()) + " €");
-        holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + " €");
+        holder.dealOldPrice.setText(Double.toString(deals.getOriginalPrice()) + "€");
+        holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + "€");
 //        gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         String imgUrl = deals.getDealImageUrl(context) + "&imagecount=1&res=470x320";
         Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl);
 
         if(!skipFav) {
             if (deals.getFavourite() == null) {
-                holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.colorGrey));
+                //int imageResource = activity.getResources().getIdentifier("@drawable/not_favorite", null, activity.getPackageName());
+                holder.favoriteImageButton.setImageResource(R.drawable.not_favorite);
+                //holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.colorGrey));
             } else if (deals.getFavourite() == true) {
-                holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.green));
+                holder.favoriteImageButton.setImageResource(R.drawable.favorite);
+                //holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.green));
             }
         } else {
             holder.favoriteImageButton.setVisibility(View.GONE);
