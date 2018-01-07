@@ -67,7 +67,7 @@
                     android:layout_height="match_parent"
                     android:paddingLeft="@dimen/_40sdp"
                     android:tint="@color/colorLightWhite"
-                    android:src="@drawable/ic_local_offer_black_24dp" />
+                    android:src="@drawable/ic_redeem_black_24dp" />
 
             </LinearLayout>
 
