@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private Fragment fragment = null;
     private Context context;
+    private Activity activity;
     private int userId = 0;
     public static final int LOGIN_REQUEST_CODE = 1;
     private TextView emailMenu;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         context = this;
-
+        activity = this;
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -112,6 +114,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (id == R.id.nav_appTeilen) {
                 //    fragment = new Deals();
+                    ShareCompat.IntentBuilder.from(activity)
+                            .setType("text/plain")
+                            .setChooserTitle("Chooser title")
+                            .setText("http://play.google.com/store/apps/details?id=" + activity.getPackageName())
+                            .startChooser();
                 }
                 else if (id == R.id.abo_buchen) {
                     SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);

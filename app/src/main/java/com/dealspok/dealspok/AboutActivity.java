@@ -49,7 +49,12 @@ public class AboutActivity extends AppCompatActivity {
         Element adsElement = new Element();
         adsElement.setTitle("Advertise with us");
 
-        View about = new AboutPage(this)
+        View about = new AboutPage(this).setDescription("" +
+                "Regional Deals gives customers the opportunity to get the cheapest deals in town. It supports multiple types of offers including: \n" +
+                "\n" +
+                "•\tCoupons: Win a free coupon of upto 50 € for a specific shop\n" +
+                "•\tNearby Deals: Glance at the cheapest nearby offers\n" +
+                "•\tOnline Deals: Get the biggest discount on online shopping")
                 .isRTL(false)
                 .setImage(R.mipmap.ic_launcher)
                 .addGroup("Connect with us")
