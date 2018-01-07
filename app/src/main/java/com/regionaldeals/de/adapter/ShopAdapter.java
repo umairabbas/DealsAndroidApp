@@ -58,10 +58,10 @@ public class ShopAdapter extends BaseAdapter {
                 (TextView) rowView.findViewById(R.id.title);
         TextView detailTextView =
                 (TextView) rowView.findViewById(R.id.title2);
-        Button add_deal_button =
-                (Button) rowView.findViewById(R.id.add_deal_button);
-        Button edit_shop_button =
-                (Button) rowView.findViewById(R.id.edit_shop_button);
+//        Button add_deal_button =
+//                (Button) rowView.findViewById(R.id.add_deal_button);
+//        Button edit_shop_button =
+//                (Button) rowView.findViewById(R.id.edit_shop_button);
 
         Shop recipe = (Shop) getItem(position);
 
@@ -69,19 +69,16 @@ public class ShopAdapter extends BaseAdapter {
         subtitleTextView.setText(recipe.getShopName());
         detailTextView.setText(recipe.getShopAddress());
 
-        add_deal_button.setOnClickListener((new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int j = position;
-                Shop s = mDataSource.get(j);
-                Context context = v.getContext();
-                Snackbar.make(v, "COMING SOON", Snackbar.LENGTH_SHORT).show();
-//                Intent intent = new Intent(context, AddDealActivity.class);
-//                intent.putExtra("EXTRA_SHOP_OBJ", s);
-//                context.startActivity(intent);
-            }}));
+//        add_deal_button.setOnClickListener((new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int j = position;
+//                Shop s = mDataSource.get(j);
+//                Context context = v.getContext();
+//                Snackbar.make(v, "COMING SOON", Snackbar.LENGTH_SHORT).show();
+//            }}));
 
-        edit_shop_button.setOnClickListener((new View.OnClickListener() {
+        rowView.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int i = position;
