@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -21,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.regionaldeals.de.fragment.Main;
 
@@ -57,9 +59,8 @@ public class MainActivity extends AppCompatActivity {
         fragment = new Main();
         fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
         fragmentTransaction.commit();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
-
         ImageView loginImg = (ImageView) header.findViewById(R.id.imageView);
         loginImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,12 +100,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (id == R.id.nav_benachrichtigungen) {
                 //    fragment = new Deals();
+                    Snackbar.make(navigationView, "Coming soon.", Snackbar.LENGTH_SHORT).show();
                 }
                 else if (id == R.id.nav_einstellungen) {
                     //    fragment = new Deals();
+                    Snackbar.make(navigationView, "Coming soon.", Snackbar.LENGTH_SHORT).show();
                 }
                 else if (id == R.id.nav_hilfe) {
                 //    fragment = new Deals();
+                    Snackbar.make(navigationView, "Coming soon.", Snackbar.LENGTH_SHORT).show();
                 }
                 else if (id == R.id.nav_uberDealSpok) {
                     Intent intent = new Intent(MainActivity.this, AboutActivity.class);
@@ -181,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Toast.makeText(context, "IMPORTANT: The app is currently using dummy data and will be live on 1st Feb 2018.", Toast.LENGTH_LONG).show();
         if(shouldRefresh){
             SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
             String restoredText = prefs.getString("userObject", null);
@@ -235,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.search) {
+            Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
             return true;
         }
 
