@@ -22,11 +22,18 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-messaging:11.0.4'
+    //implementation 'com.google.firebase:firebase-messaging:11.8.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    //Analytics
+    //compile 'com.google.firebase:firebase-core:11.0.4'
+    //push
+    //compile 'com.firebase:firebase-jobdispatcher:0.6.0'
+    compile 'com.google.firebase:firebase-messaging:11.8.0'
+
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:design:26.+'
     //upload pic
@@ -49,7 +56,14 @@ dependencies {
     //for pictures
     compile 'com.squareup.picasso:picasso:2.+'
 
-    compile 'com.google.android.gms:play-services:10.2.0'
+    //compile 'com.google.android.gms:play-services:11.+'
+    //https://developers.google.com/android/guides/setup
+    compile 'com.google.android.gms:play-services-maps:11.8.0'
+    compile 'com.google.android.gms:play-services-places:11.8.0'
+    compile 'com.google.android.gms:play-services-nearby:11.8.0'
+    compile 'com.google.android.gms:play-services-wallet:11.8.0'
+    compile 'com.google.android.gms:play-services-location:11.8.0'
+
     compile 'com.google.code.gson:gson:2.+'
     compile 'com.android.support:cardview-v7:26.+'
     compile 'com.android.support:recyclerview-v7:26.+'
@@ -57,6 +71,5 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
     testCompile 'junit:junit:4.12'
 }
-
 
 apply plugin: 'com.google.gms.google-services'

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1035519993507",
+    "firebase_url": "https://regionaldealsde-cc4c1.firebaseio.com",
+    "project_id": "regionaldealsde-cc4c1",
+    "storage_bucket": "regionaldealsde-cc4c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1035519993507:android:e4e4e21ba7f5b550",
+        "android_client_info": {
+          "package_name": "com.regionaldeals.de"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1035519993507-0j78qvkprs3d5n79ru56obvum8v3an6t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAD1noQ9T1X1YLrhAWYfioPCV_tnpUp6lI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -80,5 +80,12 @@
     <string name="issues_with_authorization">There was an issue with your authorization string</string>
     <string name="token_failed">Fail to retrieve client token </string>
 
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <!--
+        This is the name that users will see when interacting with this channel.
+        It should describe the category of notifications that will be sent through this channel
+     -->
+    <string name="default_notification_channel_name" translatable="true">News</string>
+
 
 </resources>

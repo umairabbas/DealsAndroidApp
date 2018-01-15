@@ -1,16 +1,25 @@
 package com.regionaldeals.de;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,10 +33,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.regionaldeals.de.fragment.Main;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.List;
+import java.util.UUID;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
     public static final int LOGIN_REQUEST_CODE = 1;
     private TextView emailMenu;
     private static boolean shouldRefresh = false;
+    static public final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 1234;
+    private double dlat = 0.0;
+    private double dlng = 0.0;
+    private String token = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         context = this;
         activity = this;
+
+        //GoogleApiAvailability.makeGooglePlayServicesAvailable();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -180,12 +207,25 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create channel to show notifications.
+            String channelId  = getString(R.string.default_notification_channel_id);
+            String channelName = getString(R.string.default_notification_channel_name);
+            NotificationManager notificationManager =
+                    getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
+                    channelName, NotificationManager.IMPORTANCE_LOW));
+        }
+        String id = UUID.randomUUID().toString();
+        token = FirebaseInstanceId.getInstance().getToken();
+        new RegCall().execute();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(context, "IMPORTANT: The app is currently using dummy data and will be live on 1st Feb 2018.", Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, "IMPORTANT: The app is currently using dummy data and will be live on 1st Feb 2018.", Toast.LENGTH_LONG).show();
         if(shouldRefresh){
             SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
             String restoredText = prefs.getString("userObject", null);
@@ -254,6 +294,111 @@ public class MainActivity extends AppCompatActivity {
                 String email = data.getStringExtra("userEmail");
                 emailMenu.setText(email);
             }
+        }
+    }
+
+    public void getLocation(Context context) {
+        int status = context.getPackageManager().checkPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                context.getPackageName());
+        if (status == PackageManager.PERMISSION_GRANTED) {
+            LocationManager mgr = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            List<String> providers = mgr.getAllProviders();
+            if (providers != null && providers.contains(LocationManager.NETWORK_PROVIDER)) {
+                Location loc = mgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (loc != null) {
+                    dlat = loc.getLatitude();
+                    dlng = loc.getLongitude();
+                }
+            }
+        }else{
+            ActivityCompat.requestPermissions( activity, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
+                    MY_PERMISSION_ACCESS_COURSE_LOCATION );
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSION_ACCESS_COURSE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay!
+                    getLocation(context);
+                } else {
+                    Toast.makeText(context, "Cannot get user location", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+    class RegCall extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            getLocation(context);
+        }
+        protected String doInBackground(String... args) {
+            try {
+                String message = "";
+                URL url = new URL(getApplicationContext().getString(R.string.apiUrl) + "/mobile/api/device/update_device");
+                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Accept","application/json");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+                conn.connect();
+                JSONObject jsonParam = new JSONObject();
+                jsonParam.put("deviceType", "android");
+                jsonParam.put("deviceToken", token);
+                jsonParam.put("deviceUuidImei", UUID.randomUUID().toString());
+                jsonParam.put("deviceAppLanguage", "en");
+                jsonParam.put("deviceLocationLat", dlat);
+                jsonParam.put("deviceLocationLong", dlng);
+                jsonParam.put("deviceTimezone", 60);
+
+                Log.i("JSON", jsonParam.toString());
+
+                DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+                //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
+                os.writeBytes(jsonParam.toString());
+
+                os.flush();
+                os.close();
+
+                Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+                Log.i("MSG" , conn.getResponseMessage());
+
+                BufferedReader in;
+
+                if (200 <= conn.getResponseCode() && conn.getResponseCode() <= 299) {
+                    in = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                } else {
+                    in = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
+                }
+                String inputLine;
+                StringBuffer res = new StringBuffer();
+
+                while ((inputLine = in.readLine()) != null) {
+                    res.append(inputLine);
+                }
+                in.close();
+
+                JSONObject jObject = new JSONObject(res.toString());
+                message = jObject.getString("message");
+                int status =  jObject.getInt("status");
+                conn.disconnect();
+
+                if(status==200){
+                    Toast.makeText(context, "Server notification activated", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        protected void onPostExecute(String file_url) {
         }
     }
 
