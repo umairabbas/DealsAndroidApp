@@ -1,13 +1,18 @@
 package com.regionaldeals.de;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -19,6 +24,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+
+import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.entities.CitiesObject;
+
+import org.apache.http.NameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Umi on 09.09.2017.
@@ -41,21 +54,29 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
     // list with items for side index
     private ArrayList<Object[]> indexList = null;
 
+    private Context context;
+    private ListView lv1;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_manual);
+        context = this;
+        //activity = this;
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+        String restoredCities = prefs.getString("citiesObject", null);
 
-        
-
-        // don't forget to sort our array (in case it's not sorted)
-        Arrays.sort(COUNTRIES);
-
-        final ListView lv1 = (ListView) findViewById(R.id.ListView01);
-        lv1.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, COUNTRIES));
-        mGestureDetector = new GestureDetector(this, new SideIndexGestureListener());
+        lv1 = (ListView) findViewById(R.id.ListView01);
         lv1.setOnItemClickListener(this);
+
+        if (restoredCities == null) {
+            //should not be
+        }else {
+            COUNTRIES = restoredCities.split(",");
+            lv1.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, COUNTRIES));
+            mGestureDetector = new GestureDetector(context, new SideIndexGestureListener());
+        }
     }
 
     @Override
@@ -135,7 +156,7 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
     @Override
     public void onWindowFocusChanged(boolean hasFocus)
     {
-        super.onWindowFocusChanged(hasFocus);
+    //public void onCitiesResult(){
 
         final ListView listView = (ListView) findViewById(R.id.ListView01);
         LinearLayout sideIndex = (LinearLayout) findViewById(R.id.sideIndex);
@@ -252,108 +273,108 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
     }
 
     // an array with countries to display in the list
-    static String[] COUNTRIES = new String[]
-            {
-                    "Aachen",
-                    "Augsburg",
-                    "Bergisch",
-                    "Berlin",
-                    "Bielefeld",
-                    "Bochum",
-                    "Bonn",
-                    "Bottrop",
-                    "Braunschweig",
-                    "Bremen",
-                    "Bremerhaven",
-                    "Chemnitz",
-                    "Cottbus",
-                    "Darmstadt",
-                    "Dessau-Roßlau",
-                    "Dortmund",
-                    "Dresden",
-                    "Duisburg",
-                    "Düren",
-                    "Düsseldorf",
-                    "Erfurt",
-                    "Erlangen",
-                    "Essen",
-                    "Esslingen",
-                    "Flensburg",
-                    "Frankfurt",
-                    "Freiburg",
-                    "Fürth",
-                    "Gelsenkirchen",
-                    "Gera",
-                    "Gladbach",
-                    "Göttingen",
-                    "Gütersloh",
-                    "Hagen",
-                    "Halle",
-                    "Hamburg",
-                    "Hamm",
-                    "Hanau",
-                    "Hannover",
-                    "Heidelberg",
-                    "Heilbronn",
-                    "Herne",
-                    "Hildesheim",
-                    "Ingolstadt",
-                    "Iserlohn",
-                    "Jena",
-                    "Kaiserslautern",
-                    "Karlsruhe",
-                    "Kassel",
-                    "Kiel",
-                    "Koblenz",
-                    "Krefeld",
-                    "Köln",
-                    "Leipzig",
-                    "Leverkusen",
-                    "Ludwigsburg",
-                    "Ludwigshafen",
-                    "Lübeck",
-                    "Lünen",
-                    "Magdeburg",
-                    "Mainz",
-                    "Mannheim",
-                    "Marl",
-                    "Minden",
-                    "Moers",
-                    "Mönchengladbach",
-                    "Mülheim",
-                    "München",
-                    "Münster",
-                    "Neuss",
-                    "Nürnberg",
-                    "Oberhausen",
-                    "Offenbach",
-                    "Oldenburg",
-                    "Osnabrück",
-                    "Paderborn",
-                    "Pforzheim",
-                    "Potsdam",
-                    "Ratingen",
-                    "Recklinghausen",
-                    "Regensburg",
-                    "Remscheid",
-                    "Reutlingen",
-                    "Rostock",
-                    "Saarbrücken",
-                    "Salzgitter",
-                    "Schwerin",
-                    "Siegen",
-                    "Solingen",
-                    "Stuttgart",
-                    "Trier",
-                    "Tübingen",
-                    "Ulm",
-                    "Velbert",
-                    "Villingen-Schwenn.",
-                    "Wiesbaden",
-                    "Witten",
-                    "Wolfsburg",
-                    "Wuppertal",
-                    "Würzburg",
-                    "Zwickau"
-            };
+    private static String[] COUNTRIES;// = new String[];
+//            {
+//                    "Aachen",
+//                    "Augsburg",
+//                    "Bergisch",
+//                    "Berlin",
+//                    "Bielefeld",
+//                    "Bochum",
+//                    "Bonn",
+//                    "Bottrop",
+//                    "Braunschweig",
+//                    "Bremen",
+//                    "Bremerhaven",
+//                    "Chemnitz",
+//                    "Cottbus",
+//                    "Darmstadt",
+//                    "Dessau-Roßlau",
+//                    "Dortmund",
+//                    "Dresden",
+//                    "Duisburg",
+//                    "Düren",
+//                    "Düsseldorf",
+//                    "Erfurt",
+//                    "Erlangen",
+//                    "Essen",
+//                    "Esslingen",
+//                    "Flensburg",
+//                    "Frankfurt",
+//                    "Freiburg",
+//                    "Fürth",
+//                    "Gelsenkirchen",
+//                    "Gera",
+//                    "Gladbach",
+//                    "Göttingen",
+//                    "Gütersloh",
+//                    "Hagen",
+//                    "Halle",
+//                    "Hamburg",
+//                    "Hamm",
+//                    "Hanau",
+//                    "Hannover",
+//                    "Heidelberg",
+//                    "Heilbronn",
+//                    "Herne",
+//                    "Hildesheim",
+//                    "Ingolstadt",
+//                    "Iserlohn",
+//                    "Jena",
+//                    "Kaiserslautern",
+//                    "Karlsruhe",
+//                    "Kassel",
+//                    "Kiel",
+//                    "Koblenz",
+//                    "Krefeld",
+//                    "Köln",
+//                    "Leipzig",
+//                    "Leverkusen",
+//                    "Ludwigsburg",
+//                    "Ludwigshafen",
+//                    "Lübeck",
+//                    "Lünen",
+//                    "Magdeburg",
+//                    "Mainz",
+//                    "Mannheim",
+//                    "Marl",
+//                    "Minden",
+//                    "Moers",
+//                    "Mönchengladbach",
+//                    "Mülheim",
+//                    "München",
+//                    "Münster",
+//                    "Neuss",
+//                    "Nürnberg",
+//                    "Oberhausen",
+//                    "Offenbach",
+//                    "Oldenburg",
+//                    "Osnabrück",
+//                    "Paderborn",
+//                    "Pforzheim",
+//                    "Potsdam",
+//                    "Ratingen",
+//                    "Recklinghausen",
+//                    "Regensburg",
+//                    "Remscheid",
+//                    "Reutlingen",
+//                    "Rostock",
+//                    "Saarbrücken",
+//                    "Salzgitter",
+//                    "Schwerin",
+//                    "Siegen",
+//                    "Solingen",
+//                    "Stuttgart",
+//                    "Trier",
+//                    "Tübingen",
+//                    "Ulm",
+//                    "Velbert",
+//                    "Villingen-Schwenn.",
+//                    "Wiesbaden",
+//                    "Witten",
+//                    "Wolfsburg",
+//                    "Wuppertal",
+//                    "Würzburg",
+//                    "Zwickau"
+//            };
 }

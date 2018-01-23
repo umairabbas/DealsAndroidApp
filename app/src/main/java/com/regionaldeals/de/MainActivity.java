@@ -559,6 +559,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestProperty("Accept","application/json");
+                conn.setRequestProperty("Accept-Charset", "utf-8");
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
                 conn.connect();
