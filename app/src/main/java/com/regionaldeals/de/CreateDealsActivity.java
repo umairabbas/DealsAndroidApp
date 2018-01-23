@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +19,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.adapter.DealsAdapter;
 import com.regionaldeals.de.entities.DealObject;
@@ -29,8 +35,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Umi on 10.12.2017.
@@ -49,6 +60,11 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
     private JSONArray dealArr = null;
     JSONParser jsonParser = new JSONParser();
     private DealsAdapter mAdapter;
+    public static final int ADD_DEALS_REQUEST_CODE = 115;
+    private TextView dealCount;
+    private FloatingActionButton fab;
+    private int dealCounter;
+    private String subStatus = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,16 +79,24 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         songRecyclerView = (RecyclerView)findViewById(R.id.create_deals_list);
+        dealCount = (TextView) findViewById(R.id.dealsCount);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
         SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredUser = prefs.getString("userObject", null);
+        String restoredSub = prefs.getString("subscriptionObject", null);
         try {
             if (restoredUser != null) {
                 JSONObject obj = new JSONObject(restoredUser);
                 userId = obj.getString("userId");
+            }
+            if (restoredSub != null) {
+                JSONObject data = new JSONObject(restoredSub);
+                dealCounter = data.getInt("deals_listing");
+                subStatus = data.getString("subscriptionStatus");
+                dealCount.setText(" "+Integer.toString(dealCounter) + "/4" + " (" + subStatus + ") ");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -82,13 +106,21 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_new_deals);
+        fab = (FloatingActionButton) findViewById(R.id.fab_new_deals);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent startActivityIntent = new Intent(CreateDealsActivity.this, AddDealActivity.class);
-                startActivityIntent.putExtra("userId", userId);
-                startActivity(startActivityIntent);
+                if(dealCounter>=4){
+                    Snackbar.make(view, getResources().getString(R.string.deals_limit), Snackbar.LENGTH_LONG).show();
+                }else if(dealCounter<4){
+                    Intent startActivityIntent = new Intent(CreateDealsActivity.this, AddDealActivity.class);
+                    startActivityIntent.putExtra("userId", userId);
+                    startActivityForResult(startActivityIntent, ADD_DEALS_REQUEST_CODE);
+                }
+                //Should not reach here
+                else {
+                    Snackbar.make(view, "Error", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -102,6 +134,65 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                     }
                 }
         );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ADD_DEALS_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Boolean dealSuccess = data.getBooleanExtra("dealAddSuccess", false);
+                if(dealSuccess) {
+                    dealCounter++;
+                    dealCount.setText(" "+Integer.toString(dealCounter) + "/4" + " (" + subStatus + ") ");
+                    getSubscription();
+                }
+            }
+        }
+    }
+
+    private void getSubscription() {
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                AsyncHttpClient androidClient = new AsyncHttpClient();
+                androidClient.get("https://regionaldeals.de/mobile/api/subscriptions/subscription?userid="+ userId, new TextHttpResponseHandler() {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.d("TAG", getString(R.string.token_failed) + responseString);
+                    }
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String response) {
+                        Log.d("TAG", "Client token: " + response);
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            String msg = obj.getString("message");
+                            if(msg.equals("PLANS_SUBSCRIPTIONS_OK")) {
+                                JSONObject data = obj.getJSONObject("data");
+                                JSONObject plan = data.getJSONObject("plan");
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                                editor.putString("subscriptionObject", data.toString());
+                                editor.commit();
+                            } else if (msg.equals("PLANS_SUBSCRIPTIONS_NILL")) {
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                                editor.remove("subscriptionObject");
+                                editor.commit();
+                            }
+                            //should never come
+                            else{
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                                editor.remove("subscriptionObject");
+                                editor.commit();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (Throwable t) {
+                        }
+                    }
+                });
+            }
+        };
+        mainHandler.post(myRunnable);
     }
 
     @Override

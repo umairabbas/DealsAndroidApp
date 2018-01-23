@@ -506,7 +506,17 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                     @Override
                     public void run() {
                         Toast.makeText(context, "Success "+ res, Toast.LENGTH_SHORT).show();
-                        finish();
+                        Intent intent = activity.getIntent();
+                        intent.putExtra("dealAddSuccess", true);
+                        activity.setResult(Activity.RESULT_OK, intent);
+                        activity.finish();
+                    }
+                });
+            } else if (res.equals("ERR_MAX_DEALS")){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "Sorry. MAX Deals Reached! \n" + res, Toast.LENGTH_SHORT).show();
                     }
                 });
             }else{
@@ -517,7 +527,6 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                     }
                 });
             }
-
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

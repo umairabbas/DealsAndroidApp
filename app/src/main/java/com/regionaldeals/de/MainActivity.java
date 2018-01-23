@@ -7,11 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -19,6 +25,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -34,21 +42,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.TextHttpResponseHandler;
+import com.regionaldeals.de.entities.Plans;
 import com.regionaldeals.de.fragment.Main;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
-import java.util.UUID;
+import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class MainActivity extends AppCompatActivity {
+import cz.msebera.android.httpclient.Header;
+
+public class MainActivity extends AppCompatActivity implements LocationListener {
 
     private FragmentManager fragmentManager;
     private Fragment fragment = null;
@@ -58,12 +75,15 @@ public class MainActivity extends AppCompatActivity {
     public static final int LOGIN_REQUEST_CODE = 1;
     private TextView emailMenu;
     private static boolean shouldRefresh = false;
-    static public final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 1234;
+    public static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 101;
+    private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 102;
     private double dlat = 0.0;
     private double dlng = 0.0;
     private String token = "";
-
-
+    private LocationManager mLocationManager;
+    private String city = "";
+    private String IMEINumber = "";
+    private Boolean subscribed = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +92,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         context = this;
         activity = this;
-
+        //getLocation(context);
         //GoogleApiAvailability.makeGooglePlayServicesAvailable();
+
+        String android_id = Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        IMEINumber = android_id;
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -102,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("userObject", null);
+        String restoredSub = prefs.getString("subscriptionObject", null);
         if (restoredText != null) {
             try {
                 JSONObject obj = new JSONObject(restoredText);
@@ -112,6 +137,9 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             } catch (Throwable t) {
             }
+        }
+        if (restoredSub != null) {
+            subscribed = true;
         }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -150,9 +178,9 @@ public class MainActivity extends AppCompatActivity {
                             .startChooser();
                 }
                 else if (id == R.id.abo_buchen) {
-                    SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-                    String restoredText = prefs.getString("userObject", null);
-                    if (restoredText != null) {
+                    //SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                    //String restoredText = prefs.getString("userObject", null);
+                    if (userId != 0) {
                         Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
                         startActivity(intent);
                     } else {
@@ -163,39 +191,45 @@ public class MainActivity extends AppCompatActivity {
 
                 }
                 else if (id == R.id.meine_anzeigen) {
-                    SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-                    String restoredText = prefs.getString("userObject", null);
-                    if (restoredText != null) {
-                        Intent startActivityIntent = new Intent(MainActivity.this, CreateDealsActivity.class);
-                        startActivity(startActivityIntent);
-                    } else {
+                    //SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                    //String restoredText = prefs.getString("userObject", null);
+                    if (userId == 0) {
                         Intent intent = new Intent(context, LoginActivity.class);
                         startActivityForResult(intent, LOGIN_REQUEST_CODE);
                         shouldRefresh = true;
+                    } else if(!subscribed){
+                        Snackbar.make(navigationView, getResources().getString(R.string.suberror), Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Intent startActivityIntent = new Intent(MainActivity.this, CreateDealsActivity.class);
+                        startActivity(startActivityIntent);
                     }
                 }
                 else if (id == R.id.meine_gutscheien) {
-                    SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-                    String restoredText = prefs.getString("userObject", null);
-                    if (restoredText != null) {
-                        Intent startActivityIntent = new Intent(MainActivity.this, CreateGutscheineActivity.class);
-                        startActivity(startActivityIntent);
-                    } else {
+                    //SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                    //String restoredText = prefs.getString("userObject", null);
+                    if (userId == 0) {
                         Intent intent = new Intent(context, LoginActivity.class);
                         startActivityForResult(intent, LOGIN_REQUEST_CODE);
                         shouldRefresh = true;
+                    } else if(!subscribed){
+                        Snackbar.make(navigationView, getResources().getString(R.string.suberror), Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Intent startActivityIntent = new Intent(MainActivity.this, CreateGutscheineActivity.class);
+                        startActivity(startActivityIntent);
                     }
                 }
                 else if (id == R.id.anzeigen_erstellen) {
-                    SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-                    String restoredText = prefs.getString("userObject", null);
-                    if (restoredText != null) {
-                        Intent startActivityIntent = new Intent(MainActivity.this, ShopActivity.class);
-                        startActivity(startActivityIntent);
-                    } else {
+                    //SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                    //String restoredText = prefs.getString("userObject", null);
+                    if (userId == 0) {
                         Intent intent = new Intent(context, LoginActivity.class);
                         startActivityForResult(intent, LOGIN_REQUEST_CODE);
                         shouldRefresh = true;
+                    } else if(!subscribed){
+                        Snackbar.make(navigationView, getResources().getString(R.string.suberror), Snackbar.LENGTH_LONG).show();
+                    } else {
+                        Intent startActivityIntent = new Intent(MainActivity.this, ShopActivity.class);
+                        startActivity(startActivityIntent);
                     }
                 }
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -217,31 +251,94 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(new NotificationChannel(channelId,
                     channelName, NotificationManager.IMPORTANCE_LOW));
         }
-        String id = UUID.randomUUID().toString();
+        //String id = UUID.randomUUID().toString();
         token = FirebaseInstanceId.getInstance().getToken();
-        new RegCall().execute();
+
+        /** Fading Transition Effect */
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+        if (getIntent().hasExtra("notificationBody")) {
+            String body = getIntent().getStringExtra("notificationBody");
+            Toast.makeText(context, "notificationBody: " + body, Toast.LENGTH_LONG).show();
+            getIntent().removeExtra("notificationBody");
+            Intent startActivityIntent = new Intent(MainActivity.this, NotificationDealsActivity.class);
+            startActivityIntent.putExtra("notificationBody", body);
+            startActivity(startActivityIntent);
+        }
+
+        getLocation(context);
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.hasExtra("notificationBody")) {
+            Intent startNotIntent = new Intent(MainActivity.this, NotificationDealsActivity.class);
+            startNotIntent.putExtra("notificationBody", getIntent().hasExtra("notificationBody"));
+            getIntent().removeExtra("notificationBody");
+            startActivity(startNotIntent);
+        }
+    }
+
+    /**
+     * Called when the 'loadIMEI' function is triggered.
+     */
+//    public void loadIMEI() {
+//        // Check if the READ_PHONE_STATE permission is already available.
+//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            // READ_PHONE_STATE permission has not been granted.
+//            requestReadPhoneStatePermission();
+//        } else {
+//            // READ_PHONE_STATE permission is already been granted.
+//            TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+//            //Get IMEI Number of Phone  //////////////// for this example i only need the IMEI
+//            IMEINumber = tm.getDeviceId();
+//
+//        }
+//    }
+
+    /**
+     * Requests the READ_PHONE_STATE permission.
+     * If the permission has been denied previously, a dialog will prompt the user to grant the
+     * permission, otherwise it is requested directly.
+     */
+//    private void requestReadPhoneStatePermission() {
+//        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                android.Manifest.permission.READ_PHONE_STATE)) {
+//
+//                            //re-request
+//                            ActivityCompat.requestPermissions(MainActivity.this,
+//                                    new String[]{android.Manifest.permission.READ_PHONE_STATE},
+//                                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+//
+//        } else {
+//            // READ_PHONE_STATE permission has not been granted yet. Request it directly.
+//            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE},
+//                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+//        }
+//    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
         //Toast.makeText(context, "IMPORTANT: The app is currently using dummy data and will be live on 1st Feb 2018.", Toast.LENGTH_LONG).show();
-        if(shouldRefresh){
-            SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-            String restoredText = prefs.getString("userObject", null);
-            if (restoredText != null) {
-                try {
-                    JSONObject obj = new JSONObject(restoredText);
-                    userId = obj.getInt("userId");
-                    String email = obj.getString("email");
-                    emailMenu.setText(email);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (Throwable t) {
-                }
-            }
-        }
-
+//        if(shouldRefresh){
+//            SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+//            String restoredText = prefs.getString("userObject", null);
+//            if (restoredText != null) {
+//                try {
+//                    JSONObject obj = new JSONObject(restoredText);
+//                    userId = obj.getInt("userId");
+//                    String email = obj.getString("email");
+//                    emailMenu.setText(email);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                } catch (Throwable t) {
+//                }
+//            }
+//        }
     }
 
 
@@ -292,23 +389,95 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == LOGIN_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 String email = data.getStringExtra("userEmail");
+                userId = data.getIntExtra("userId", 0);
                 emailMenu.setText(email);
+                //update Subscriptions
+                getSubscription(userId);
             }
         }
+    }
+
+    private void getSubscription(final int user) {
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                AsyncHttpClient androidClient = new AsyncHttpClient();
+                androidClient.get("https://regionaldeals.de/mobile/api/subscriptions/subscription?userid="+ Integer.toString(user), new TextHttpResponseHandler() {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.d("TAG", getString(R.string.token_failed) + responseString);
+                    }
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String response) {
+                        Log.d("TAG", "Client token: " + response);
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            String msg = obj.getString("message");
+                            if(msg.equals("PLANS_SUBSCRIPTIONS_OK")) {
+                                subscribed = true;
+                                JSONObject data = obj.getJSONObject("data");
+                                JSONObject plan = data.getJSONObject("plan");
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                                editor.putString("subscriptionObject", data.toString());
+                                editor.commit();
+                            } else if (msg.equals("PLANS_SUBSCRIPTIONS_NILL")) {
+                                subscribed = false;
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                                editor.remove("subscriptionObject");
+                                editor.commit();
+                            }
+                            //should never come
+                            else{
+                                subscribed = false;
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                                editor.remove("subscriptionObject");
+                                editor.commit();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (Throwable t) {
+                        }
+                    }
+                });
+            }
+        };
+        mainHandler.post(myRunnable);
     }
 
     public void getLocation(Context context) {
         int status = context.getPackageManager().checkPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION,
                 context.getPackageName());
         if (status == PackageManager.PERMISSION_GRANTED) {
-            LocationManager mgr = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            List<String> providers = mgr.getAllProviders();
-            if (providers != null && providers.contains(LocationManager.NETWORK_PROVIDER)) {
-                Location loc = mgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                if (loc != null) {
-                    dlat = loc.getLatitude();
-                    dlng = loc.getLongitude();
+            mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            List<String> providers = mLocationManager.getAllProviders();
+            Location bestLocation = null;
+            for (String provider : providers) {
+                Location l = mLocationManager.getLastKnownLocation(provider);
+                if (l == null) {
+                    continue;
                 }
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    // Found best last known location: %s", l);
+                    bestLocation = l;
+                }
+            }
+            if(bestLocation==null){
+                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) context);
+            }else{
+                dlat = bestLocation.getLatitude();
+                dlng = bestLocation.getLongitude();
+                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                List<Address> addresses = null;
+                try {
+                    addresses = geocoder.getFromLocation(dlat, dlng, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                city = addresses.get(0).getLocality();
+                String cityName = addresses.get(0).getAddressLine(0);
+
+                new RegCall().execute();
             }
         }else{
             ActivityCompat.requestPermissions( activity, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
@@ -329,14 +498,58 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return;
             }
+//            case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
+//                // Received permission result for READ_PHONE_STATE permission.est.");
+//                // Check if the only required permission has been granted
+//                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    // READ_PHONE_STATE permission has been granted, proceed with displaying IMEI Number
+//                    //alertAlert(getString(R.string.permision_available_read_phone_state));
+//                    loadIMEI();
+//                } else {
+//                    Toast.makeText(context, "Permission not granted", Toast.LENGTH_SHORT).show();
+//                }
+//            }
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            Log.v("Location Changed", location.getLatitude() + " and " + location.getLongitude());
+            dlat = location.getLatitude();
+            dlng = location.getLongitude();
+            mLocationManager.removeUpdates(this);
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = null;
+            try {
+                addresses = geocoder.getFromLocation(dlat, dlng, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            city = addresses.get(0).getLocality();
+            String cityName = addresses.get(0).getAddressLine(0);
+//            String stateName = addresses.get(0).getAddressLine(1);
+//            String countryName = addresses.get(0).getAddressLine(2);
+            new RegCall().execute();
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
     }
 
     class RegCall extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            getLocation(context);
         }
         protected String doInBackground(String... args) {
             try {
@@ -352,10 +565,11 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject jsonParam = new JSONObject();
                 jsonParam.put("deviceType", "android");
                 jsonParam.put("deviceToken", token);
-                jsonParam.put("deviceUuidImei", UUID.randomUUID().toString());
+                jsonParam.put("deviceUuidImei", IMEINumber);
                 jsonParam.put("deviceAppLanguage", "en");
-                jsonParam.put("deviceLocationLat", dlat);
-                jsonParam.put("deviceLocationLong", dlng);
+                //jsonParam.put("deviceLocationLat", dlat);
+                //jsonParam.put("deviceLocationLong", dlng);
+                jsonParam.put("deviceCity", city);
                 jsonParam.put("deviceTimezone", 60);
 
                 Log.i("JSON", jsonParam.toString());
@@ -390,8 +604,14 @@ public class MainActivity extends AppCompatActivity {
                 int status =  jObject.getInt("status");
                 conn.disconnect();
 
-                if(status==200){
-                    Toast.makeText(context, "Server notification activated", Toast.LENGTH_SHORT).show();
+                if(status==200 && message.equals("DEVICE_DATA_UPDATE_OK")){
+                    if(activity != null){
+                        activity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "Server notification activated", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

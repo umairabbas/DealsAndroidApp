@@ -214,6 +214,7 @@ public class Login extends Fragment {
                         try {
                             Intent intent = getActivity().getIntent();
                             intent.putExtra("userEmail", jObject.getString("email"));
+                            intent.putExtra("userId", jObject.getInt("userId"));
                             getActivity().setResult(Activity.RESULT_OK, intent);
                             getActivity().finish();
                         } catch (Exception e) {

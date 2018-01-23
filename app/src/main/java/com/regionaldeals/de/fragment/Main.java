@@ -40,7 +40,7 @@ public class Main extends Fragment {
 
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         viewPager = (ViewPager) view.findViewById(R.id.view_pager);
-        cfpa = new CustomFragmentPageAdapter(getChildFragmentManager());
+        cfpa = new CustomFragmentPageAdapter(getChildFragmentManager(), getContext());
         viewPager.setAdapter(cfpa);
         tabLayout.setupWithViewPager(viewPager);
 

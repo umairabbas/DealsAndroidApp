@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,8 +32,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -52,8 +58,6 @@ public class SubscribeActivity extends AppCompatActivity {
     private static final int BRAINTREE_REQUEST_CODE = 4949;
     private String paymentNonce = "";
     private String msg = "";
-//    EditText e1;
-//    EditText e2;
     private Button firstDealBtn;
     private TextView firstDealTv;
     private Button secDealBtn;
@@ -78,15 +82,10 @@ public class SubscribeActivity extends AppCompatActivity {
         secDealBtn = (Button)findViewById(R.id.btn_2);
         firstDealTv = (TextView)findViewById(R.id.tv1);
         secDealTv = (TextView)findViewById(R.id.tv2);
+        TextView currentSub = (TextView)findViewById(R.id.currentSub);
 
         deals = new ArrayList<>();
-//        e1 = (EditText)findViewById(R.id.input_t1);
-//        e2 = (EditText)findViewById(R.id.input_t2);
 
-//        e1.setText("https://regionaldeals.de/mobile/api/payment/client_token");
-//        e2.setText("https://regionaldeals.de/mobile/api/payment/checkout");
-        getSubDataFromServer();
-        getClientTokenFromServer();
         firstDealBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,8 +105,47 @@ public class SubscribeActivity extends AppCompatActivity {
         });
 
         SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+        String restoredSub = prefs.getString("subscriptionObject", null);
         String restoredUser = prefs.getString("userObject", null);
         try {
+            //Subscription
+            if (restoredSub != null) {
+                JSONObject data = new JSONObject(restoredSub);
+                JSONObject plan = data.getJSONObject("plan");
+                String planName = plan.getString("planName");
+                int billingCycle = plan.getInt("billingCycle");
+                int numberBillingCycles = plan.getInt("numberBillingCycles");
+                long subStartDate = data.getLong("subscriptionStartDate");
+                String subStatus = data.getString("subscriptionStatus");
+                long subNextPayment = data.getLong("subscriptionNextPaymentDate");
+                //String planDesc = plan.getString("planDescription");
+                currentSub.setVisibility(View.VISIBLE);
+
+                Date d = new Date(subStartDate);
+                SimpleDateFormat startDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                String start = startDate.format(d);
+                Date d2 = new Date(subNextPayment);
+                SimpleDateFormat nextDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                String next = nextDate.format(d2);
+
+                currentSub.setText("Plan" + "\n" + planName +"\n" + "\n"
+                        + "Status" + "\n" + subStatus + "\n" + "\n"
+                        + getResources().getString(R.string.billing_cycle) + "\n" + Integer.toString(billingCycle)+ "/" + Integer.toString(numberBillingCycles) + "\n" + "\n"
+                        + getResources().getString(R.string.start_date) + "\n" + start + "\n" + "\n"
+                        + getResources().getString(R.string.next_date) + "\n" + next + "\n"
+                        );
+
+                firstDealBtn.setVisibility(View.GONE);
+                firstDealTv.setVisibility(View.GONE);
+                secDealBtn.setVisibility(View.GONE);
+                secDealTv.setVisibility(View.GONE);
+            }else {
+                firstDealBtn.setEnabled(true);
+                secDealBtn.setEnabled(true);
+                getSubDataFromServer();
+                getClientTokenFromServer();
+            }
+            //User
             if (restoredUser != null) {
                 JSONObject obj = new JSONObject(restoredUser);
                 userId = obj.getString("userId");
@@ -155,9 +193,14 @@ public class SubscribeActivity extends AppCompatActivity {
                             public void run() {
                                 //TODO: make dynamic
                                 firstDealBtn.setText(deals.get(0).getPlanName());
-                                firstDealTv.setText(deals.get(0).getPlanDescription());
                                 secDealBtn.setText(deals.get(1).getPlanName());
-                                secDealTv.setText(deals.get(1).getPlanDescription());
+                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                                    firstDealTv.setText(Html.fromHtml(deals.get(0).getPlanDescription(), Html.FROM_HTML_MODE_COMPACT));
+                                    secDealTv.setText(Html.fromHtml(deals.get(1).getPlanDescription(), Html.FROM_HTML_MODE_COMPACT));
+                                }else{
+                                    firstDealTv.setText(Html.fromHtml(deals.get(0).getPlanDescription()));
+                                    secDealTv.setText(Html.fromHtml(deals.get(1).getPlanDescription()));
+                                }
                                 //Toast.makeText(context, "Success!\n" + msg, Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -239,8 +282,45 @@ public class SubscribeActivity extends AppCompatActivity {
                 resultData = client.getResponse();
                 resultData.toString();
                 JSONObject obj = new JSONObject(resultData);
-                String payId = obj.getString("data");
+
                 msg = obj.getString("message");
+                if(msg.equals("PLANS_SUBSCRIPTIONS_OK") || msg.equals("PLANS_SUBSCRIPTIONS_UPDATE_OK")) {
+
+                    JSONObject data = obj.getJSONObject("data");
+                    JSONObject plan = data.getJSONObject("plan");
+                    final String planName = plan.getString("planName");
+//                    String subStartDate = data.getString("subscriptionStartDate");
+//                    String subStatus = data.getString("subscriptionStatus");
+//                    String subNextPayment = data.getString("subscriptionNextPaymentDate");
+
+                    SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                    editor.putString("subscriptionObject", data.toString());
+                    editor.commit();
+
+                    if (activity != null)
+                        activity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "Success!\n" + "Sie haben erfolgreich " + planName + " gekauft", Toast.LENGTH_SHORT).show();
+                                firstDealBtn.setEnabled(false);
+                                secDealBtn.setEnabled(false);
+                                //finish();
+                            }
+                        });
+                }else if(msg.equals("PLANS_SUBSCRIPTIONS_ALREADY_SUBSCRIBED")) {
+                    if(activity!=null)
+                        activity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "Already Subscribed!\n" + msg, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                } else {
+                    if(activity!=null)
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(context, "Failed!\n" + msg, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             } catch (Throwable t) {
                 t.printStackTrace();
             }
@@ -248,15 +328,15 @@ public class SubscribeActivity extends AppCompatActivity {
         }
         protected void onPostExecute(String file_url) {
             //pDialog.dismiss();
-            activity.runOnUiThread(new Runnable() {
-                public void run() {
-                    if(msg.equals("PAYMENT_CLIENT_CHECKOUT_SUCCESS")) {
-                        Toast.makeText(context, "Success!\n" + msg, Toast.LENGTH_SHORT).show();
-                    } else if(msg.equals("PLANS_SUBSCRIPTIONS_UPDATE_OK")){
-                        Toast.makeText(context, "Success!\n" + msg, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+//            activity.runOnUiThread(new Runnable() {
+//                public void run() {
+//                    if(msg.equals("PLANS_SUBSCRIPTIONS_OK")) {
+//                        Toast.makeText(context, "Success!\n" + msg, Toast.LENGTH_SHORT).show();
+//                    } else if(msg.equals("PLANS_SUBSCRIPTIONS_UPDATE_OK")){
+//                        Toast.makeText(context, "Success!\n" + msg, Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
         }
     }
 
@@ -279,6 +359,7 @@ public class SubscribeActivity extends AppCompatActivity {
             }else {
                 Exception error = (Exception)data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
                 Log.d(TAG, " error exception");
+                Toast.makeText(context, "Kindly choose a different option", Toast.LENGTH_LONG).show();
             }
         }
     }

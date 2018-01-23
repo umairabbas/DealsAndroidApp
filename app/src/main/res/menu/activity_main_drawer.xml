@@ -5,51 +5,51 @@
         <item
             android:id="@+id/nav_favourite"
             android:icon="@drawable/ic_favorite"
-            android:title="Favoriten" />
+            android:title="@string/menu_fav" />
         <item
             android:id="@+id/nav_ort"
             android:icon="@drawable/ic_place_black_24dp"
-            android:title="Standort Ändern" />
+            android:title="@string/menu_location" />
         <item
             android:id="@+id/nav_benachrichtigungen"
             android:icon="@drawable/ic_notifications_black_24dp"
-            android:title="Benachrichtigungen" />
+            android:title="@string/menu_notification" />
         <item
             android:id="@+id/nav_einstellungen"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="Einstellungen" />
+            android:title="@string/menu_setting" />
         <item
             android:id="@+id/nav_hilfe"
             android:icon="@drawable/ic_help_black_24dp"
-            android:title="Hilfe" />
+            android:title="@string/menu_help" />
         <item
             android:id="@+id/nav_uberDealSpok"
             android:icon="@drawable/ic_location_city_black_24dp"
-            android:title="Über RegionalDeals" />
+            android:title="@string/menu_about" />
         <item
             android:id="@+id/nav_appTeilen"
             android:icon="@drawable/ic_share_black_24dp"
-            android:title="App Teilen" />
+            android:title="@string/menu_share" />
     </group>
 
-    <item android:title="Gewerbetreibende">
+    <item android:title="@string/menu_shop">
         <menu>
             <item
                 android:id="@+id/abo_buchen"
                 android:icon="@drawable/ic_local_offer_black_24dp"
-                android:title="Abo Buchen" />
+                android:title="@string/menu_subscription" />
             <item
                 android:id="@+id/meine_anzeigen"
                 android:icon="@drawable/ic_shopping_basket_black_24dp"
-                android:title="Meine Anzeigen" />
+                android:title="@string/menu_mydeals" />
             <item
                 android:id="@+id/meine_gutscheien"
                 android:icon="@drawable/ic_shopping_basket_black_24dp"
-                android:title="Meine Gutscheine" />
+                android:title="@string/menu_mycoupons" />
             <item
                 android:id="@+id/anzeigen_erstellen"
                 android:icon="@drawable/ic_add_shopping_cart_black_24dp"
-                android:title="Anzeigen Erstellen" />
+                android:title="@string/menu_myshops" />
         </menu>
     </item>
 

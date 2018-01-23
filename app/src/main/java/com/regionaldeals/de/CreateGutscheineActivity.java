@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +19,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.TextHttpResponseHandler;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.adapter.GutscheineAdapter;
 import com.regionaldeals.de.entities.GutscheineObject;
@@ -31,6 +37,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by Umi on 19.12.2017.
@@ -48,7 +56,11 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
     private final String URL_Deals = "/mobile/api/gutschein/list-owner";
     private JSONArray dealArr = null;
     JSONParser jsonParser = new JSONParser();
+    private TextView dealCount;
     private GutscheineAdapter mAdapter;
+    public static final int ADD_GUT_REQUEST_CODE = 116;
+    private int dealCounter;
+    private String subStatus = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,15 +76,23 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
 
         songRecyclerView = (RecyclerView)findViewById(R.id.create_deals_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        dealCount = (TextView) findViewById(R.id.dealsCount);
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
         SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredUser = prefs.getString("userObject", null);
+        String restoredSub = prefs.getString("subscriptionObject", null);
         try {
             if (restoredUser != null) {
                 JSONObject obj = new JSONObject(restoredUser);
                 userId = obj.getString("userId");
+            }
+            if (restoredSub != null) {
+                JSONObject data = new JSONObject(restoredSub);
+                dealCounter = data.getInt("deals_listing");
+                subStatus = data.getString("subscriptionStatus");
+                dealCount.setText(" "+Integer.toString(dealCounter) + "/4" + " (" + subStatus + ") ");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -86,10 +106,17 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent startActivityIntent = new Intent(CreateGutscheineActivity.this, AddDealActivity.class);
-                startActivityIntent.putExtra("isGutscheine", true);
-                startActivityIntent.putExtra("userId", userId);
-                startActivity(startActivityIntent);
+                if(dealCounter>=4){
+                    Snackbar.make(view, getResources().getString(R.string.deals_limit), Snackbar.LENGTH_LONG).show();
+                }else if(dealCounter<4) {
+                    Intent startActivityIntent = new Intent(CreateGutscheineActivity.this, AddDealActivity.class);
+                    startActivityIntent.putExtra("isGutscheine", true);
+                    startActivityIntent.putExtra("userId", userId);
+                    startActivityForResult(startActivityIntent, ADD_GUT_REQUEST_CODE);
+                }//Should not reach here
+                else {
+                    Snackbar.make(view, "Error", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -103,6 +130,65 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
                     }
                 }
         );
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ADD_GUT_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Boolean dealSuccess = data.getBooleanExtra("dealAddSuccess", false);
+                if(dealSuccess) {
+                    dealCounter++;
+                    dealCount.setText(" "+Integer.toString(dealCounter) + "/4" + " (" + subStatus + ") ");
+                    getSubscription();
+                }
+            }
+        }
+    }
+
+    private void getSubscription() {
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                AsyncHttpClient androidClient = new AsyncHttpClient();
+                androidClient.get("https://regionaldeals.de/mobile/api/subscriptions/subscription?userid="+ userId, new TextHttpResponseHandler() {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        Log.d("TAG", getString(R.string.token_failed) + responseString);
+                    }
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, String response) {
+                        Log.d("TAG", "Client token: " + response);
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            String msg = obj.getString("message");
+                            if(msg.equals("PLANS_SUBSCRIPTIONS_OK")) {
+                                JSONObject data = obj.getJSONObject("data");
+                                JSONObject plan = data.getJSONObject("plan");
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                                editor.putString("subscriptionObject", data.toString());
+                                editor.commit();
+                            } else if (msg.equals("PLANS_SUBSCRIPTIONS_NILL")) {
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                                editor.remove("subscriptionObject");
+                                editor.commit();
+                            }
+                            //should never come
+                            else{
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                                editor.remove("subscriptionObject");
+                                editor.commit();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (Throwable t) {
+                        }
+                    }
+                });
+            }
+        };
+        mainHandler.post(myRunnable);
     }
 
     @Override

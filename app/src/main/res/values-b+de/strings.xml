@@ -1,0 +1,114 @@
+<resources>
+    <string name="app_name">RegionalDeals</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="favouriten">Favouriten</string>
+    <string name="deals_heute">Deals Heute</string>
+    <string name="deals">Deals</string>
+    <string name="online_deals">Online Deals</string>
+    <string name="gutscheine">Gutscheine</string>
+    <string name="nearby">In der Nähe</string>
+    <string name="shopping">In der Nähe</string>
+    <string name="max_distance">Entfernung</string>
+    <string name="apiUrl">https://www.regionaldeals.de</string>
+
+    <string name="error_gif">x oder y gebundene Größe sollte mindestens %1$dpx und Dateigröße sollte nicht mehr als %2$sM sein</string>
+
+    <string name="locationErrorMsg">"Bitte wählen Sie einen Standort"</string>
+
+    <string name="sharedPredName">com.dealspok.www.MyPrefsFile</string>
+    <string name="place_details">
+    <![CDATA[
+        <b>%1$s</b>
+        <br/>
+        <i>Place Id: %2$s</i>
+        <br/>
+        Address: %3$s
+        <br/>
+        Phone: %4$s
+        <br/>
+        Website: %5$s
+    ]]>
+    </string>
+
+    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
+        AIzaSyCnEXKge_M54dyLyIkkBXgWzetKIFUUE1s
+    </string>
+
+
+    <string name="SERVER_EXCEPTION">SERVER_EXCEPTION</string>
+    <string name="LOGIN_OK">LOGIN_SUCCESS</string>
+    <string name="LOGIN_ERR_INVALID_CREDENTIALS">LOGIN_ERR_INVALID_CREDENTIALS</string>
+    <string name="SIGNUP_ERR_EMAIL_TAKEN">SIGNUP_ERR_EMAIL_TAKEN</string>
+    <string name="SIGNUP_ERR_USERNAME_TAKEN">SIGNUP_ERR_USERNAME_TAKEN</string>
+    <string name="SIGNUP_OK">SIGNUP_OK</string>
+    <string name="PASSWORD_UPDATE_OK">PASSWORD_UPDATE_OK</string>
+    <string name="PASSWORD_UPDATE_NOT_OK">PASSWORD_UPDATE_NOT_OK</string>
+
+    <string name="USER_NOT_VALID">USER_NOT_VALID</string>
+
+    <string name="SHOPS_UPLOAD_ERR">SHOPS_UPLOAD_ERR</string>
+    <string name="SHOPS_UPLOAD_OK">SHOPS_UPLOAD_OK</string>
+
+    <string name="DEALS_REMOVE_OK">DEALS_REMOVE_OK</string>
+    <string name="DEALS_REMOVE_ERR">DEALS_REMOVE_ERR</string>
+
+    <string name="GUTSCHEIN_REMOVE_OK">GUTSCHEIN_REMOVE_OK</string>
+    <string name="GUTSCHEIN_REMOVE_ERR">GUTSCHEIN_REMOVE_ERR</string>
+
+    <string name="SHOPS_REMOVE_OK">SHOPS_REMOVE_OK</string>
+    <string name="SHOPS_REMOVE_ERR">SHOPS_REMOVE_ERR</string>
+
+    <string name="DEALS_FAV_CHECK">DEALS_FAV_CHECK</string>
+    <string name="DEALS_FAV_ERR">DEALS_FAV_ERR</string>
+    <string name="DEALS_FAV_UNCHECK">DEALS_FAV_UNCHECK</string>
+
+    <string name="ONLINE_FAV_CHECK">ONLINE_FAV_CHECK</string>
+    <string name="ONLINE_FAV_ERR">ONLINE_FAV_ERR</string>
+    <string name="ONLINE_FAV_UNCHECK">ONLINE_FAV_UNCHECK</string>
+    <string name="FAVOURITES_LIST_OK">FAVOURITES_LIST_OK</string>
+
+
+    <string name="copy_right" translatable="false" >Copyrights © %1$d</string>
+
+
+    <string name="failed_token">Client Fehler beim Abrufen des Tokens vom Server</string>
+    <string name="BraintreeFragment_initialized">BraintreeFragment is ready to use</string>
+    <string name="issues_with_authorization">Bei der authorization string ist ein Problem aufgetreten</string>
+    <string name="token_failed">Fehler beim Abrufen des Client-Tokens</string>
+
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <!--
+        This is the name that users will see when interacting with this channel.
+        It should describe the category of notifications that will be sent through this channel
+     -->
+    <string name="default_notification_channel_name" translatable="true">News</string>
+
+    <string name="menu_fav">Favoriten</string>
+    <string name="menu_location">Standort Ändern</string>
+    <string name="menu_notification">Benachrichtigungen</string>
+    <string name="menu_setting">Einstellungen</string>
+    <string name="menu_help">Hilfe</string>
+    <string name="menu_about">Über RegionalDeals</string>
+    <string name="menu_share">App Teilen</string>
+    <string name="menu_shop">Gewerbetreibende</string>
+    <string name="menu_subscription">Abo Buchen</string>
+    <string name="menu_mydeals">Meine Anzeigen</string>
+    <string name="menu_mycoupons">Meine Gutscheine</string>
+    <string name="menu_myshops">Anzeigen Erstellen</string>
+
+    <string name="billing_cycle">Rechnungskreis</string>
+    <string name="start_date">Anfangsdatum</string>
+    <string name="next_date">Nächstes Zahlungsdatum</string>
+
+    <string name="remaining">Verbleibende Deals: </string>
+    <string name="deals_limit">Sie haben das Deals Limit für den aktuellen Abrechnungszeitraum erreicht</string>
+
+
+    <string name="suberror">Bitte machen Sie das erste Abonnement</string>
+
+</resources>

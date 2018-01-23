@@ -30,7 +30,19 @@
             android:layout_height="wrap_content"
             android:paddingTop="56dp"
             android:paddingLeft="24dp"
+            android:layout_gravity="center"
             android:paddingRight="24dp">
+
+            <TextView
+                android:id="@+id/currentSub"
+                android:background="@color/colorAccent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:textSize="@dimen/_17sdp" />
 
             <!--<ImageView android:src="@drawable/ic_local_offer_black_24dp"-->
                 <!--android:layout_width="wrap_content"-->
@@ -71,6 +83,7 @@
                 android:padding="12dp"
                 android:background="@drawable/button_round_trans"
                 android:textColor="@color/colorWhite"
+                android:enabled="false"
                 android:textSize="@dimen/_18sdp"/>
                 <!--android:text="CLEVER SPAR TARIF"/>-->
 
@@ -96,6 +109,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="15dp"
                 android:padding="12dp"
+                android:enabled="false"
                 android:background="@drawable/button_round_trans"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/_18sdp"/>
@@ -125,7 +139,6 @@
                 <!--android:text="No account yet? Create one"-->
                 <!--android:gravity="center"-->
                 <!--android:textSize="16dip"/>-->
-
         </LinearLayout>
     </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

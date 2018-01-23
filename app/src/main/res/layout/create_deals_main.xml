@@ -47,6 +47,31 @@
             android:orientation="vertical"
             android:background="@color/colorLightWhite">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@color/colorWhite">
+
+                <TextView
+                    android:id="@+id/titDeal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/red"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_8sdp"
+                    android:text="@string/remaining"
+                    android:textSize="@dimen/_17sdp" />
+
+                <TextView
+                    android:id="@+id/dealsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/_17sdp" />
+
+            </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/create_deals_list"

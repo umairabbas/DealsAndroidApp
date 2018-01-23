@@ -7,6 +7,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -19,13 +21,18 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.regionaldeals.de.MainActivity;
+import com.regionaldeals.de.NotificationDealsActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.SplashActivity;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
-
+    Bitmap bitmap;
     /**
      * Called when message is received.
      *
@@ -65,18 +72,49 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody());
         }
+
+        //message will contain the Push Message
+        String message = "msg";//remoteMessage.getData().get("message");
+        //imageUri will contain URL of the image to be displayed with Notification
+        String imageUri = "https://www.regionaldeals.de/mobile/api/deals/dealimage?dealid=63&dealtype=TYPE_DEALS&imagecount=1&res=300x200";//remoteMessage.getData().get("image");
+
+        //To get a Bitmap image from the URL received
+        bitmap = getBitmapfromUrl(imageUri);
+
+        sendNotification(remoteMessage.getNotification().getBody(), message, bitmap);
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
     }
+
+    /*
+*To get a Bitmap image from the URL received
+* */
+    public Bitmap getBitmapfromUrl(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(input);
+            return bitmap;
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+
+        }
+    }
+
     // [END receive_message]
 
     /**
      * Schedule a job using FirebaseJobDispatcher.
      */
-    private void scheduleJob() {
+//    private void scheduleJob() {
         // [START dispatch_job]
 //        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
 //        Job myJob = dispatcher.newJobBuilder()
@@ -85,22 +123,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //                .build();
 //        dispatcher.schedule(myJob);
         // [END dispatch_job]
-    }
+//    }
 
     /**
      * Handle time allotted to BroadcastReceivers.
      */
-    private void handleNow() {
-        Log.d(TAG, "Short lived task is done.");
-    }
+//    private void handleNow() {
+//        Log.d(TAG, "Short lived task is done.");
+//    }
 
     /**
      * Create and show a simple notification containing the received FCM message.
      *
      * @param messageBody FCM message body received.
      */
-    private void sendNotification(String messageBody) {
-        Intent intent = new Intent(this, SplashActivity.class);
+    private void sendNotification(String messageBody, String message, Bitmap bmpic) {
+        Intent intent = new Intent(this.getApplicationContext(), SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("notificationBody", messageBody);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -111,8 +149,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.ic_launcher)
+                        .setLargeIcon(bmpic)/*Notification icon image*/
                         .setContentTitle("RegionalDeals")
                         .setContentText(messageBody)
+                        .setStyle(new NotificationCompat.BigPictureStyle()
+                                .bigPicture(bmpic))/*Notification with Image*/
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
