@@ -226,7 +226,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                         adapter.notifyDataSetChanged();
 
                         if (shopList.size() <= 0) {
-                            Toast.makeText(context, "Kindly add a shop first", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, getResources().getString(R.string.no_shop), Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     } else {

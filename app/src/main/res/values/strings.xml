@@ -165,6 +165,7 @@
     <!--
     Add Shops
     -->
+    <string name="no_shop">Please add a shop first!</string>
 
 
 </resources>
