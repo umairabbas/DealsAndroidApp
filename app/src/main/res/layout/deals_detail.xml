@@ -48,16 +48,6 @@
                 android:fitsSystemWindows="true"
                 />
 
-
-            <!--<ImageView-->
-                <!--android:id="@+id/image"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:fitsSystemWindows="true"-->
-                <!--android:scaleType="fitXY"-->
-                <!--app:layout_collapseMode="parallax" />-->
-            <!--tools:background="@drawable/a"-->
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/deal_detail_toolbar"
                 android:layout_width="match_parent"
@@ -87,10 +77,28 @@
                 android:paddingTop="@dimen/_8sdp">
 
                 <TextView
+                    android:id="@+id/urlTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/website"
+                    android:visibility="gone"
+                    android:textColor="?attr/colorAccent"
+                    android:textSize="@dimen/article_titles" />
+
+                <TextView
+                    android:id="@+id/place_url"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:linksClickable="true"
+                    android:visibility="gone"
+                    android:layout_marginBottom="@dimen/md_keylines"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/md_keylines"
-                    android:text="Description"
+                    android:text="@string/description"
                     android:textColor="?attr/colorAccent"
                     android:textSize="@dimen/article_titles" />
 
@@ -104,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/md_keylines"
                     android:layout_marginTop="@dimen/md_keylines"
-                    android:text="Location"
+                    android:text="@string/location"
                     android:textColor="?attr/colorAccent"
                     android:textSize="@dimen/article_titles" />
 
@@ -149,7 +157,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Expiry Date"
+                android:text="@string/expiry"
                 android:textColor="@color/red"
                 android:textSize="26px"
                 />
@@ -171,7 +179,7 @@
                 android:visibility="gone"
                 android:textColor="@color/colorWhite"
                 android:background="@color/red"
-                android:text="Delete Deal"/>
+                android:text="@string/del_deal"/>
 
         </LinearLayout>
 

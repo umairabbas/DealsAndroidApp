@@ -111,4 +111,56 @@
 
     <string name="suberror">Bitte machen Sie das erste Abonnement</string>
 
+    <!--
+    Login/signup
+    -->
+    <string name="login_signup">Anmeldung/Registrieren</string>
+    <string name="existing_user">EXISTIERENDER BENUTZER</string>
+    <string name="new_user">NEUER BENUTZER</string>
+    <string name="password">Passwort</string>
+    <string name="login">Anmeldung</string>
+    <string name="login_msg">Noch keinen Account? Erstelle einen</string>
+    <string name="create_account">Benutzerkonto Anlegen</string>
+    <string name="signup_msg">Schon ein Mitglied? Anmeldung</string>
+    <string name="welcome">Herzlich willkommen</string>
+    <string name="login_failed">Anmeldung fehlgeschlagen</string>
+
+    <!--
+        Android Manifest
+     -->
+    <string name="about_us">Über Uns</string>
+    <string name="shop">Geschäfte</string>
+    <string name="add_shops">Geschäfte Hinzufügen</string>
+    <string name="new_deals">Neue Angebote</string>
+    <string name="subscribe">Abo Buchen</string>
+    <string name="create_deals">Deals erstellen</string>
+    <string name="create_gut">Gutscheine erstellen</string>
+    <string name="add_deals">Hinzufügen Deals</string>
+
+    <!--
+    Uber Uns
+    -->
+    <string name="about_us_text">
+    RegionalDeals bietet Kunden die Möglichkeit, die günstigsten Angebote in der Stadt zu bekommen. Es unterstützt mehrere Arten von Angeboten, darunter: \n
+    \n
+    •  Gutscheine: Gewinnen Sie einen kostenlosen Gutschein von bis zu 50 € für einen bestimmten Shop\n
+    •  Angebote in der Nähe: Werfen Sie einen Blick auf die günstigsten Angebote in der Nähe\n
+    •  Online-Angebote: Erhalten Sie den größten Rabatt auf Online-Shopping</string>
+    <string name="connect">Verbinden Sie uns</string>
+    <string name="call_us">Ruf uns an</string>
+
+    <!--
+    Deal description
+    -->
+    <string name="description">Beschreibung</string>
+    <string name="location">Ort</string>
+    <string name="expiry">Verfallsdatum</string>
+    <string name="del_deal">Deal löschen</string>
+    <string name="website">Webseite</string>
+
+
+    <!--
+    Add Shops
+    -->
+
 </resources>

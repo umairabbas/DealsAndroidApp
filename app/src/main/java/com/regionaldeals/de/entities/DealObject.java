@@ -27,6 +27,39 @@ public class DealObject implements Serializable {
     private Boolean favourite;
     private String dealType;
     private int dealImageCount;
+    private String dealUrl;
+
+    public long getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(long createDate) {
+        this.createDate = createDate;
+    }
+
+    public long getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(long publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public long getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(long expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public String getDealUrl() {
+        return dealUrl;
+    }
+
+    public void setDealUrl(String dealUrl) {
+        this.dealUrl = dealUrl;
+    }
 
     public int getDealImageCount() {
         return dealImageCount;

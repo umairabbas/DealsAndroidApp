@@ -61,8 +61,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new Login(), "EXISTING USER");
-        adapter.addFragment(new SignUp(), "NEW USER");
+        adapter.addFragment(new Login(), getResources().getString(R.string.existing_user));
+        adapter.addFragment(new SignUp(), getResources().getString(R.string.new_user));
         viewPager.setAdapter(adapter);
     }
 

@@ -58,47 +58,47 @@
         <activity
             android:allowBackup="true"
             android:name=".AddDealActivity"
-            android:label="Create Deals"
+            android:label="@string/add_deals"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"
             android:name=".CreateGutscheineActivity"
-            android:label="Create Gutscheine"
+            android:label="@string/create_gut"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"
             android:name=".CreateDealsActivity"
-            android:label="Create Deals"
+            android:label="@string/create_deals"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"
             android:name=".SubscribeActivity"
-            android:label="Abo Buchen"
+            android:label="@string/subscribe"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"
             android:name=".AboutActivity"
-            android:label="Über Uns"
+            android:label="@string/about_us"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"
             android:name=".LoginActivity"
-            android:label="Login"
+            android:label="@string/login"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"
             android:name=".ShopActivity"
-            android:label="Shop"
+            android:label="@string/shop"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"
             android:name=".AddShopActivity"
-            android:label="Add Shop"
+            android:label="@string/add_shops"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:allowBackup="true"
             android:name=".NotificationDealsActivity"
-            android:label="New Deals"
+            android:label="@string/new_deals"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".GooglePlacesAutocompleteActivity"></activity>

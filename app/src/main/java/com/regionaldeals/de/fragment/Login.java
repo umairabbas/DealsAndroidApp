@@ -210,7 +210,7 @@ public class Login extends Fragment {
                         editor.putString("userObject", jObject.toString());
                         editor.commit();
 
-                        Toast.makeText(context, "Welcome " + name, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, getResources().getString(R.string.welcome)+" " + name, Toast.LENGTH_LONG).show();
                         try {
                             Intent intent = getActivity().getIntent();
                             intent.putExtra("userEmail", jObject.getString("email"));
@@ -221,7 +221,7 @@ public class Login extends Fragment {
                             e.printStackTrace();
                         }
                     } else {
-                        Toast.makeText(context,  "Login failed\n" + message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context,  getResources().getString(R.string.login_failed)+"\n" + message, Toast.LENGTH_LONG).show();
                     }
                 }
             });

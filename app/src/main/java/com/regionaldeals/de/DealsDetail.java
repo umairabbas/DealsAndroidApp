@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -73,6 +74,7 @@ public class DealsDetail extends AppCompatActivity implements
 
     //for gutscheien del
     private Boolean isGutschein = false;
+    private String dealURL= "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,11 +92,32 @@ public class DealsDetail extends AppCompatActivity implements
         context = this;
         Intent intent = getIntent();
         int postion = intent.getIntExtra(EXTRA_POSITION, 0);
+
+
+        TextView placeUrl = (TextView) findViewById(R.id.place_url);
+        TextView titleUrl = (TextView) findViewById(R.id.urlTitle);
+
         if(intent.hasExtra("currDeal")) {
             DealObject currDeal = (DealObject) getIntent().getSerializableExtra("currDeal");
             dealId = currDeal.getDealId();
             shopId = currDeal.getShop().getShopId();
             exp.setText(DateFormat.format("dd/MM/yyyy", new Date(currDeal.getDateExpire())).toString());
+            if(!currDeal.getDealUrl().isEmpty()) {
+                dealURL = currDeal.getDealUrl();
+                titleUrl.setVisibility(View.VISIBLE);
+                placeUrl.setText(dealURL);
+                placeUrl.setVisibility(View.VISIBLE);
+                placeUrl.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!dealURL.startsWith("http://") && !dealURL.startsWith("https://")) {
+                            dealURL = "http://" + dealURL;
+                        }
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dealURL));
+                        startActivity(browserIntent);
+                    }
+                });
+            }
         }
 
         if(intent.hasExtra("currGut")) {

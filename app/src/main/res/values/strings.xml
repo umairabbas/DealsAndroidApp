@@ -110,4 +110,61 @@
 
     <string name="suberror">Kindly make subscription first</string>
 
+    <!--
+    Login/signup
+    -->
+    <string name="login_signup">Login/Signup</string>
+    <string name="existing_user">EXISTING USER</string>
+    <string name="new_user">NEW USER</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="login_msg">No account yet? Create one</string>
+    <string name="create_account">Create Account</string>
+    <string name="signup_msg">Already a member? Login</string>
+    <string name="welcome">Welcome</string>
+    <string name="login_failed">Login Failed</string>
+
+    <!--
+    Android Manifest
+    -->
+    <string name="about_us">About us</string>
+    <string name="shop">Shops</string>
+    <string name="add_shops">Add Shops</string>
+    <string name="new_deals">New Deals</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="create_deals">Create Deals</string>
+    <string name="create_gut">Create Gutscheine</string>
+    <string name="add_deals">Add Deals</string>
+
+    <!--
+    About Us
+    -->
+    <string name="about_us_text">
+    Regional Deals gives customers the opportunity to get the cheapest deals in town. It supports multiple types of offers including: \n
+    \n
+    •  Coupons: Win a free coupon of upto 50 € for a specific shop\n
+    •  Nearby Deals: Glance at the cheapest nearby offers\n
+    •  Online Deals: Get the biggest discount on online shopping</string>
+    <string name="connect">Connect with us</string>
+    <string name="call_us">Call help center</string>
+
+    <!--
+    Deal description
+    -->
+    <string name="description">Description</string>
+    <string name="location">Location</string>
+    <string name="expiry">Expiry Date</string>
+    <string name="del_deal">Delete Deal</string>
+    <string name="website">Website</string>
+
+
+
+
+
+
+    <!--
+    Add Shops
+    -->
+
+
 </resources>

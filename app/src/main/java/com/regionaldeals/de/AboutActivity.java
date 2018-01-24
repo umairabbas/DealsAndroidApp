@@ -6,6 +6,7 @@ package com.regionaldeals.de;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -48,24 +49,28 @@ public class AboutActivity extends AppCompatActivity {
         simulateDayNight(/* DAY */ 0);
         Element adsElement = new Element();
         adsElement.setTitle("Advertise with us");
+        String version = "";
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            version = pInfo.versionName;
+            int verCode = pInfo.versionCode;
+            version.concat(" ("+Integer.toString(verCode) + ")");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
-        View about = new AboutPage(this).setDescription("" +
-                "Regional Deals gives customers the opportunity to get the cheapest deals in town. It supports multiple types of offers including: \n" +
-                "\n" +
-                "•\tCoupons: Win a free coupon of upto 50 € for a specific shop\n" +
-                "•\tNearby Deals: Glance at the cheapest nearby offers\n" +
-                "•\tOnline Deals: Get the biggest discount on online shopping")
+        View about = new AboutPage(this).setDescription(getResources().getString(R.string.about_us_text))
                 .isRTL(false)
                 .setImage(R.mipmap.ic_launcher)
-                .addGroup("Connect with us")
-                .addEmail("feritbaycan@hotmail.com")
+                .addGroup(getResources().getString(R.string.connect))
+                .addEmail("regionaldeals.de@gmail.com")
                 .addWebsite("http://www.regionaldeals.de")
                 .addFacebook("umairabbashayat")
                 .addTwitter("umairabbas")
                 //.addYoutube("kJQP7kiw5Fk")
-                .addPlayStore("com.groupon")
+                .addPlayStore("com.regionaldeals.de")
                 .addInstagram("umairabbas")
-                .addItem(new Element().setTitle("Version 1.2"))
+                .addItem(new Element().setTitle(version))
                 .addItem(getCopyRightsElement())
                 .addItem(getCallElement())
                 .create();
@@ -76,7 +81,7 @@ public class AboutActivity extends AppCompatActivity {
 
     Element getCallElement() {
         Element copyRightsElement = new Element();
-        copyRightsElement.setTitle("Call help center");
+        copyRightsElement.setTitle(getResources().getString(R.string.call_us));
         //scopyRightsElement.setIconDrawable(R.drawable.about_icon_copy_right);
         copyRightsElement.setIconTint(mehdi.sakout.aboutpage.R.color.about_item_icon_color);
         copyRightsElement.setIconNightTint(android.R.color.white);

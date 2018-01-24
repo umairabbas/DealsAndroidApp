@@ -4,6 +4,11 @@
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true">
 
+    <!--<LinearLayout-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" >-->
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -12,8 +17,9 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <ImageView android:src="@drawable/logo_320_trans"
+        <ImageView android:src="@drawable/ic_launcher_not"
             android:layout_width="wrap_content"
+            android:tint="@color/colorAccent"
             android:layout_height="72dp"
             android:layout_marginBottom="24dp"
             android:layout_gravity="center_horizontal" />
@@ -41,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="Password"/>
+                android:hint="@string/password"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
@@ -53,15 +59,14 @@
             android:padding="12dp"
             android:textColor="@color/colorWhite"
             android:background="@color/colorPrimary"
-            android:text="Login"/>
+            android:text="@string/login"/>
 
         <TextView android:id="@+id/link_signup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="No account yet? Create one"
+                android:text="@string/login_msg"
             android:gravity="center"
             android:textSize="16dip"/>
-
     </LinearLayout>
 </ScrollView>

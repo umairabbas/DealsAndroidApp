@@ -48,7 +48,7 @@ public class SignUp extends Fragment {
     @BindView(R.id.input_password) EditText _passwordText;
     @BindView(R.id.btn_signup) Button _signupButton;
     @BindView(R.id.link_login) TextView _loginLink;
-    @BindView(R.id.shopCheck) Switch _isShopKeeper;
+    //@BindView(R.id.shopCheck) Switch _isShopKeeper;
 
     private ViewPager viewPager;
     private JSONObject Result = null;
@@ -116,7 +116,7 @@ public class SignUp extends Fragment {
         name = _nameText.getText().toString();
         email = _emailText.getText().toString();
         password = _passwordText.getText().toString();
-        isShop = _isShopKeeper.isChecked();
+        //isShop = _isShopKeeper.isChecked();
 
         new SignUpCall().execute();
 

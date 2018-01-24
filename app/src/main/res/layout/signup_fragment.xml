@@ -13,8 +13,9 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <ImageView android:src="@drawable/logo_320_trans"
+        <ImageView android:src="@drawable/ic_launcher_not"
             android:layout_width="wrap_content"
+            android:tint="@color/colorAccent"
             android:layout_height="72dp"
             android:layout_marginBottom="24dp"
             android:layout_gravity="center_horizontal" />
@@ -55,15 +56,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="Password"/>
+                android:hint="@string/password"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Signup Button -->
-        <Switch
-            android:id="@+id/shopCheck"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Are you a Shopkeeper?" />
+        <!--<Switch-->
+            <!--android:id="@+id/shopCheck"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Are you a Shopkeeper?" />-->
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_signup"
@@ -74,13 +75,13 @@
             android:padding="12dp"
             android:textColor="@color/colorWhite"
             android:background="@color/colorPrimary"
-            android:text="Create Account"/>
+            android:text="@string/create_account"/>
 
         <TextView android:id="@+id/link_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="Already a member? Login"
+            android:text="@string/signup_msg"
             android:gravity="center"
             android:textSize="16dip"/>
 

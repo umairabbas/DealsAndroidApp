@@ -45,10 +45,11 @@ public class OnlineDealsViewHolder extends RecyclerView.ViewHolder{
                 Context context = v.getContext();
                 Intent intent = new Intent(context, DealsDetail.class);
                 DealObject currDeal = allDeals.get(getAdapterPosition());
+                intent.putExtra("currDeal", currDeal);
                 intent.putExtra("title", currDeal.getDealTitle());
                 intent.putExtra("desc", currDeal.getDealDescription());
-                intent.putExtra("coverImg", currDeal.getDealImageUrl(context));
-                intent.putExtra("imgCount", currDeal.getDealImageCount() + "&imagecount=");
+                intent.putExtra("coverImg", currDeal.getDealImageUrl(context)+ "&imagecount=");
+                intent.putExtra("imgCount", currDeal.getDealImageCount());
                 intent.putExtra("lat",  Double.parseDouble(currDeal.getShop().getShopLocationLat()));
                 intent.putExtra("long", Double.parseDouble(currDeal.getShop().getShopLocationLong()));
                 intent.putExtra("contact", currDeal.getShop().getShopContact());
