@@ -172,11 +172,9 @@ public class SplashActivity extends AppCompatActivity {
                     Intent startActivityIntent = new Intent(SplashActivity.this, MainActivity.class);
                     if (getIntent().hasExtra("notificationBody")) {
                         String body = getIntent().getStringExtra("notificationBody");
-                        //Toast.makeText(context, "notificationBody: " + body, Toast.LENGTH_LONG).show();
                         startActivityIntent.putExtra("notificationBody", body);
                     } else if (getIntent().hasExtra("dealids")) {     //should be redirect = true
                         String body = getIntent().getStringExtra("dealids");
-                        //Toast.makeText(context, "notificationBody: " + body, Toast.LENGTH_LONG).show();
                         startActivityIntent.putExtra("notificationBody", body);
                     }
                     startActivity(startActivityIntent);

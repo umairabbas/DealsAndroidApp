@@ -22,7 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_launcher" />
+            android:resource="@drawable/ic_launcher_not" />
+        <meta-data android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBrlwKev72JMLRQzv0iJgZ62t-AztlSoTs"/>

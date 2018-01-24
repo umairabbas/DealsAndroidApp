@@ -42,6 +42,7 @@ public class NotificationDealsActivity extends AppCompatActivity {
     private JSONArray dealArr = null;
     JSONParser jsonParser = new JSONParser();
     private DealsAdapter mAdapter;
+    private String ids = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +55,8 @@ public class NotificationDealsActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        ids = getIntent().getStringExtra("notificationBody");
 
         songRecyclerView = (RecyclerView)findViewById(R.id.create_deals_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -91,8 +94,7 @@ public class NotificationDealsActivity extends AppCompatActivity {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-            params.add(new BasicNameValuePair("dealids", "63;64"));
-            //params.add(new BasicNameValuePair("userid", userId));
+            params.add(new BasicNameValuePair("dealids", ids));
 
             // getting JSON string from URL
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
@@ -124,9 +126,6 @@ public class NotificationDealsActivity extends AppCompatActivity {
                 return;
             activity.runOnUiThread(new Runnable() {
                 public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
                     mAdapter = new DealsAdapter(activity, deals, false, false);
                     songRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();

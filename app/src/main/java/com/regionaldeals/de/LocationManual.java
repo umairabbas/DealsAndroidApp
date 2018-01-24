@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.Toast;
 
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.entities.CitiesObject;
@@ -72,6 +73,8 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
 
         if (restoredCities == null) {
             //should not be
+            Toast.makeText(this, "Please restart or update app", Toast.LENGTH_LONG).show();
+            finish();
         }else {
             COUNTRIES = restoredCities.split(",");
             lv1.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, COUNTRIES));

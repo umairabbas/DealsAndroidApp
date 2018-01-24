@@ -74,15 +74,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
-        //message will contain the Push Message
-        String message = "msg";//remoteMessage.getData().get("message");
         //imageUri will contain URL of the image to be displayed with Notification
-        String imageUri = "https://www.regionaldeals.de/mobile/api/deals/dealimage?dealid=63&dealtype=TYPE_DEALS&imagecount=1&res=300x200";//remoteMessage.getData().get("image");
+        //String imageUri = "https://www.regionaldeals.de/mobile/api/deals/dealimage?dealid=63&dealtype=TYPE_DEALS&imagecount=1&res=300x200";//remoteMessage.getData().get("image");
 
         //To get a Bitmap image from the URL received
-        bitmap = getBitmapfromUrl(imageUri);
+        //bitmap = getBitmapfromUrl(imageUri);
 
-        sendNotification(remoteMessage.getNotification().getBody(), message, bitmap);
+        sendNotification(remoteMessage);//remoteMessage.getNotification().getBody(), message, bitmap);
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
@@ -135,12 +133,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     /**
      * Create and show a simple notification containing the received FCM message.
      *
-     * @param messageBody FCM message body received.
      */
-    private void sendNotification(String messageBody, String message, Bitmap bmpic) {
+    private void sendNotification(RemoteMessage remoteMessage) {
+
+        String dealids = remoteMessage.getData().get("dealids");
+        String title = remoteMessage.getNotification().getTitle();
+        String body = remoteMessage.getNotification().getBody();
+
         Intent intent = new Intent(this.getApplicationContext(), SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("notificationBody", messageBody);
+        intent.putExtra("notificationBody", dealids);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
@@ -148,12 +150,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setLargeIcon(bmpic)/*Notification icon image*/
-                        .setContentTitle("RegionalDeals")
-                        .setContentText(messageBody)
-                        .setStyle(new NotificationCompat.BigPictureStyle()
-                                .bigPicture(bmpic))/*Notification with Image*/
+                        .setSmallIcon(R.drawable.ic_launcher_not)
+                        //.setLargeIcon(bmpic)/*Notification icon image*/
+                        .setContentTitle(title)
+                        .setContentText(body)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("First deal title\nSecond deal title\nThird deal title\nForuth deal title is very very quite long title so that it takes many lines\nFifth deal title"))
+                        //.setStyle(new NotificationCompat.BigPictureStyle()
+                        //       .bigPicture(bmpic))/*Notification with Image*/
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);

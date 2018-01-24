@@ -1,32 +1,20 @@
 package com.regionaldeals.de;
 
 import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewPager;
-import android.telephony.TelephonyManager;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -42,30 +30,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
-import com.regionaldeals.de.entities.Plans;
 import com.regionaldeals.de.fragment.Main;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.List;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import cz.msebera.android.httpclient.Header;
 
-public class MainActivity extends AppCompatActivity implements LocationListener {
+public class MainActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager;
     private Fragment fragment = null;
@@ -75,15 +57,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public static final int LOGIN_REQUEST_CODE = 1;
     private TextView emailMenu;
     private static boolean shouldRefresh = false;
-    public static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 101;
-    private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 102;
-    private double dlat = 0.0;
-    private double dlng = 0.0;
     private String token = "";
-    private LocationManager mLocationManager;
     private String city = "";
     private String IMEINumber = "";
     private Boolean subscribed = false;
+
+//    public static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 101;
+//    private LocationManager mLocationManager;
+//    private double dlat = 0.0;
+//    private double dlng = 0.0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,9 +107,27 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         emailMenu = (TextView)header.findViewById(R.id.textemail);
 
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            // Create channel to show notifications.
+//            String channelId  = getString(R.string.default_notification_channel_id);
+//            String channelName = getString(R.string.default_notification_channel_name);
+//            NotificationManager notificationManager =
+//                    getSystemService(NotificationManager.class);
+//            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
+//                    channelName, NotificationManager.IMPORTANCE_LOW));
+//        }
+
+        if(getIntent().hasExtra("userCity")) {
+            city = getIntent().getStringExtra("userCity");
+        }
+
+        token = FirebaseInstanceId.getInstance().getToken();
+
         SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("userObject", null);
         String restoredSub = prefs.getString("subscriptionObject", null);
+        String restoredNot = prefs.getString("notificationToken", null);
+
         if (restoredText != null) {
             try {
                 JSONObject obj = new JSONObject(restoredText);
@@ -141,6 +142,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         if (restoredSub != null) {
             subscribed = true;
         }
+        if(restoredNot != null){
+            if(!token.equals(restoredNot)){
+                new RegCall().execute();
+            }
+        }else {
+            new RegCall().execute();
+        }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -150,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     ViewPager vp = fragment.getView().findViewById(R.id.view_pager);
                     vp.setCurrentItem(5);
                 } else if (id == R.id.nav_ort) {
-                    Intent startActivityIntent = new Intent(MainActivity.this, GooglePlacesAutocompleteActivity.class);
+                    Intent startActivityIntent = new Intent(MainActivity.this, LocationManual.class);
                     startActivity(startActivityIntent);
                 }
                 else if (id == R.id.nav_benachrichtigungen) {
@@ -170,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     startActivity(intent);
                 }
                 else if (id == R.id.nav_appTeilen) {
-                //    fragment = new Deals();
                     ShareCompat.IntentBuilder.from(activity)
                             .setType("text/plain")
                             .setChooserTitle("Chooser title")
@@ -178,8 +185,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                             .startChooser();
                 }
                 else if (id == R.id.abo_buchen) {
-                    //SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-                    //String restoredText = prefs.getString("userObject", null);
                     if (userId != 0) {
                         Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
                         startActivity(intent);
@@ -191,8 +196,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
                 }
                 else if (id == R.id.meine_anzeigen) {
-                    //SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-                    //String restoredText = prefs.getString("userObject", null);
                     if (userId == 0) {
                         Intent intent = new Intent(context, LoginActivity.class);
                         startActivityForResult(intent, LOGIN_REQUEST_CODE);
@@ -205,8 +208,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     }
                 }
                 else if (id == R.id.meine_gutscheien) {
-                    //SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-                    //String restoredText = prefs.getString("userObject", null);
                     if (userId == 0) {
                         Intent intent = new Intent(context, LoginActivity.class);
                         startActivityForResult(intent, LOGIN_REQUEST_CODE);
@@ -219,8 +220,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     }
                 }
                 else if (id == R.id.anzeigen_erstellen) {
-                    //SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-                    //String restoredText = prefs.getString("userObject", null);
                     if (userId == 0) {
                         Intent intent = new Intent(context, LoginActivity.class);
                         startActivityForResult(intent, LOGIN_REQUEST_CODE);
@@ -242,31 +241,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             }
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create channel to show notifications.
-            String channelId  = getString(R.string.default_notification_channel_id);
-            String channelName = getString(R.string.default_notification_channel_name);
-            NotificationManager notificationManager =
-                    getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
-                    channelName, NotificationManager.IMPORTANCE_LOW));
-        }
-        //String id = UUID.randomUUID().toString();
-        token = FirebaseInstanceId.getInstance().getToken();
-
-        /** Fading Transition Effect */
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
         if (getIntent().hasExtra("notificationBody")) {
             String body = getIntent().getStringExtra("notificationBody");
-            Toast.makeText(context, "notificationBody: " + body, Toast.LENGTH_LONG).show();
             getIntent().removeExtra("notificationBody");
             Intent startActivityIntent = new Intent(MainActivity.this, NotificationDealsActivity.class);
             startActivityIntent.putExtra("notificationBody", body);
             startActivity(startActivityIntent);
         }
 
-        getLocation(context);
     }
 
     @Override
@@ -274,51 +258,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         super.onNewIntent(intent);
         if (intent.hasExtra("notificationBody")) {
             Intent startNotIntent = new Intent(MainActivity.this, NotificationDealsActivity.class);
-            startNotIntent.putExtra("notificationBody", getIntent().hasExtra("notificationBody"));
-            getIntent().removeExtra("notificationBody");
+            startNotIntent.putExtra("notificationBody", intent.getStringExtra("notificationBody"));
+            intent.removeExtra("notificationBody");
             startActivity(startNotIntent);
         }
     }
-
-    /**
-     * Called when the 'loadIMEI' function is triggered.
-     */
-//    public void loadIMEI() {
-//        // Check if the READ_PHONE_STATE permission is already available.
-//        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            // READ_PHONE_STATE permission has not been granted.
-//            requestReadPhoneStatePermission();
-//        } else {
-//            // READ_PHONE_STATE permission is already been granted.
-//            TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-//            //Get IMEI Number of Phone  //////////////// for this example i only need the IMEI
-//            IMEINumber = tm.getDeviceId();
-//
-//        }
-//    }
-
-    /**
-     * Requests the READ_PHONE_STATE permission.
-     * If the permission has been denied previously, a dialog will prompt the user to grant the
-     * permission, otherwise it is requested directly.
-     */
-//    private void requestReadPhoneStatePermission() {
-//        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                android.Manifest.permission.READ_PHONE_STATE)) {
-//
-//                            //re-request
-//                            ActivityCompat.requestPermissions(MainActivity.this,
-//                                    new String[]{android.Manifest.permission.READ_PHONE_STATE},
-//                                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-//
-//        } else {
-//            // READ_PHONE_STATE permission has not been granted yet. Request it directly.
-//            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_PHONE_STATE},
-//                    MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-//        }
-//    }
-
 
     @Override
     protected void onResume() {
@@ -445,106 +389,95 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         mainHandler.post(myRunnable);
     }
 
-    public void getLocation(Context context) {
-        int status = context.getPackageManager().checkPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                context.getPackageName());
-        if (status == PackageManager.PERMISSION_GRANTED) {
-            mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            List<String> providers = mLocationManager.getAllProviders();
-            Location bestLocation = null;
-            for (String provider : providers) {
-                Location l = mLocationManager.getLastKnownLocation(provider);
-                if (l == null) {
-                    continue;
-                }
-                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                    // Found best last known location: %s", l);
-                    bestLocation = l;
-                }
-            }
-            if(bestLocation==null){
-                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) context);
-            }else{
-                dlat = bestLocation.getLatitude();
-                dlng = bestLocation.getLongitude();
-                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-                List<Address> addresses = null;
-                try {
-                    addresses = geocoder.getFromLocation(dlat, dlng, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                city = addresses.get(0).getLocality();
-                String cityName = addresses.get(0).getAddressLine(0);
-
-                new RegCall().execute();
-            }
-        }else{
-            ActivityCompat.requestPermissions( activity, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
-                    MY_PERMISSION_ACCESS_COURSE_LOCATION );
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSION_ACCESS_COURSE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay!
-                    getLocation(context);
-                } else {
-                    Toast.makeText(context, "Cannot get user location", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-//            case MY_PERMISSIONS_REQUEST_READ_PHONE_STATE: {
-//                // Received permission result for READ_PHONE_STATE permission.est.");
-//                // Check if the only required permission has been granted
-//                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    // READ_PHONE_STATE permission has been granted, proceed with displaying IMEI Number
-//                    //alertAlert(getString(R.string.permision_available_read_phone_state));
-//                    loadIMEI();
-//                } else {
-//                    Toast.makeText(context, "Permission not granted", Toast.LENGTH_SHORT).show();
+//    public void getLocation(Context context) {
+//        int status = context.getPackageManager().checkPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION,
+//                context.getPackageName());
+//        if (status == PackageManager.PERMISSION_GRANTED) {
+//            mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+//            List<String> providers = mLocationManager.getAllProviders();
+//            Location bestLocation = null;
+//            for (String provider : providers) {
+//                Location l = mLocationManager.getLastKnownLocation(provider);
+//                if (l == null) {
+//                    continue;
+//                }
+//                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+//                    // Found best last known location: %s", l);
+//                    bestLocation = l;
 //                }
 //            }
-        }
-    }
+//            if(bestLocation==null){
+//                mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) context);
+//            }else{
+//                dlat = bestLocation.getLatitude();
+//                dlng = bestLocation.getLongitude();
+//                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+//                List<Address> addresses = null;
+//                try {
+//                    addresses = geocoder.getFromLocation(dlat, dlng, 1);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                city = addresses.get(0).getLocality();
+//                String cityName = addresses.get(0).getAddressLine(0);
+//
+//                new RegCall().execute();
+//            }
+//        }else{
+//            ActivityCompat.requestPermissions( activity, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
+//                    MY_PERMISSION_ACCESS_COURSE_LOCATION );
+//        }
+//    }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        if (location != null) {
-            Log.v("Location Changed", location.getLatitude() + " and " + location.getLongitude());
-            dlat = location.getLatitude();
-            dlng = location.getLongitude();
-            mLocationManager.removeUpdates(this);
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            List<Address> addresses = null;
-            try {
-                addresses = geocoder.getFromLocation(dlat, dlng, 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            city = addresses.get(0).getLocality();
-            String cityName = addresses.get(0).getAddressLine(0);
-//            String stateName = addresses.get(0).getAddressLine(1);
-//            String countryName = addresses.get(0).getAddressLine(2);
-            new RegCall().execute();
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+//        switch (requestCode) {
+//            case MY_PERMISSION_ACCESS_COURSE_LOCATION: {
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    // permission was granted, yay!
+//                    getLocation(context);
+//                } else {
+//                    Toast.makeText(context, "Cannot get user location", Toast.LENGTH_SHORT).show();
+//                }
+//                return;
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void onLocationChanged(Location location) {
+//        if (location != null) {
+//            Log.v("Location Changed", location.getLatitude() + " and " + location.getLongitude());
+//            dlat = location.getLatitude();
+//            dlng = location.getLongitude();
+//            mLocationManager.removeUpdates(this);
+//            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+//            List<Address> addresses = null;
+//            try {
+//                addresses = geocoder.getFromLocation(dlat, dlng, 1);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            city = addresses.get(0).getLocality();
+//            String cityName = addresses.get(0).getAddressLine(0);
+////            String stateName = addresses.get(0).getAddressLine(1);
+////            String countryName = addresses.get(0).getAddressLine(2);
+//            new RegCall().execute();
+//        }
+//    }
+//
+//    @Override
+//    public void onStatusChanged(String s, int i, Bundle bundle) {
+//    }
+//
+//    @Override
+//    public void onProviderEnabled(String s) {
+//    }
+//
+//    @Override
+//    public void onProviderDisabled(String s) {
+//    }
 
     class RegCall extends AsyncTask<String, String, String> {
         @Override
@@ -567,7 +500,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 jsonParam.put("deviceType", "android");
                 jsonParam.put("deviceToken", token);
                 jsonParam.put("deviceUuidImei", IMEINumber);
-                jsonParam.put("deviceAppLanguage", "en");
+                jsonParam.put("deviceAppLanguage", Locale.getDefault().getLanguage());
                 //jsonParam.put("deviceLocationLat", dlat);
                 //jsonParam.put("deviceLocationLong", dlng);
                 jsonParam.put("deviceCity", city);
@@ -609,7 +542,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     if(activity != null){
                         activity.runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(context, "Server notification activated", Toast.LENGTH_SHORT).show();
+                                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                                editor.putString("notificationToken", token);
+                                editor.commit();
+                                Toast.makeText(context, "Notifications activated", Toast.LENGTH_SHORT).show();
+
                             }
                         });
                     }
@@ -622,29 +559,4 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         protected void onPostExecute(String file_url) {
         }
     }
-
-//    @SuppressWarnings("StatementWithEmptyBody")
-//    @Override
-//    public boolean onNavigationItemSelected(MenuItem item) {
-//        // Handle navigation view item clicks here.
-//        int id = item.getItemId();
-//
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
-//
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawer.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
 }
