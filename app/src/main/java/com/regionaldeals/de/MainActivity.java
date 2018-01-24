@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //Toast.makeText(context, "IMPORTANT: The app is currently using dummy data and will be live on 1st Feb 2018.", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "IMPORTANT: The app is currently using dummy data and will be live on 10th Feb 2018.\nStay tuned.", Toast.LENGTH_LONG).show();
 //        if(shouldRefresh){
 //            SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
 //            String restoredText = prefs.getString("userObject", null);
