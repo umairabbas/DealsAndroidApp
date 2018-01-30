@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">RegionalDeals</string>
 
+    <string name="headerText">RegionalDeals</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -154,6 +156,7 @@
     Add Shops
     -->
     <string name="no_shop">Bitte fügen Sie zuerst ein Geschäft hinzu!</string>
+    <string name="city">Region</string>
 
 
 

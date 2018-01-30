@@ -55,7 +55,7 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutscheine, container, false);
         context = getContext();
-        getActivity().setTitle("Regional Deals");
+        getActivity().setTitle(getResources().getString(R.string.headerText));
         songRecyclerView = (RecyclerView)view.findViewById(R.id.song_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         songRecyclerView.setLayoutManager(linearLayoutManager);

@@ -16,7 +16,16 @@ public class Shop implements Serializable {
     private String shopLocationLat;
     private String shopLocationLong;
     private String shopContact;
+    private String shopCity;
     private Boolean active;
+
+    public String getShopCity() {
+        return shopCity;
+    }
+
+    public void setShopCity(String shopCity) {
+        this.shopCity = shopCity;
+    }
 
     public Shop(int shopId, String shopName){
         this.shopId = shopId;

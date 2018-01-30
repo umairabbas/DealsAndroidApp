@@ -261,6 +261,9 @@ public class MainActivity extends AppCompatActivity {
             startNotIntent.putExtra("notificationBody", intent.getStringExtra("notificationBody"));
             intent.removeExtra("notificationBody");
             startActivity(startNotIntent);
+        }else if(intent.hasExtra("subscribed")){
+            subscribed = intent.getBooleanExtra("subscribed", false);
+            intent.removeExtra("subscribed");
         }
     }
 

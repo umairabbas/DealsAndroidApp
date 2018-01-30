@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">RegionalDeals</string>
 
+    <string name="headerText">RegionalDeals</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -140,7 +142,7 @@
     About Us
     -->
     <string name="about_us_text">
-    Regional Deals gives customers the opportunity to get the cheapest deals in town. It supports multiple types of offers including: \n
+    RegionalDeals gives customers the opportunity to get the cheapest deals in town. It supports multiple types of offers including: \n
     \n
     •  Coupons: Win a free coupon of upto 50 € for a specific shop\n
     •  Nearby Deals: Glance at the cheapest nearby offers\n
@@ -166,6 +168,8 @@
     Add Shops
     -->
     <string name="no_shop">Please add a shop first!</string>
+    <string name="city">Region</string>
+
 
 
 </resources>

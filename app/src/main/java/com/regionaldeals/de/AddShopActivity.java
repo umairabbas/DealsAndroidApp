@@ -11,12 +11,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
+import com.regionaldeals.de.entities.CategoryObject;
 import com.regionaldeals.de.entities.Shop;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -45,7 +50,7 @@ import butterknife.ButterKnife;
  * Created by Umi on 28.10.2017.
  */
 
-public class AddShopActivity extends AppCompatActivity {
+public class AddShopActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     @BindView(com.regionaldeals.de.R.id.input_name)
     EditText _nameText;
@@ -87,7 +92,8 @@ public class AddShopActivity extends AppCompatActivity {
     private String shopCity = "";
     private String shopCountry = "";
     private Geocoder mGeocoder;
-
+    private Spinner shopCitySpinner;
+    private static String[] COUNTRIES;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +102,27 @@ public class AddShopActivity extends AppCompatActivity {
         context = this;
         activity = this;
         isEdit = false;
+
+        shopCitySpinner = (Spinner) findViewById(R.id.spinner_city);
+
+        SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+        String restoredCities = prefs.getString("citiesObject", null);
+
+        if (restoredCities == null) {
+            //should not be
+            Toast.makeText(this, "Please restart or update app", Toast.LENGTH_LONG).show();
+            finish();
+        }else {
+            COUNTRIES = restoredCities.split(",");
+        }
+
+
+        //Adapter Deals
+        ArrayAdapter<String> adapterDeals = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, COUNTRIES);
+        adapterDeals.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        shopCitySpinner.setAdapter(adapterDeals);
+        shopCitySpinner.setOnItemSelectedListener(this);
 
         ButterKnife.bind(this);
 
@@ -114,6 +141,14 @@ public class AddShopActivity extends AppCompatActivity {
             shopActive = editShop.getActive();
             shopId = editShop.getShopId();
             _delButton.setVisibility(View.VISIBLE);
+            int index = 0;
+            for (int i=0;i<COUNTRIES.length;i++) {
+                if (COUNTRIES[i].equals(editShop.getShopCity())) {
+                    index = i;
+                    break;
+                }
+            }
+            shopCitySpinner.setSelection(index);
 
             _delButton.setOnClickListener(new View.OnClickListener() {
 
@@ -162,7 +197,6 @@ public class AddShopActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences prefs = this.getSharedPreferences(getString(com.regionaldeals.de.R.string.sharedPredName), MODE_PRIVATE);
         String restoredUser = prefs.getString("userObject", null);
         try {
             if (restoredUser != null) {
@@ -173,6 +207,18 @@ public class AddShopActivity extends AppCompatActivity {
             e.printStackTrace();
         } catch (Throwable t) {
         }
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+        switch (parent.getId()) {
+            case R.id.spinner_city:
+                shopCity = COUNTRIES[position];
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
     }
 
     private void getCityNameByCoordinates(double lat, double lon) throws IOException {

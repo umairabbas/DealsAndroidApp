@@ -1,6 +1,7 @@
 package com.regionaldeals.de;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -303,6 +304,10 @@ public class SubscribeActivity extends AppCompatActivity {
                                 Toast.makeText(context, "Success!\n" + "Sie haben erfolgreich " + planName + " gekauft", Toast.LENGTH_SHORT).show();
                                 firstDealBtn.setEnabled(false);
                                 secDealBtn.setEnabled(false);
+                                Intent intent = new Intent(context, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.putExtra("subscribed", true);
+                                startActivity(intent);
                                 //finish();
                             }
                         });

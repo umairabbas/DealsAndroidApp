@@ -80,7 +80,7 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutscheine, container, false);
-        getActivity().setTitle("Regional Deals");
+        getActivity().setTitle(getResources().getString(R.string.headerText));
         context = getContext();
         songRecyclerView = (RecyclerView)view.findViewById(R.id.song_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
