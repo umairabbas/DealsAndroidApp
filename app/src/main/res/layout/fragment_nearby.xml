@@ -13,23 +13,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorLightWhite">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/colorLightWhite">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/song_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="50dp"
-        android:paddingTop="@dimen/md_keylines"
-        android:scrollbars="vertical"
-/>
-</LinearLayout>
+            <ListView
+                android:id="@+id/shop_list"
+                android:layout_height="match_parent"
+                android:paddingBottom="50dp"
+                android:paddingTop="@dimen/md_keylines"
+                android:layout_width="match_parent">
+            </ListView>
+        </LinearLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

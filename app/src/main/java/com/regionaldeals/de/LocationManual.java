@@ -92,6 +92,7 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
         editor.commit();
 
         Intent startActivityIntent = new Intent(LocationManual.this, MainActivity.class);
+        startActivityIntent.putExtra("userCity",citySelected);
         startActivity(startActivityIntent);
         LocationManual.this.finish();
 

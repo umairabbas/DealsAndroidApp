@@ -12,14 +12,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.DoubleNameValuePair;
+import com.regionaldeals.de.Utils.IntNameValuePair;
 import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.adapter.NearbyAdapter;
 import com.regionaldeals.de.adapter.OnlineDealsAdapter;
+import com.regionaldeals.de.adapter.ShopAdapter;
 import com.regionaldeals.de.entities.DealObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.regionaldeals.de.entities.Shop;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -38,44 +44,34 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshListener{
 
-    private List<DealObject> deals;
+    private List<Shop> shopList;
+    private ListView mListView;
     JSONParser jsonParser = new JSONParser();
     Context context;
-    private final String URL_Online = "/mobile/api/deals/list";
-    private JSONArray dealArr = null;
-    private RecyclerView songRecyclerView;
+    private final String URL_Online = "/mobile/api/shops/list";
+    private JSONArray shopArr = null;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private String userId = "";
+    //private String userId = "";
     private Double locationLat = 50.781203;
     private Double locationLng = 6.078068;
-    private OnlineDealsAdapter mAdapter;
+    private NearbyAdapter mAdapter;
+    private JSONArray cat;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_gutscheine, container, false);
+        View view = inflater.inflate(R.layout.fragment_nearby, container, false);
         context = getContext();
         getActivity().setTitle(getResources().getString(R.string.headerText));
-        songRecyclerView = (RecyclerView)view.findViewById(R.id.song_list);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        songRecyclerView.setLayoutManager(linearLayoutManager);
-        songRecyclerView.setHasFixedSize(true);
+        mListView = (ListView)view.findViewById(R.id.shop_list);
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        deals = new ArrayList<>();
-        swipeRefreshLayout.post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        new Shopping.LoadDeals().execute();
-                    }
-                }
-        );
-
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
-        String restoredUser = prefs.getString("userObject", null);
+        String restoredCat = prefs.getString("categoriesObj", null);
+
+        // restoredUser = prefs.getString("userObject", null);
         try {
             if (restoredText != null) {
                 JSONObject obj = new JSONObject(restoredText);
@@ -86,14 +82,29 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
                     locationLng = Double.parseDouble(Lng);
                 }
             }
-            if (restoredUser != null) {
-                JSONObject obj = new JSONObject(restoredUser);
-                userId = obj.getString("userId");
+            if(restoredCat != null){
+                cat = new JSONArray(restoredCat);
+            } else {
+
             }
+//            if (restoredUser != null) {
+//                JSONObject obj = new JSONObject(restoredUser);
+//                userId = obj.getString("userId");
+//            }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Throwable t) {
         }
+
+        shopList = new ArrayList<>();
+        swipeRefreshLayout.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        new Shopping.LoadDeals().execute();
+                    }
+                }
+        );
 
         return view;
     }
@@ -104,43 +115,20 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
         new Shopping.LoadDeals().execute();
     }
 
-    /**
-     * Background Async Task to Load all Albums by making http request
-     * */
     class LoadDeals extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             swipeRefreshLayout.setRefreshing(true);
-//            pDialog = new ProgressDialog(AlbumsActivity.this);
-//            pDialog.setMessage("Listing Albums ...");
-//            pDialog.setIndeterminate(false);
-//            pDialog.setCancelable(false);
-//            pDialog.show();
         }
 
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("dealtype", "TYPE_SHOPS"));
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
-            params.add(new BasicNameValuePair("userid", userId));
-            params.add(new NameValuePair() {
-                @Override
-                public String getName() {
-                    return "dealtype";
-                }
-
-                @Override
-                public String getValue() {
-                    return "shopping";
-                }
-            });
+            //params.add(new DoubleNameValuePair("cat", ));
+            params.add(new IntNameValuePair("radius", 10000));
 
             // getting JSON string from URL
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Online, "GET",
@@ -149,14 +137,15 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
             Log.d("JSON: ", "> " + json);
 
             try {
-                dealArr = new JSONArray(json);
-                deals.clear();
-                if (dealArr != null) {
-                    for (int i = 0; i < dealArr.length(); i++) {
-                        JSONObject c = dealArr.getJSONObject(i);
+                shopList.clear();
+                JSONObject jO = new JSONObject(json);
+                shopArr = (JSONArray) jO.getJSONArray("data");
+                if (shopArr != null) {
+                    for (int i = 0; i < shopArr.length(); i++) {
+                        JSONObject c = shopArr.getJSONObject(i);
                         Gson gson = new GsonBuilder().create();
-                        DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
-                        deals.add(newDeal);
+                        Shop newDeal = gson.fromJson(c.toString(), Shop.class);
+                        shopList.add(newDeal);
                     }
                 } else {
                     Log.d("Deals: ", "null");
@@ -167,24 +156,14 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(String file_url) {
-            // dismiss the dialog after getting all albums
-            //pDialog.dismiss();
-            // updating UI from Background Thread
-            // here you check the value of getActivity() and break up if needed
             swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
-                    mAdapter = new OnlineDealsAdapter(getActivity(), deals);
-                    songRecyclerView.setAdapter(mAdapter);
+                    mAdapter = new NearbyAdapter(context, shopList);
+                    mListView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                 }
             });

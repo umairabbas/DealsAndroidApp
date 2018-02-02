@@ -30,10 +30,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.regionaldeals.de.entities.CategoryObject;
 import com.regionaldeals.de.fragment.Main;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -127,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         String restoredText = prefs.getString("userObject", null);
         String restoredSub = prefs.getString("subscriptionObject", null);
         String restoredNot = prefs.getString("notificationToken", null);
+        String restoredCat = prefs.getString("categoriesObj", null);
 
         if (restoredText != null) {
             try {
@@ -148,6 +154,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }else {
             new RegCall().execute();
+        }
+        if(restoredCat == null){
+            getCatFromServer();
         }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -253,6 +262,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void getCatFromServer() {
+        AsyncHttpClient androidClient = new AsyncHttpClient();
+        RequestParams params = new RequestParams("userid", userId);
+        androidClient.get(this.getString(R.string.apiUrl) + "/mobile/api/categories/list", params, new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.d("TAG", getString(R.string.token_failed) + responseString);
+            }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseToken) {
+                Log.d("TAG", "Client token: " + responseToken);
+                try {
+                    JSONArray catArr = new JSONArray(responseToken);
+                    if (catArr != null) {
+                        SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                        editor.putString("categoriesObj", catArr.toString());
+                        editor.commit();
+                    } else {
+                        Log.d("Deals: ", "null");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (Throwable t) {
+                }
+            }
+        });
+    }
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);

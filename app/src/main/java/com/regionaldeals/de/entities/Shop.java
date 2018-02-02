@@ -18,6 +18,15 @@ public class Shop implements Serializable {
     private String shopContact;
     private String shopCity;
     private Boolean active;
+    private String shopCategories;
+
+    public String getShopCategories() {
+        return shopCategories;
+    }
+
+    public void setShopCategories(String shopCategories) {
+        this.shopCategories = shopCategories;
+    }
 
     public String getShopCity() {
         return shopCity;
