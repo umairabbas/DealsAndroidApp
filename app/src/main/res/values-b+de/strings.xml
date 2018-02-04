@@ -157,7 +157,8 @@
     -->
     <string name="no_shop">Bitte fügen Sie zuerst ein Geschäft hinzu!</string>
     <string name="city">Region</string>
-
+    <string name="select_string">Wählen Sie eine Kategorie</string>
+    <string name="cat">Kategorie</string>
 
 
 </resources>

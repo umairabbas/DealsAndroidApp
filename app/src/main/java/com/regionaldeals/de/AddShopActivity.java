@@ -17,11 +17,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 
-import com.regionaldeals.de.entities.CategoryObject;
+import com.regionaldeals.de.adapter.DropDownListAdapter;
 import com.regionaldeals.de.entities.Shop;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -30,6 +31,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,6 +40,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,6 +48,18 @@ import javax.net.ssl.HttpsURLConnection;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import android.graphics.drawable.BitmapDrawable;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * Created by Umi on 28.10.2017.
@@ -95,6 +110,13 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
     private Spinner shopCitySpinner;
     private static String[] COUNTRIES;
 
+    private PopupWindow pw;
+    private boolean expanded; 		//to  store information whether the selected values are displayed completely or in shortened representatn
+    public static boolean[] checkSelected;	// store select/unselect information about the values in the list
+    private JSONArray catArr;
+    private ArrayList<String> items =  new ArrayList<String>();
+    private String selectedCat = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +129,8 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
 
         SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredCities = prefs.getString("citiesObject", null);
+        String restoredCat = prefs.getString("categoriesObj", null);
+
 
         if (restoredCities == null) {
             //should not be
@@ -207,7 +231,10 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
             e.printStackTrace();
         } catch (Throwable t) {
         }
+
+        initialize(restoredCat);
     }
+
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
         switch (parent.getId()) {
@@ -215,6 +242,120 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
                 shopCity = COUNTRIES[position];
                 break;
         }
+    }
+
+    /*
+     * Function to set up initial settings: Creating the data source for drop-down list, initialising the checkselected[], set the drop-down list
+     * */
+    private void initialize(String cat){
+
+        items = new ArrayList<String>();
+
+        try {
+            catArr = new JSONArray(cat);
+            for(int i=0; i<catArr.length(); i++){
+                JSONObject catOb = (JSONObject)catArr.get(i);
+                String catt = (String)catOb.get("catName");
+                items.add(catt);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        checkSelected = new boolean[items.size()];
+        //initialize all values of list to 'unselected' initially
+        for (int i = 0; i < checkSelected.length; i++) {
+            checkSelected[i] = false;
+        }
+
+	/*SelectBox is the TextView where the selected values will be displayed in the form of "Item 1 & 'n' more".
+    	 * When this selectBox is clicked it will display all the selected values
+    	 * and when clicked again it will display in shortened representation as before.
+    	 * */
+        final TextView tv = (TextView) findViewById(R.id.SelectBox);
+        tv.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                if(!expanded){
+                    //display all selected values
+                    String selected = "";
+                    int flag = 0;
+                    for (int i = 0; i < items.size(); i++) {
+                        if (checkSelected[i] == true) {
+                            selected += items.get(i);
+                            selected += ", ";
+                            flag = 1;
+                        }
+                    }
+                    if(flag==1)
+                        tv.setText(selected);
+                    expanded =true;
+                }
+                else{
+                    //display shortened representation of selected values
+                    tv.setText(DropDownListAdapter.getSelected());
+                    expanded = false;
+                }
+            }
+        });
+
+        //onClickListener to initiate the dropDown list
+        Button createButton = (Button)findViewById(R.id.create);
+        createButton.setOnClickListener(new OnClickListener() {
+
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                initiatePopUp(items,tv);
+            }
+        });
+    }
+
+    /*
+     * Function to set up the pop-up window which acts as drop-down list
+     * */
+    private void initiatePopUp(ArrayList<String> items, TextView tv){
+        LayoutInflater inflater = (LayoutInflater)AddShopActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        //get the pop-up window i.e.  drop-down layout
+        LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.pop_up_window, (ViewGroup)findViewById(R.id.PopUpView));
+
+        //get the view to which drop-down layout is to be anchored
+        RelativeLayout layout1 = (RelativeLayout)findViewById(R.id.relativeLayout1);
+        pw = new PopupWindow(layout, LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, true);
+
+        //Pop-up window background cannot be null if we want the pop-up to listen touch events outside its window
+        pw.setBackgroundDrawable(new BitmapDrawable());
+        pw.setTouchable(true);
+
+        //let pop-up be informed about touch events outside its window. This  should be done before setting the content of pop-up
+        pw.setOutsideTouchable(true);
+        pw.setHeight(LayoutParams.WRAP_CONTENT);
+
+        //dismiss the pop-up i.e. drop-down when touched anywhere outside the pop-up
+        pw.setTouchInterceptor(new OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                    pw.dismiss();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        //provide the source layout for drop-down
+        pw.setContentView(layout);
+
+        //anchor the drop-down to bottom-left corner of 'layout1'
+        pw.showAsDropDown(layout1);
+
+        //populate the drop-down list
+        final ListView list = (ListView) layout.findViewById(R.id.dropDownList);
+        DropDownListAdapter adapter = new DropDownListAdapter(this, items, tv);
+        list.setAdapter(adapter);
     }
 
     @Override
@@ -308,6 +449,7 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
                 jsonParam.put("shopContact", contact);
                 jsonParam.put("shopDetails", desc);
                 jsonParam.put("taxNumber", tax);
+                jsonParam.put("shopCategories", selectedCat);
 
                 Log.i("JSON", jsonParam.toString());
 
@@ -493,6 +635,26 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
             valid = false;
         } else {
             _placeText.setError(null);
+        }
+
+        selectedCat = "";
+        try {
+            for (int i = 0; i < items.size(); i++) {
+                if (checkSelected[i] == true) {
+                    JSONObject catOb = (JSONObject)catArr.get(i);
+                    selectedCat += catOb.getString("catShortName");
+                    selectedCat += ";";
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if(selectedCat.isEmpty() || selectedCat.equals("")){
+            valid = false;
+            Toast.makeText(context, "Please select a Category first.", Toast.LENGTH_SHORT).show();
+        }else{
+            selectedCat = selectedCat.substring(0, selectedCat.length() - 1);
         }
 
         return valid;

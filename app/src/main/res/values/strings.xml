@@ -169,7 +169,7 @@
     -->
     <string name="no_shop">Please add a shop first!</string>
     <string name="city">Region</string>
-
-
+    <string name="select_string">Select an item</string>
+    <string name="cat">Category</string>
 
 </resources>

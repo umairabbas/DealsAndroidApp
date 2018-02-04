@@ -43,6 +43,43 @@
                 android:hint="Shop Details..." />
         </android.support.design.widget.TextInputLayout>
 
+        <TextView
+            android:id="@+id/ShopCatLabel"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cat"
+            android:textColor="#777777"
+            android:textSize="26px"
+            />
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="fill_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id  ="@+id/SelectBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/_14sdp"
+                android:text="@string/select_string"/>
+
+            <Button
+                android:id="@+id/create"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:drawableRight="@drawable/drop_down_image"
+                android:drawableTint="@color/colorPrimaryDark"
+                android:background="@android:color/transparent"/>
+
+        </RelativeLayout>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
