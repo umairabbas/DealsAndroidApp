@@ -73,7 +73,7 @@
     <string name="ONLINE_FAV_ERR">ONLINE_FAV_ERR</string>
     <string name="ONLINE_FAV_UNCHECK">ONLINE_FAV_UNCHECK</string>
     <string name="FAVOURITES_LIST_OK">FAVOURITES_LIST_OK</string>
-
+    <string name="nearByTextEmpty">Cannot find shops in this Category</string>
 
     <string name="copy_right" translatable="false" >Copyrights © %1$d</string>
 

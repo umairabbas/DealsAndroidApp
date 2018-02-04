@@ -8,10 +8,23 @@
     tools:context="com.regionaldeals.de.fragment.Gutscheine"
     tools:showIn="@layout/activity_main">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <Spinner
+        android:id="@+id/spinnerNearby"
+        android:layout_width="wrap_content"
+        android:padding="@dimen/_9sdp"
+        android:spinnerMode="dropdown"
+        android:layout_height="wrap_content">
+    </Spinner>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -19,6 +32,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:background="@color/colorLightWhite">
+
+            <TextView
+                android:id="@+id/nearbyEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/nearByTextEmpty"
+                style="@style/about_description"/>
 
             <ListView
                 android:id="@+id/shop_list"
@@ -30,6 +51,7 @@
         </LinearLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
 

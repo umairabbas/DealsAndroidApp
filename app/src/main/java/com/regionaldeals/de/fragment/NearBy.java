@@ -4,25 +4,25 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.DoubleNameValuePair;
 import com.regionaldeals.de.Utils.IntNameValuePair;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.adapter.NearbyAdapter;
-import com.regionaldeals.de.adapter.OnlineDealsAdapter;
-import com.regionaldeals.de.adapter.ShopAdapter;
-import com.regionaldeals.de.entities.DealObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.regionaldeals.de.entities.Shop;
@@ -42,7 +42,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Umi on 30.08.2017.
  */
 
-public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshListener{
+public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemSelectedListener{
 
     private List<Shop> shopList;
     private ListView mListView;
@@ -55,7 +55,12 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
     private Double locationLat = 50.781203;
     private Double locationLng = 6.078068;
     private NearbyAdapter mAdapter;
-    private JSONArray cat;
+    private JSONArray catArr;
+    private Spinner spinner;
+    private boolean isSpinnerInitial = true;
+    private String catShortName = "essen";
+    ArrayList<String> items = new ArrayList<String>();
+    private TextView nearbyText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,14 +68,16 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
         context = getContext();
         getActivity().setTitle(getResources().getString(R.string.headerText));
         mListView = (ListView)view.findViewById(R.id.shop_list);
-
+        nearbyText = (TextView)view.findViewById(R.id.nearbyEmpty);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        items = new ArrayList<String>();
 
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
         String restoredCat = prefs.getString("categoriesObj", null);
-
+        int positionEssen = 0;
         // restoredUser = prefs.getString("userObject", null);
         try {
             if (restoredText != null) {
@@ -82,26 +89,46 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
                     locationLng = Double.parseDouble(Lng);
                 }
             }
-            if(restoredCat != null){
-                cat = new JSONArray(restoredCat);
-            } else {
-
-            }
-//            if (restoredUser != null) {
-//                JSONObject obj = new JSONObject(restoredUser);
-//                userId = obj.getString("userId");
-//            }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Throwable t) {
         }
+        try{
+            if(restoredCat != null){
+                catArr = new JSONArray(restoredCat);
+                for(int i=0; i<catArr.length(); i++){
+                    JSONObject catOb = (JSONObject)catArr.get(i);
+                    String catt = (String)catOb.get("catName");
+                    items.add(catt);
+                    if(catt.equals("Essen")){
+                        positionEssen = i;
+                    }
+                }
+            } else {
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Throwable t) {
+        }
+
+        spinner = (Spinner)view.findViewById(R.id.spinnerNearby);
+        spinner.setVisibility(View.VISIBLE);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, items);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        isSpinnerInitial = true;
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+        spinner.setSelection(positionEssen);
 
         shopList = new ArrayList<>();
         swipeRefreshLayout.post(
                 new Runnable() {
                     @Override
                     public void run() {
-                        new Shopping.LoadDeals().execute();
+                        new NearBy.LoadDeals().execute();
                     }
                 }
         );
@@ -109,10 +136,33 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
         return view;
     }
 
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+
+        if(isSpinnerInitial)
+        {
+            isSpinnerInitial = false;
+        }
+        else  {
+            JSONObject catOb = null;
+            try {
+                catOb = (JSONObject)catArr.get(position);
+                catShortName = (String)catOb.get("catShortName");
+                new NearBy.LoadDeals().execute();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
     @Override
     public void onRefresh() {
         // swipe refresh is performed, fetch the messages again
-        new Shopping.LoadDeals().execute();
+        new NearBy.LoadDeals().execute();
     }
 
     class LoadDeals extends AsyncTask<String, String, String> {
@@ -127,7 +177,7 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
-            //params.add(new DoubleNameValuePair("cat", ));
+            params.add(new BasicNameValuePair("cat", catShortName));
             params.add(new IntNameValuePair("radius", 10000));
 
             // getting JSON string from URL
@@ -135,20 +185,25 @@ public class Shopping extends Fragment  implements SwipeRefreshLayout.OnRefreshL
                     params);
 
             Log.d("JSON: ", "> " + json);
-
             try {
                 shopList.clear();
                 JSONObject jO = new JSONObject(json);
-                shopArr = (JSONArray) jO.getJSONArray("data");
-                if (shopArr != null) {
-                    for (int i = 0; i < shopArr.length(); i++) {
-                        JSONObject c = shopArr.getJSONObject(i);
-                        Gson gson = new GsonBuilder().create();
-                        Shop newDeal = gson.fromJson(c.toString(), Shop.class);
-                        shopList.add(newDeal);
+                if(jO.getString("message").equals("SHOPS_LIST_EMPTY")) {
+                    nearbyText.setVisibility(View.VISIBLE);
+                    //Snackbar.make(getView(), "Cannot find shops in this Category", Snackbar.LENGTH_SHORT).show();
+                }else {
+                    shopArr = (JSONArray) jO.getJSONArray("data");
+                    if (shopArr != null) {
+                        nearbyText.setVisibility(View.GONE);
+                        for (int i = 0; i < shopArr.length(); i++) {
+                            JSONObject c = shopArr.getJSONObject(i);
+                            Gson gson = new GsonBuilder().create();
+                            Shop newDeal = gson.fromJson(c.toString(), Shop.class);
+                            shopList.add(newDeal);
+                        }
+                    } else {
+                        Log.d("Deals: ", "null");
                     }
-                } else {
-                    Log.d("Deals: ", "null");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

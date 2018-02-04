@@ -68,7 +68,7 @@
     <string name="ONLINE_FAV_ERR">ONLINE_FAV_ERR</string>
     <string name="ONLINE_FAV_UNCHECK">ONLINE_FAV_UNCHECK</string>
     <string name="FAVOURITES_LIST_OK">FAVOURITES_LIST_OK</string>
-
+    <string name="nearByTextEmpty">Es gibt keine Geschäfte in dieser Kategorie</string>
 
     <string name="failed_token">Client Fehler beim Abrufen des Tokens vom Server</string>
     <string name="BraintreeFragment_initialized">BraintreeFragment is ready to use</string>

@@ -14,7 +14,7 @@ import com.regionaldeals.de.fragment.Deals;
 import com.regionaldeals.de.fragment.Favourite;
 import com.regionaldeals.de.fragment.Gutscheine;
 import com.regionaldeals.de.fragment.OnlineDeals;
-import com.regionaldeals.de.fragment.Shopping;
+import com.regionaldeals.de.fragment.NearBy;
 
 public class CustomFragmentPageAdapter extends FragmentPagerAdapter{
     private static final String TAG = CustomFragmentPageAdapter.class.getSimpleName();
@@ -34,7 +34,7 @@ public class CustomFragmentPageAdapter extends FragmentPagerAdapter{
             case 2:
                 return new OnlineDeals();
             case 3:
-                return new Shopping();
+                return new NearBy();
 //            case 4:
 //                return new DealsHeute();
             case 4:
