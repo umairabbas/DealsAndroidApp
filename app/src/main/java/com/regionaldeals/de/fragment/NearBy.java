@@ -42,7 +42,8 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Umi on 30.08.2017.
  */
 
-public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemSelectedListener{
+public class NearBy extends Fragment  implements //SwipeRefreshLayout.OnRefreshListener,
+        AdapterView.OnItemSelectedListener{
 
     private List<Shop> shopList;
     private ListView mListView;
@@ -50,7 +51,7 @@ public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshLis
     Context context;
     private final String URL_Online = "/mobile/api/shops/list";
     private JSONArray shopArr = null;
-    private SwipeRefreshLayout swipeRefreshLayout;
+//    private SwipeRefreshLayout swipeRefreshLayout;
     //private String userId = "";
     private Double locationLat = 50.781203;
     private Double locationLng = 6.078068;
@@ -61,6 +62,7 @@ public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshLis
     private String catShortName = "essen";
     ArrayList<String> items = new ArrayList<String>();
     private TextView nearbyText;
+    private int positionEssen = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,15 +71,14 @@ public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshLis
         getActivity().setTitle(getResources().getString(R.string.headerText));
         mListView = (ListView)view.findViewById(R.id.shop_list);
         nearbyText = (TextView)view.findViewById(R.id.nearbyEmpty);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(this);
+//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+//        swipeRefreshLayout.setOnRefreshListener(this);
 
         items = new ArrayList<String>();
 
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
         String restoredCat = prefs.getString("categoriesObj", null);
-        int positionEssen = 0;
         // restoredUser = prefs.getString("userObject", null);
         try {
             if (restoredText != null) {
@@ -112,6 +113,10 @@ public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshLis
         } catch (Throwable t) {
         }
 
+        shopList = new ArrayList<>();
+        mAdapter = new NearbyAdapter(context, shopList);
+        mListView.setAdapter(mAdapter);
+
         spinner = (Spinner)view.findViewById(R.id.spinnerNearby);
         spinner.setVisibility(View.VISIBLE);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
@@ -120,20 +125,27 @@ public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshLis
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         isSpinnerInitial = true;
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
         spinner.setSelection(positionEssen);
+        spinner.setOnItemSelectedListener(this);
 
-        shopList = new ArrayList<>();
-        swipeRefreshLayout.post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        new NearBy.LoadDeals().execute();
-                    }
-                }
-        );
+//        swipeRefreshLayout.post(
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        new NearBy.LoadDeals().execute();
+//                    }
+//                }
+//        );
+
+        new NearBy.LoadDeals().execute();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
@@ -159,17 +171,17 @@ public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshLis
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-    @Override
-    public void onRefresh() {
-        // swipe refresh is performed, fetch the messages again
-        new NearBy.LoadDeals().execute();
-    }
+//    @Override
+//    public void onRefresh() {
+//        // swipe refresh is performed, fetch the messages again
+//        new NearBy.LoadDeals().execute();
+//    }
 
     class LoadDeals extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            swipeRefreshLayout.setRefreshing(true);
+ //           swipeRefreshLayout.setRefreshing(true);
         }
 
         protected String doInBackground(String... args) {
@@ -189,12 +201,10 @@ public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshLis
                 shopList.clear();
                 JSONObject jO = new JSONObject(json);
                 if(jO.getString("message").equals("SHOPS_LIST_EMPTY")) {
-                    nearbyText.setVisibility(View.VISIBLE);
                     //Snackbar.make(getView(), "Cannot find shops in this Category", Snackbar.LENGTH_SHORT).show();
                 }else {
                     shopArr = (JSONArray) jO.getJSONArray("data");
                     if (shopArr != null) {
-                        nearbyText.setVisibility(View.GONE);
                         for (int i = 0; i < shopArr.length(); i++) {
                             JSONObject c = shopArr.getJSONObject(i);
                             Gson gson = new GsonBuilder().create();
@@ -212,13 +222,16 @@ public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshLis
         }
 
         protected void onPostExecute(String file_url) {
-            swipeRefreshLayout.setRefreshing(false);
+ //           swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    mAdapter = new NearbyAdapter(context, shopList);
-                    mListView.setAdapter(mAdapter);
+                    if(shopList.size()>0){
+                        nearbyText.setVisibility(View.GONE);
+                    }else {
+                        nearbyText.setVisibility(View.VISIBLE);
+                    }
                     mAdapter.notifyDataSetChanged();
                 }
             });

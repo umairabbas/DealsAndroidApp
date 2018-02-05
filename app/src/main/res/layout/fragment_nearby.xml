@@ -14,16 +14,16 @@
         android:orientation="vertical">
     <Spinner
         android:id="@+id/spinnerNearby"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:padding="@dimen/_9sdp"
         android:spinnerMode="dropdown"
         android:layout_height="wrap_content">
     </Spinner>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!--<android.support.v4.widget.SwipeRefreshLayout-->
+        <!--android:id="@+id/swipe_refresh_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,6 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/_12sdp"
                 android:text="@string/nearByTextEmpty"
                 style="@style/about_description"/>
 
@@ -50,7 +52,7 @@
             </ListView>
         </LinearLayout>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

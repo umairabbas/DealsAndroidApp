@@ -3,55 +3,57 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_centerVertical="true"
+    android:background="@color/colorWhite"
     android:layout_height="wrap_content">
 
+    <!--<TextView-->
+        <!--android:id="@+id/shopCat"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--style="@style/ShopsHeaderText"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:textStyle="bold"-->
+        <!--android:paddingLeft="20dp" />-->
+
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/titleShop"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/DealsHeaderText"
+        android:maxLines="2"
+        android:paddingLeft="20dp"
+        style="@style/ShopsHeaderText" />
+
+    <TextView
+        android:id="@+id/contactShop"
         android:layout_marginTop="10dp"
-        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_below="@+id/titleShop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
         android:paddingLeft="20dp" />
 
     <TextView
-        android:id="@+id/title2"
-        android:layout_below="@+id/title"
+        android:id="@+id/addressShop"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/contactShop"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="2"
-        android:textStyle="bold"
-        android:paddingLeft="20dp"
-        style="@style/ShopsDescText" />
+        android:paddingLeft="20dp" />
 
     <TextView
-        android:id="@+id/title3"
-        android:layout_below="@+id/title2"
+        android:id="@+id/shopDesc"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/addressShop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:textStyle="bold"
+        android:maxLines="4"
         android:paddingLeft="20dp"
+        android:layout_marginBottom="10dp"
         style="@style/ShopsDescText" />
 
-    <TextView
-        android:id="@+id/title4"
-        android:layout_below="@+id/title3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:textStyle="bold"
-        android:paddingLeft="20dp"
-        style="@style/ShopsDescText" />
-
-    <TextView
-        android:id="@+id/title5"
-        android:layout_below="@+id/title4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:textStyle="bold"
-        android:paddingLeft="20dp"
-        style="@style/ShopsDescText" />
 
 </RelativeLayout>

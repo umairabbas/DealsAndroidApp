@@ -166,14 +166,14 @@ public class Deals extends Fragment implements //AdapterView.OnItemSelectedListe
         mAdapter = new DealsAdapter(getActivity(), deals);
         songRecyclerView.setAdapter(mAdapter);
 
-//        swipeRefreshLayout.post(
-//                new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        new LoadDeals().execute();
-//                    }
-//                }
-//        );
+        swipeRefreshLayout.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        new LoadDeals().execute();
+                    }
+                }
+        );
 
         return view;
     }

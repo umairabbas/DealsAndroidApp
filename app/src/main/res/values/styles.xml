@@ -9,10 +9,22 @@
             <!-- Dark Indigo -->
             <item name="colorAccent">@color/colorAccent</item>
             <!-- Blue -->
+            <item name="android:spinnerStyle">@style/SpinnerAppTheme</item>
+            <item name="android:dropDownListViewStyle">@style/ListViewAppTheme</item>
+            <item name="android:listViewStyle">@style/ListViewAppTheme</item>
         </style>
         <style name="AppTheme" parent="AppTheme.Base">
             <item name="android:windowDisablePreview">true</item>
         </style>
+
+    <style name="SpinnerAppTheme" parent="android:Widget.Holo.Light.Spinner">
+        <item name="android:background">@drawable/spinner_background_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
+    </style>
+
+    <style name="ListViewAppTheme" parent="android:Widget.Holo.Light.ListView">
+        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
+    </style>
 
     <!--<style name="Theme.Transparent" parent="android:Theme">-->
         <!--<item name="android:windowIsTranslucent">true</item>-->

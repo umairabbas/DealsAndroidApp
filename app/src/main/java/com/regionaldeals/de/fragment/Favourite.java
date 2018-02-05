@@ -47,7 +47,7 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
     private JSONArray normalDealsArr = null;
     private RecyclerView songRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private String userId;
+    private String userId = "";
     private DealsAdapter mAdapter;
 
     @Override
@@ -135,20 +135,11 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
         }
 
         protected String doInBackground(String... args) {
+            if (userId.isEmpty() || userId == "") {
+                return null;
+            }
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("userid", userId));
-//            params.add(new NameValuePair() {
-//                @Override
-//                public String getName() {
-//                    return "dealtype";
-//                }
-//
-//                @Override
-//                public String getValue() {
-//                    return "online";
-//                }
-//            });
-
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Fav, "GET",
                     params);
 

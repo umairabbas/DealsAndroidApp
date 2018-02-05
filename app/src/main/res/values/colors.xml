@@ -16,6 +16,7 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGreen">#008744</color>
     <color name="colorLightGrey">#777777</color>
+    <color name="transparent">#00000000</color>
 
     <color name="pantone0">#523551</color>
     <color name="pantone1">#6e425d</color>
