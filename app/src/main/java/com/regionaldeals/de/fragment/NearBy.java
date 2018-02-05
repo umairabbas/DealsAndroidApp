@@ -190,7 +190,7 @@ public class NearBy extends Fragment  implements //SwipeRefreshLayout.OnRefreshL
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
             params.add(new BasicNameValuePair("cat", catShortName));
-            params.add(new IntNameValuePair("radius", 10000));
+            params.add(new IntNameValuePair("radius", 100000));
 
             // getting JSON string from URL
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Online, "GET",
