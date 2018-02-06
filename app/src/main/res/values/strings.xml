@@ -142,11 +142,10 @@
     About Us
     -->
     <string name="about_us_text">
-    RegionalDeals gives customers the opportunity to get the cheapest deals in town. It supports multiple types of offers including: \n
-    \n
-    •  Coupons: Win a free coupon of upto 50 € for a specific shop\n
-    •  Nearby Deals: Glance at the cheapest nearby offers\n
-    •  Online Deals: Get the biggest discount on online shopping</string>
+        RegionalDeals bietet ihnen günstige Angebote sowie Prospekte und kostenlose Gutscheine in ihrer Stadt.\n
+        Durch die intelligente Push Benachrichtigung,verpassen Sie ab sofort keine Angebote mehr.\n
+        Wir bieten eine Plattform spezialisiert für Regionale Unternehmen, basierend auf Mobil-App und ist kostenlos verfügbar für IOS und Android Mobile Geräte.\n
+        Unser Ziel ist es eine Verbindung zwischen Benutzer und Unternehmen zu ermöglichen.</string>
     <string name="connect">Connect with us</string>
     <string name="call_us">Call help center</string>
 

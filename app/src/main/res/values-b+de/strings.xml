@@ -8,7 +8,7 @@
 
     <string name="action_settings">Settings</string>
 
-    <string name="favouriten">Favouriten</string>
+    <string name="favouriten">Favoriten</string>
     <string name="deals_heute">Deals Heute</string>
     <string name="deals">Deals</string>
     <string name="online_deals">Online Deals</string>
@@ -134,11 +134,10 @@
     Uber Uns
     -->
     <string name="about_us_text">
-    RegionalDeals bietet Kunden die Möglichkeit, die günstigsten Angebote in der Stadt zu bekommen. Es unterstützt mehrere Arten von Angeboten, darunter: \n
-    \n
-    •  Gutscheine: Gewinnen Sie einen kostenlosen Gutschein von bis zu 50 € für einen bestimmten Shop\n
-    •  Angebote in der Nähe: Werfen Sie einen Blick auf die günstigsten Angebote in der Nähe\n
-    •  Online-Angebote: Erhalten Sie den größten Rabatt auf Online-Shopping</string>
+        RegionalDeals bietet ihnen günstige Angebote sowie Prospekte und kostenlose Gutscheine in ihrer Stadt.\n
+        Durch die intelligente Push Benachrichtigung,verpassen Sie ab sofort keine Angebote mehr.\n
+        Wir bieten eine Plattform spezialisiert für Regionale Unternehmen, basierend auf Mobil-App und ist kostenlos verfügbar für IOS und Android Mobile Geräte.\n
+        Unser Ziel ist es eine Verbindung zwischen Benutzer und Unternehmen zu ermöglichen.</string>
     <string name="connect">Verbinden Sie uns</string>
     <string name="call_us">Ruf uns an</string>
 
