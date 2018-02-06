@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/splash_3"
+    android:background="@drawable/screen"
     tools:context="com.regionaldeals.de.SplashActivity">
     <!--<LinearLayout-->
         <!--android:layout_width="match_parent"-->

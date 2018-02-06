@@ -20,7 +20,7 @@
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:background="@drawable/screen_back2"
+        android:background="@drawable/screen"
         android:layout_height="fill_parent"
         android:fitsSystemWindows="true">
 
@@ -28,7 +28,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="56dp"
+            android:paddingTop="76dp"
             android:paddingLeft="24dp"
             android:layout_gravity="center"
             android:paddingRight="24dp">
@@ -92,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_11sdp" />
                 <!--android:text=-->
                     <!--" + 49,99 pro Monat\n-->
 <!--+ 24 Monate Laufzeit\n-->
@@ -120,7 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/_13sdp"/>
+                android:textSize="@dimen/_11sdp"/>
                 <!--android:text=-->
                     <!--" + 69,99 pro Monat\n-->
 <!--+ 12 Monat Laufzeit\n-->
