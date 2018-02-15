@@ -1,6 +1,9 @@
 package com.regionaldeals.de.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,7 +45,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Umi on 30.08.2017.
  */
 
-public class NearBy extends Fragment  implements //SwipeRefreshLayout.OnRefreshListener,
+public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshListener,
         AdapterView.OnItemSelectedListener{
 
     private List<Shop> shopList;
@@ -63,6 +66,20 @@ public class NearBy extends Fragment  implements //SwipeRefreshLayout.OnRefreshL
     ArrayList<String> items = new ArrayList<String>();
     private TextView nearbyText;
     private int positionEssen = 0;
+    private int maxDistance = 10;
+    private MyReceiver myReceiver;
+    private IntentFilter filter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    public class MyReceiver extends BroadcastReceiver {
+        public MyReceiver() {
+        }
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            maxDistance = intent.getIntExtra("distance", maxDistance);
+            new NearBy.LoadDeals().execute();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,8 +88,8 @@ public class NearBy extends Fragment  implements //SwipeRefreshLayout.OnRefreshL
         getActivity().setTitle(getResources().getString(R.string.headerText));
         mListView = (ListView)view.findViewById(R.id.shop_list);
         nearbyText = (TextView)view.findViewById(R.id.nearbyEmpty);
-//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
-//        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         items = new ArrayList<String>();
 
@@ -144,13 +161,28 @@ public class NearBy extends Fragment  implements //SwipeRefreshLayout.OnRefreshL
 
         new NearBy.LoadDeals().execute();
 
+        filter = new IntentFilter("BroadcastReceiver");
+        myReceiver = new MyReceiver();
+
         return view;
+    }
+
+    @Override
+    public void onRefresh() {
+        // swipe refresh is performed, fetch the messages again
+        new NearBy.LoadDeals().execute();
+    }
+
+    @Override
+    public void onPause() {
+        context.unregisterReceiver(myReceiver);
+        super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        context.registerReceiver(myReceiver, filter);
     }
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
@@ -186,7 +218,7 @@ public class NearBy extends Fragment  implements //SwipeRefreshLayout.OnRefreshL
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
- //           swipeRefreshLayout.setRefreshing(true);
+            swipeRefreshLayout.setRefreshing(true);
         }
 
         protected String doInBackground(String... args) {
@@ -195,7 +227,7 @@ public class NearBy extends Fragment  implements //SwipeRefreshLayout.OnRefreshL
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
             params.add(new BasicNameValuePair("cat", catShortName));
-            params.add(new IntNameValuePair("radius", 100000));
+            params.add(new IntNameValuePair("radius", maxDistance*1000));
 
             // getting JSON string from URL
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Online, "GET",
@@ -227,7 +259,7 @@ public class NearBy extends Fragment  implements //SwipeRefreshLayout.OnRefreshL
         }
 
         protected void onPostExecute(String file_url) {
- //           swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {

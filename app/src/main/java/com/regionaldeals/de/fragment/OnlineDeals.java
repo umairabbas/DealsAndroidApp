@@ -1,6 +1,9 @@
 package com.regionaldeals.de.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.DoubleNameValuePair;
+import com.regionaldeals.de.Utils.IntNameValuePair;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.adapter.OnlineDealsAdapter;
 import com.regionaldeals.de.entities.DealObject;
@@ -50,6 +54,19 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
     private Double locationLat = 50.781203;
     private Double locationLng = 6.078068;
     private OnlineDealsAdapter mAdapter;
+    private int maxDistance = 10;
+    private MyReceiver myReceiver;
+    private IntentFilter filter;
+
+    public class MyReceiver extends BroadcastReceiver {
+        public MyReceiver() {
+        }
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            maxDistance = intent.getIntExtra("distance", maxDistance);
+            new OnlineDeals.LoadDeals().execute();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,7 +119,22 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
         } catch (Throwable t) {
         }
 
+        filter = new IntentFilter("BroadcastReceiver");
+        myReceiver = new MyReceiver();
+
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        context.unregisterReceiver(myReceiver);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        context.registerReceiver(myReceiver, filter);
     }
 
     @Override
@@ -138,6 +170,7 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
             params.add(new BasicNameValuePair("userid", userId));
+            params.add(new IntNameValuePair("radius", maxDistance*1000));
             params.add(new NameValuePair() {
                 @Override
                 public String getName() {
