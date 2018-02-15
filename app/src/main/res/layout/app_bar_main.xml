@@ -15,10 +15,18 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            android:logo="@android:drawable/ic_menu_view"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <ImageView
+                android:src="@drawable/logo_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </android.support.v7.widget.Toolbar>
         <!--app:layout_scrollFlags="scroll|enterAlwaysCollapsed"-->
 
     </android.support.design.widget.AppBarLayout>

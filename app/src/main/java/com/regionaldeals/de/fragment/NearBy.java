@@ -76,18 +76,23 @@ public class NearBy extends Fragment  implements //SwipeRefreshLayout.OnRefreshL
 
         items = new ArrayList<String>();
 
+        locationLat = ((Main)getParentFragment()).getLat();
+        locationLng = ((Main)getParentFragment()).getLng();
+
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
         String restoredCat = prefs.getString("categoriesObj", null);
         // restoredUser = prefs.getString("userObject", null);
         try {
-            if (restoredText != null) {
-                JSONObject obj = new JSONObject(restoredText);
-                String Lat = obj.getString("lat");
-                String Lng = obj.getString("lng");
-                if(!Lat.isEmpty() && !Lng.isEmpty()) {
-                    locationLat = Double.parseDouble(Lat);
-                    locationLng = Double.parseDouble(Lng);
+            if(locationLat == 0.0 || locationLng == 0.0) {
+                if (restoredText != null) {
+                    JSONObject obj = new JSONObject(restoredText);
+                    String Lat = obj.getString("lat");
+                    String Lng = obj.getString("lng");
+                    if (!Lat.isEmpty() && !Lng.isEmpty()) {
+                        locationLat = Double.parseDouble(Lat);
+                        locationLng = Double.parseDouble(Lng);
+                    }
                 }
             }
         } catch (JSONException e) {

@@ -125,6 +125,10 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
+        <service
+            android:name=".service.LocationStatic">
+        </service>
+
         <!-- [END firebase_iid_service] -->
         <!--<service android:name=".service.MyJobService"-->
             <!--android:exported="false">-->

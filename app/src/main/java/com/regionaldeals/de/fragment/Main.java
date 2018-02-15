@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.regionaldeals.de.MainActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.adapter.CustomFragmentPageAdapter;
+import com.regionaldeals.de.service.LocationStatic;
 
 /**
  * Created by Umi on 28.08.2017.
@@ -30,7 +32,18 @@ public class Main extends Fragment {
     CustomFragmentPageAdapter cfpa;
     private SeekBar seekControl = null;
     Intent intent;
+    public static double latitude = 0.0;
+    public static double longitude = 0.0;
+
     public Main() {
+    }
+
+    public static double getLat(){
+        return latitude;
+    }
+
+    public static double getLng(){
+        return longitude;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -43,6 +56,7 @@ public class Main extends Fragment {
         cfpa = new CustomFragmentPageAdapter(getChildFragmentManager(), getContext());
         viewPager.setAdapter(cfpa);
         tabLayout.setupWithViewPager(viewPager);
+        new LocationStatic(getContext());
 
         intent = new Intent();
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
@@ -50,6 +64,13 @@ public class Main extends Fragment {
         intent.putExtra("Foo", "Bar");
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        latitude  = LocationStatic.latitude; // latitude
+        longitude = LocationStatic.longitude; // latitude
     }
 
     @Override

@@ -19,11 +19,14 @@ import android.widget.SeekBar;
 
 import com.regionaldeals.de.MainActivity;
 import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.DoubleNameValuePair;
+import com.regionaldeals.de.Utils.IntNameValuePair;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.adapter.GutscheineAdapter;
 import com.regionaldeals.de.entities.GutscheineObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.regionaldeals.de.service.LocationStatic;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -99,18 +102,22 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
 //        isSpinnerInitial = true;
 //        spinner.setAdapter(adapter);
 //        spinner.setOnItemSelectedListener(this);
+        locationLat = ((Main)getParentFragment()).getLat();
+        locationLng = ((Main)getParentFragment()).getLng();
 
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
         String restoredUser = prefs.getString("userObject", null);
         try {
-            if (restoredText != null) {
-                JSONObject obj = new JSONObject(restoredText);
-                String Lat = obj.getString("lat");
-                String Lng = obj.getString("lng");
-                if(!Lat.isEmpty() && !Lng.isEmpty()) {
-                    locationLat = Double.parseDouble(Lat);
-                    locationLng = Double.parseDouble(Lng);
+            if(locationLat == 0.0 || locationLng == 0.0) {
+                if (restoredText != null) {
+                    JSONObject obj = new JSONObject(restoredText);
+                    String Lat = obj.getString("lat");
+                    String Lng = obj.getString("lng");
+                    if (!Lat.isEmpty() && !Lng.isEmpty()) {
+                        locationLat = Double.parseDouble(Lat);
+                        locationLng = Double.parseDouble(Lng);
+                    }
                 }
             }
             if (restoredUser != null) {
@@ -142,46 +149,6 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
         return view;
     }
 
-//    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-//
-//        if(isSpinnerInitial)
-//        {
-//            isSpinnerInitial = false;
-//        }
-//        else  {
-//            switch (position) {
-//                case 0:
-//                    maxDistance = 5;
-//                    new Gutscheine.UpdateDeals().execute();
-//                    break;
-//                case 1:
-//                    maxDistance = 10;
-//                    new Gutscheine.UpdateDeals().execute();
-//                    break;
-//                case 2:
-//                    maxDistance = 50;
-//                    new Gutscheine.UpdateDeals().execute();
-//                    break;
-//                case 3:
-//                    maxDistance = 100;
-//                    new Gutscheine.UpdateDeals().execute();
-//                    break;
-//                case 4:
-//                    maxDistance = 500;
-//                    new Gutscheine.UpdateDeals().execute();
-//                    break;
-//                case 5:
-//                    maxDistance = 9999;
-//                    new Gutscheine.UpdateDeals().execute();
-//                    break;
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//    }
 
     @Override
     public void onResume() {
@@ -229,6 +196,9 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("userid", userId));
+            params.add(new DoubleNameValuePair("lat", locationLat));
+            params.add(new DoubleNameValuePair("long", locationLng));
+            params.add(new IntNameValuePair("radius", maxDistance*1000));
 
             // getting JSON string from URL
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
@@ -293,6 +263,9 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("userid", userId));
+            params.add(new DoubleNameValuePair("lat", locationLat));
+            params.add(new DoubleNameValuePair("long", locationLng));
+            params.add(new IntNameValuePair("radius", maxDistance*1000));
 
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
                     params);

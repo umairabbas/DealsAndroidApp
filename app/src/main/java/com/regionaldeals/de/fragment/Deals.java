@@ -108,17 +108,22 @@ public class Deals extends Fragment implements //AdapterView.OnItemSelectedListe
 //        spinner.setAdapter(adapter);
 //        spinner.setOnItemSelectedListener(this);
 
+        locationLat = ((Main)getParentFragment()).getLat();
+        locationLng = ((Main)getParentFragment()).getLng();
+
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
         String restoredUser = prefs.getString("userObject", null);
         try {
-            if (restoredText != null) {
-                JSONObject obj = new JSONObject(restoredText);
-                String Lat = obj.getString("lat");
-                String Lng = obj.getString("lng");
-                if(!Lat.isEmpty() && !Lng.isEmpty()) {
-                    locationLat = Double.parseDouble(Lat);
-                    locationLng = Double.parseDouble(Lng);
+            if(locationLat == 0.0 || locationLng == 0.0) {
+                if (restoredText != null) {
+                    JSONObject obj = new JSONObject(restoredText);
+                    String Lat = obj.getString("lat");
+                    String Lng = obj.getString("lng");
+                    if (!Lat.isEmpty() && !Lng.isEmpty()) {
+                        locationLat = Double.parseDouble(Lat);
+                        locationLng = Double.parseDouble(Lng);
+                    }
                 }
             }
             if (restoredUser != null) {
@@ -135,32 +140,6 @@ public class Deals extends Fragment implements //AdapterView.OnItemSelectedListe
 
         filter = new IntentFilter("BroadcastReceiver");
         myReceiver = new MyReceiver();
-
-//        view.findViewById(R.id.distanceInput).setVisibility(View.VISIBLE);
-//        SeekBar seek = (SeekBar) view.findViewById(R.id.select_distance);
-//        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            TextView seekText = (TextView) view.findViewById(R.id.distance);
-//            int newProgress = 10;
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                if(progress < 5){
-//                    newProgress = progress;
-//                }
-//                else {
-//                    newProgress = (int) (Math.rint((double) progress / 10) * 10);
-//                }
-//                seekBar.setProgress(newProgress);
-//                seekText.setText(Integer.toString(newProgress) + " KM");
-//                maxDistance = newProgress;
-//                new LoadDeals().execute();
-//            }
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {}
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {}
-//        });
-
-
         deals = new ArrayList<>();
 
         mAdapter = new DealsAdapter(getActivity(), deals);
@@ -211,50 +190,6 @@ public class Deals extends Fragment implements //AdapterView.OnItemSelectedListe
         new LoadDeals().execute();
     }
 
-//    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-//
-//        if(isSpinnerInitial)
-//        {
-//            isSpinnerInitial = false;
-//        }
-//        else  {
-//            switch (position) {
-//                case 0:
-//                    maxDistance = 5;
-//                    new LoadDeals().execute();
-//                    break;
-//                case 1:
-//                    maxDistance = 10;
-//                    new LoadDeals().execute();
-//                    break;
-//                case 2:
-//                    maxDistance = 50;
-//                    new LoadDeals().execute();
-//                    break;
-//                case 3:
-//                    maxDistance = 100;
-//                    new LoadDeals().execute();
-//                    break;
-//                case 4:
-//                    maxDistance = 500;
-//                    new LoadDeals().execute();
-//                    break;
-//                case 5:
-//                    maxDistance = 9999;
-//                    new LoadDeals().execute();
-//                    break;
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//    }
-
-    /**
-     * Background Async Task to Load all Albums by making http request
-     * */
     class LoadDeals extends AsyncTask<String, String, String> {
 
         @Override

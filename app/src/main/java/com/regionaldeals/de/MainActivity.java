@@ -30,12 +30,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
-import com.regionaldeals.de.entities.CategoryObject;
+import com.regionaldeals.de.service.LocationStatic;
 import com.regionaldeals.de.fragment.Main;
 
 import org.json.JSONArray;
@@ -80,8 +78,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         context = this;
         activity = this;
-        //getLocation(context);
-        //GoogleApiAvailability.makeGooglePlayServicesAvailable();
+//        new LocationStatic(MainActivity.this);
+//        double latitude  = LocationStatic.latitude; // latitude
+//        double longitude = LocationStatic.longitude; // latitude
+
 
         String android_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.search) {
+        if (id == R.id.notification) {
             Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
             return true;
         }

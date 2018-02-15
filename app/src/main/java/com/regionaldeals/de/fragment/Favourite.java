@@ -78,15 +78,16 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
         String restoredText = prefs.getString("locationObject", null);
         String restoredUser = prefs.getString("userObject", null);
         try {
-            if (restoredText != null) {
-                JSONObject obj = new JSONObject(restoredText);
-                String Lat = obj.getString("lat");
-                String Lng = obj.getString("lng");
-                if(!Lat.isEmpty() && !Lng.isEmpty()) {
+                if (restoredText != null) {
+                    JSONObject obj = new JSONObject(restoredText);
+                    String Lat = obj.getString("lat");
+                    String Lng = obj.getString("lng");
+                    if (!Lat.isEmpty() && !Lng.isEmpty()) {
 //                    locationLat = Double.parseDouble(Lat);
 //                    locationLng = Double.parseDouble(Lng);
+                    }
                 }
-            }
+
             if (restoredUser != null) {
                 JSONObject obj = new JSONObject(restoredUser);
                 userId = obj.getString("userId");
@@ -140,6 +141,7 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
             }
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("userid", userId));
+
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Fav, "GET",
                     params);
 
