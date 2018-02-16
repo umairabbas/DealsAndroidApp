@@ -51,7 +51,7 @@ public class DealsHeute  extends Fragment implements SwipeRefreshLayout.OnRefres
     private boolean isSpinnerInitial = true;
     private Double locationLat = 50.781203;
     private Double locationLng = 6.078068;
-    private int maxDistance = 1;
+    private int maxDistance = 50;
     private Spinner spinner;
     private static final String[] paths = {"1 KM", "2 KM", "5 KM", "10 KM", "50 KM", "100 KM"};
     private SwipeRefreshLayout swipeRefreshLayout;

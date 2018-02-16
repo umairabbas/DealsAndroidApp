@@ -54,7 +54,7 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
     private Double locationLat = 50.781203;
     private Double locationLng = 6.078068;
     private OnlineDealsAdapter mAdapter;
-    private int maxDistance = 10;
+    private int maxDistance = 50;
     private MyReceiver myReceiver;
     private IntentFilter filter;
 

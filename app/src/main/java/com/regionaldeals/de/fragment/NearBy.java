@@ -66,7 +66,7 @@ public class NearBy extends Fragment  implements SwipeRefreshLayout.OnRefreshLis
     ArrayList<String> items = new ArrayList<String>();
     private TextView nearbyText;
     private int positionEssen = 0;
-    private int maxDistance = 10;
+    private int maxDistance = 50;
     private MyReceiver myReceiver;
     private IntentFilter filter;
     private SwipeRefreshLayout swipeRefreshLayout;

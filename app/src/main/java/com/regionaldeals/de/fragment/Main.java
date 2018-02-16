@@ -78,6 +78,7 @@ public class Main extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         seekControl = (SeekBar) view.findViewById(R.id.fontSeekBar);
         final TextView seekTitle2 = (TextView) view.findViewById(R.id.seekBarTitle);
+        seekTitle2.setText("50 KM");
         seekControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){

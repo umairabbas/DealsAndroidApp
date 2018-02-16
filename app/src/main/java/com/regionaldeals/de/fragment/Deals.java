@@ -54,7 +54,7 @@ public class Deals extends Fragment implements //AdapterView.OnItemSelectedListe
     private DealsAdapter mAdapter;
     private Double locationLat = 50.781203;
     private Double locationLng = 6.078068;
-    private int maxDistance = 10;
+    private int maxDistance = 50;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String userId = "";
     private MyReceiver myReceiver;
