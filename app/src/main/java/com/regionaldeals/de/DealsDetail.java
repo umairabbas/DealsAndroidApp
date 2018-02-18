@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.CameraPosition;
 import com.regionaldeals.de.entities.DealObject;
 import com.regionaldeals.de.entities.GutscheineObject;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -102,6 +103,7 @@ public class DealsDetail extends AppCompatActivity implements
             dealId = currDeal.getDealId();
             shopId = currDeal.getShop().getShopId();
             exp.setText(DateFormat.format("dd/MM/yyyy", new Date(currDeal.getDateExpire())).toString());
+            if(currDeal.getDealUrl() != null)
             if(!currDeal.getDealUrl().isEmpty()) {
                 dealURL = currDeal.getDealUrl();
                 titleUrl.setVisibility(View.VISIBLE);
@@ -253,16 +255,23 @@ public class DealsDetail extends AppCompatActivity implements
     public void onMapReady(GoogleMap map) {
         mMap = map;
 
+        CameraPosition cp = new CameraPosition.Builder()
+                .target(LOCATIONCORDINATE)      // Sets the center of the map to Mountain View
+                .zoom(11.0f)                   // Sets the zoom
+                .bearing(90)                // Sets the orientation of the camera to east
+                .tilt(0)                   // Sets the tilt of the camera to 30 degrees
+                .build();
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
+
         // Add some markers to the map, and add a data object to each marker.
         mPerth = mMap.addMarker(new MarkerOptions()
                 .position(LOCATIONCORDINATE)
                 .title(title));
         mPerth.setTag(0);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(LOCATIONCORDINATE));
         mMap.setMinZoomPreference(6.0f);
         mMap.setMaxZoomPreference(14.0f);
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(12.0f));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(10.0f));
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setScrollGesturesEnabled(false);
         // Set a listener for marker click.

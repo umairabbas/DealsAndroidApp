@@ -52,9 +52,9 @@ public class SubscribeActivity extends AppCompatActivity {
     private Activity activity;
     private View v;
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String PATH_TO_SERVER = "https://regionaldeals.de/mobile/api/subscriptions/client_token";
-    private static final String PATH_TO_SERVER_SUB_DEALS = "https://www.regionaldeals.de/mobile/api/subscriptions/plans";
-    private static final String PATH_TO_SERVER_CHECKOUT = "https://regionaldeals.de/mobile/api/subscriptions/customer_vault";
+    private static final String PATH_TO_SERVER = "/mobile/api/subscriptions/client_token";
+    private static final String PATH_TO_SERVER_SUB_DEALS = "/mobile/api/subscriptions/plans";
+    private static final String PATH_TO_SERVER_CHECKOUT = "/mobile/api/subscriptions/customer_vault";
     private String clientToken;
     private static final int BRAINTREE_REQUEST_CODE = 4949;
     private String paymentNonce = "";
@@ -170,7 +170,7 @@ public class SubscribeActivity extends AppCompatActivity {
 
     private void getSubDataFromServer(){
         AsyncHttpClient androidClient = new AsyncHttpClient();
-        androidClient.get(PATH_TO_SERVER_SUB_DEALS, new TextHttpResponseHandler() {
+        androidClient.get(context.getString(R.string.apiUrl) + PATH_TO_SERVER_SUB_DEALS, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("TAG", getString(R.string.token_failed) + responseString);
@@ -218,7 +218,7 @@ public class SubscribeActivity extends AppCompatActivity {
 
     private void getClientTokenFromServer(){
         AsyncHttpClient androidClient = new AsyncHttpClient();
-        androidClient.get(PATH_TO_SERVER, new TextHttpResponseHandler() {
+        androidClient.get(context.getString(R.string.apiUrl) + PATH_TO_SERVER, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("TAG", getString(R.string.token_failed) + responseString);
@@ -274,7 +274,7 @@ public class SubscribeActivity extends AppCompatActivity {
         protected String doInBackground(String... args) {
             try {
                 String resultData = "";
-                HttpClient client = new HttpClient(PATH_TO_SERVER_CHECKOUT);
+                HttpClient client = new HttpClient(context.getString(R.string.apiUrl) + PATH_TO_SERVER_CHECKOUT);
                 client.connectForMultipart();
                 client.addFormPart("payment_method_nonce", paymentNonce);
                 client.addFormPart("userid", userId);

@@ -14,8 +14,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -35,6 +37,7 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.regionaldeals.de.service.LocationStatic;
 import com.regionaldeals.de.fragment.Main;
+import com.tooltip.Tooltip;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -306,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(context, "IMPORTANT: The app is currently using dummy data and will be live on 10th Feb 2018.\nStay tuned.", Toast.LENGTH_LONG).show();
+ //       Toast.makeText(context, "IMPORTANT: The app is currently using dummy data and will be live on 10th Feb 2018.\nStay tuned.", Toast.LENGTH_LONG).show();
 //        if(shouldRefresh){
 //            SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
 //            String restoredText = prefs.getString("userObject", null);
@@ -351,6 +354,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    private Tooltip mTooltip;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -360,7 +365,24 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.notification) {
-            Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
+
+            if (mTooltip == null) {
+                mTooltip = new Tooltip.Builder(findViewById(R.id.notification), R.style.Tooltip)
+                        .setDismissOnClick(true)
+                        .setGravity(Gravity.BOTTOM)
+                        .setPadding(R.dimen.tile_padding)
+                        .setText("Sie haben einen Gutschein gewonnen.\nCode: XAZ15E")
+                        .show();
+            } else {
+                if (mTooltip.isShowing()) {
+                    mTooltip.dismiss();
+                } else {
+                    mTooltip.show();
+                }
+            }
+            item.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_notifications_none_white_24dp));
+            //Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
+
             return true;
         }
 

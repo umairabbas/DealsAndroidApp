@@ -75,6 +75,7 @@
         <item name="android:shadowDy">0.0</item>
         <item name="android:shadowRadius">1.2</item>
         <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:fontFamily">@font/digitalt2</item>
     </style>
 
     <style name="ShopsDescText">
@@ -101,6 +102,7 @@
         <item name="android:shadowDy">0.0</item>
         <item name="android:shadowRadius">1.2</item>
         <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/digitalt2</item>
     </style>
 
     <style name="DealsToolbarHeaderText">
@@ -110,6 +112,7 @@
         <item name="android:shadowDy">0.0</item>
         <item name="android:shadowRadius">4</item>
         <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/digitalt2</item>
     </style>
 
     <style name="DealsDescText">
@@ -143,6 +146,11 @@
         <item name="android:textColor">@color/red</item>
     </style>
 
-
+    <style name="Tooltip">
+        <item name="android:textSize">16sp</item>
+        <item name="backgroundColor">@color/colorAccent</item>
+        <item name="cornerRadius">5dp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
 
 </resources>

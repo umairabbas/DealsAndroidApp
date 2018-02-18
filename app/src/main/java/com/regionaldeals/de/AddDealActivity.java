@@ -108,7 +108,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
     private static final int PICK_FILE_REQUEST = 1;
     private final String URL_Shops = "/mobile/api/shops/list";
     private final String URL_Cat = "/mobile/api/categories/list";
-    private String SERVER_URL = "https://www.regionaldeals.de/mobile/api/deals/upload-deal";
+    private String SERVER_URL = "/mobile/api/deals/upload-deal";
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int REQUEST_CODE_CHOOSE = 1234;
     private static final String[] dealTypes = {"Deals", "Online Deals"};
@@ -460,7 +460,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         }
 
         try {
-            HttpClient client = new HttpClient(SERVER_URL);
+            HttpClient client = new HttpClient(getApplicationContext().getString(R.string.apiUrl) + SERVER_URL);
             client.connectForMultipart();
             int userIdInt = Integer.valueOf(userId);
             client.addFormPartInt("userid", userIdInt);
