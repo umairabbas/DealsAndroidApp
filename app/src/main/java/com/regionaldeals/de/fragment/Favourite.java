@@ -78,6 +78,10 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
         String restoredText = prefs.getString("locationObject", null);
         String restoredUser = prefs.getString("userObject", null);
         try {
+            if (restoredUser != null) {
+                JSONObject obj = new JSONObject(restoredUser);
+                userId = obj.getString("userId");
+            }
                 if (restoredText != null) {
                     JSONObject obj = new JSONObject(restoredText);
                     String Lat = obj.getString("lat");
@@ -88,10 +92,7 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
                     }
                 }
 
-            if (restoredUser != null) {
-                JSONObject obj = new JSONObject(restoredUser);
-                userId = obj.getString("userId");
-            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Throwable t) {
@@ -146,26 +147,27 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
                     params);
 
             Log.d("JSON: ", "> " + json);
-
-            try {
-                normalDealsArr = null;
-                deals.clear();
-                JSONObject data = (JSONObject) new JSONObject(json);
-                if(data.getString("message").equals(getString(R.string.FAVOURITES_LIST_OK))) {
-                    normalDealsArr = (JSONArray) data.getJSONArray("data");
-                    if (normalDealsArr != null) {
-                        for (int i = 0; i < normalDealsArr.length(); i++) {
-                            JSONObject c = normalDealsArr.getJSONObject(i);
-                            Gson gson = new GsonBuilder().create();
-                            DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
-                            deals.add(newDeal);
+            if(getActivity()!=null) {
+                try {
+                    normalDealsArr = null;
+                    deals.clear();
+                    JSONObject data = (JSONObject) new JSONObject(json);
+                    if (data.getString("message").equals(getString(R.string.FAVOURITES_LIST_OK))) {
+                        normalDealsArr = (JSONArray) data.getJSONArray("data");
+                        if (normalDealsArr != null) {
+                            for (int i = 0; i < normalDealsArr.length(); i++) {
+                                JSONObject c = normalDealsArr.getJSONObject(i);
+                                Gson gson = new GsonBuilder().create();
+                                DealObject newDeal = gson.fromJson(c.toString(), DealObject.class);
+                                deals.add(newDeal);
+                            }
+                        } else {
+                            Log.d("Deals: ", "null");
                         }
-                    } else {
-                        Log.d("Deals: ", "null");
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
             return null;
         }

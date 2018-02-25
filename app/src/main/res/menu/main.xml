@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/notification"
         android:title="@null"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/ic_not_check"
         app:showAsAction="always"
         />
     <item android:id="@+id/search"

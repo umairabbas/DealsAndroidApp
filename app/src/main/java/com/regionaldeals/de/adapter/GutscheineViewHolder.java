@@ -21,6 +21,7 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder {
 
     public TextView dealTitle;
     public TextView dealDescription;
+    public TextView gut_price;
     public ImageView dealCoverUrl;
     public ImageButton mitMachenBtn;
     private Activity context;
@@ -39,6 +40,7 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder {
         context = (Activity) itemView.getContext();
         dealTitle = (TextView) itemView.findViewById(R.id.deal_title);
         dealDescription = (TextView) itemView.findViewById(R.id.deal_description);
+        gut_price = (TextView) itemView.findViewById(R.id.gut_price);
         dealCoverUrl = (ImageView) itemView.findViewById(R.id.card_image_gut);
         mitMachenBtn = (ImageButton) itemView.findViewById(R.id.action_button);
 

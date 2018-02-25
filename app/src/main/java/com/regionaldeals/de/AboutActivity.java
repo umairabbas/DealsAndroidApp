@@ -66,7 +66,7 @@ public class AboutActivity extends AppCompatActivity {
                 .addEmail("regionaldeals.de@gmail.com")
                 .addWebsite("http://www.regionaldeals.de")
                 .addFacebook("umairabbashayat")
-                .addTwitter("umairabbas")
+//                .addTwitter("umairabbas")
                 //.addYoutube("kJQP7kiw5Fk")
                 .addPlayStore("com.regionaldeals.de")
                 .addInstagram("umairabbas")
