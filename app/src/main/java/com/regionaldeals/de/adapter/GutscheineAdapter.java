@@ -71,7 +71,7 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
     public void onBindViewHolder(GutscheineViewHolder holder, int position) {
         final GutscheineObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getGutscheinTitle());
-        holder.dealDescription.setText(deals.getGutscheinDescription());
+        holder.dealDescription.setText(deals.getShop().getShopName());//deals.getGutscheinDescription());
         holder.gut_price.setText(String.valueOf(deals.getGutscheinPrice()) + "€");
         //gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         String imgUrl = deals.getGutscheinImageUrl(context) + "&imagecount=1&res=470x320";
@@ -82,10 +82,12 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
         dealPosition = position;
         if(!isEdit){
             if(deals.isGutscheinAvailed()){
-                holder.mitMachenBtn.setEnabled(false);
+                holder.mitmachenLay.setEnabled(false);
                 holder.mitMachenBtn.setColorFilter(activity.getResources().getColor(R.color.colorAccent));
             } else {
-                holder.mitMachenBtn.setOnClickListener(new View.OnClickListener() {
+
+
+                holder.mitmachenLay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Context context = v.getContext();
@@ -131,7 +133,7 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
         }
 
         protected String doInBackground(String... args) {
-            String url = "https://www.regionaldeals.de/mobile/api/gutschein/gutscheinclick";
+            String url = context.getString(R.string.apiUrl) + "/mobile/api/gutschein/gutscheinclick";
 
             try {
 

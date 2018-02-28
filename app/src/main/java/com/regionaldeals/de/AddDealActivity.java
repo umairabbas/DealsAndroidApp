@@ -148,7 +148,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         if(isGutscheine){
             inputOPrice.setVisibility(View.GONE);
             dealType.setVisibility(View.GONE);
-            SERVER_URL = "https://www.regionaldeals.de/mobile/api/gutschein/upload-gutschein";
+            SERVER_URL = "/mobile/api/gutschein/upload-gutschein";
         }
 
         attachImg.setOnClickListener(this);
@@ -315,7 +315,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         }
         if (v == bUpload) {
             if (selectedFilePath != null) {
-                dialog = ProgressDialog.show(AddDealActivity.this, "", "Uploading File...", true);
+                dialog = ProgressDialog.show(context, "", "Uploading File...", true);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -460,7 +460,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         }
 
         try {
-            HttpClient client = new HttpClient(getApplicationContext().getString(R.string.apiUrl) + SERVER_URL);
+            HttpClient client = new HttpClient(context.getString(R.string.apiUrl) + SERVER_URL);
             client.connectForMultipart();
             int userIdInt = Integer.valueOf(userId);
             client.addFormPartInt("userid", userIdInt);
@@ -530,14 +530,14 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-             Toast.makeText(AddDealActivity.this, "File Not Found", Toast.LENGTH_SHORT).show();
+             Toast.makeText(context, "File Not Found", Toast.LENGTH_SHORT).show();
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            Toast.makeText(AddDealActivity.this, "URL error!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "URL error!", Toast.LENGTH_SHORT).show();
 
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(AddDealActivity.this, "Cannot Read/Write File!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Cannot Read/Write File!", Toast.LENGTH_SHORT).show();
         } catch (Throwable t) {
             t.printStackTrace();
         }

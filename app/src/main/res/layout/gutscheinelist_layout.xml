@@ -26,82 +26,88 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_alignLeft="@+id/card_image_gut"
-            android:layout_alignBottom="@+id/card_image_gut"
-            android:layout_marginBottom="@dimen/_4sdp"
-            android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:orientation="horizontal"
             android:weightSum="1"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_alignBottom="@+id/card_image_gut"
+            android:paddingBottom="10dp"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.9"
+            android:orientation="vertical"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/deal_title"
                 style="@style/DealsHeaderText"
                 android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="0.80"
+                android:layout_width="wrap_content"
                 android:text="deal_title" />
-
-            <TextView
-                android:layout_weight="0.2"
-                android:id="@+id/gut_price"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:gravity="right"
-                android:text=""
-                style="@style/DealsPriceText" />
-
-        </LinearLayout>
 
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/description_layout"
                 android:orientation="horizontal"
                 android:weightSum="1"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/deal_description"
-                style="@style/DealsDescText"
-                android:layout_width="0dp"
-                android:layout_weight="0.80"
-                android:layout_height="wrap_content"
-                android:text="deal_description" />
-
-                <ImageButton
-                    android:id="@+id/action_button"
-                    style="?android:attr/borderlessButtonStyle"
+                <TextView
+                    android:layout_weight="0.12"
+                    android:id="@+id/gut_price"
                     android:layout_width="0dp"
-                    android:layout_gravity="top"
-                    android:layout_weight="0.2"
                     android:layout_height="match_parent"
-                    android:paddingLeft="@dimen/_40sdp"
-                    android:tint="@color/colorLightWhite"
-                    android:src="@drawable/ic_redeem_black_24dp" />
+                    android:text="5k"
+                    style="@style/DealsPriceText" />
+
+                <TextView
+                    android:layout_weight="0.80"
+                    android:id="@+id/deal_description"
+                    style="@style/DealsDescText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="deal_description_is_very_long_then_what_will_be_overwritten" />
 
             </LinearLayout>
 
+
+
         </LinearLayout>
 
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:weightSum="1"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_height="wrap_content">-->
+            <LinearLayout
+                android:id="@+id/mitmachenlay"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_weight="0.1"
+                android:layout_height="wrap_content">
 
+                <ImageView
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:layout_gravity="center"
+                    android:paddingBottom="0dp"
+                    android:id="@+id/action_button"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:tint="@color/colorLightWhite"
+                    android:src="@drawable/ic_redeem_black_24dp"
+                    />
 
+                <TextView
+                    android:id="@+id/mit_text"
+                    style="@style/MitmachenText"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mitmachen" />
 
-        <!--</LinearLayout>-->
+            </LinearLayout>
+
+            </LinearLayout>
 
     </RelativeLayout>
 

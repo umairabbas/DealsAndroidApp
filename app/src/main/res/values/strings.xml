@@ -16,8 +16,10 @@
     <string name="nearby">Near by</string>
     <string name="shopping">Near by</string>
     <string name="max_distance">Entfernung</string>
+    <string name="mitmachen">Avail</string>
     <string name="apiUrl">https://www.regionaldeals.de</string>
 
+    <string name="gutNot">You have won a coupon.\nPlease click to see</string>
     <string name="error_gif">x or y bound size should be at least %1$dpx and file size should be no more than %2$sM</string>
 
     <string name="locationErrorMsg">Please select a location</string>

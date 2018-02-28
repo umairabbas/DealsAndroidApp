@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.regionaldeals.de.DealsDetail;
@@ -23,7 +24,8 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder {
     public TextView dealDescription;
     public TextView gut_price;
     public ImageView dealCoverUrl;
-    public ImageButton mitMachenBtn;
+    public ImageView mitMachenBtn;
+    public LinearLayout mitmachenLay;
     private Activity context;
 
     public GutscheineViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl, ImageButton mitBtn) {
@@ -42,7 +44,8 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder {
         dealDescription = (TextView) itemView.findViewById(R.id.deal_description);
         gut_price = (TextView) itemView.findViewById(R.id.gut_price);
         dealCoverUrl = (ImageView) itemView.findViewById(R.id.card_image_gut);
-        mitMachenBtn = (ImageButton) itemView.findViewById(R.id.action_button);
+        mitMachenBtn = (ImageView) itemView.findViewById(R.id.action_button);
+        mitmachenLay = (LinearLayout) itemView.findViewById(R.id.mitmachenlay);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

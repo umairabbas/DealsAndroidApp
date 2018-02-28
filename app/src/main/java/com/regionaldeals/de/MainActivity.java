@@ -363,6 +363,11 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if (id == R.id.search) {
+            Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.notification) {
 
@@ -371,10 +376,11 @@ public class MainActivity extends AppCompatActivity {
                         .setDismissOnClick(true)
                         .setGravity(Gravity.BOTTOM)
                         .setPadding(R.dimen.tile_padding)
-                        .setText("Sie haben einen Gutschein gewonnen.\nCode: XAZ15E")
+                        .setText("Sie haben einen Gutschein gewonnen.\nBitte klicken Sie hier um zu sehen")
                         .show();
             } else {
                 if (mTooltip.isShowing()) {
+                    //proceed to gutschein win page
                     mTooltip.dismiss();
                 } else {
                     mTooltip.show();

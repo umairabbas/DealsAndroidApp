@@ -53,59 +53,71 @@
             android:name=".MainActivity"
             android:label="Deals"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
             android:name=".AddDealActivity"
             android:label="@string/add_deals"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
             android:name=".CreateGutscheineActivity"
             android:label="@string/create_gut"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
             android:name=".CreateDealsActivity"
             android:label="@string/create_deals"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
             android:name=".SubscribeActivity"
             android:label="@string/subscribe"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
             android:name=".AboutActivity"
             android:label="@string/about_us"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
             android:name=".LoginActivity"
             android:label="@string/login"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
             android:name=".ShopActivity"
             android:label="@string/shop"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
             android:name=".AddShopActivity"
             android:label="@string/add_shops"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
             android:name=".NotificationDealsActivity"
             android:label="@string/new_deals"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".GooglePlacesAutocompleteActivity"></activity>
         <activity
-            android:name=".LocationManual"></activity>
+            android:name=".LocationManual"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".DealsDetail"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
