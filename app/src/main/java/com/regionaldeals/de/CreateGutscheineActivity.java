@@ -92,9 +92,9 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
             }
             if (restoredSub != null) {
                 JSONObject data = new JSONObject(restoredSub);
-                dealCounter = data.getInt("deals_listing");
+                dealCounter = data.getInt("gutschein_listing");
                 subStatus = data.getString("subscriptionStatus");
-                dealCount.setText(" "+Integer.toString(dealCounter) + "/4" + " (" + subStatus + ") ");
+                dealCount.setText(" "+Integer.toString(dealCounter) + "/1" + " (" + subStatus + ") ");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -108,9 +108,9 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(dealCounter>=4){
+                if(dealCounter>=1){
                     Snackbar.make(view, getResources().getString(R.string.deals_limit), Snackbar.LENGTH_LONG).show();
-                }else if(dealCounter<4) {
+                }else if(dealCounter<1) {
                     Intent startActivityIntent = new Intent(CreateGutscheineActivity.this, AddDealActivity.class);
                     startActivityIntent.putExtra("isGutscheine", true);
                     startActivityIntent.putExtra("userId", userId);
@@ -174,7 +174,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
                 Boolean dealSuccess = data.getBooleanExtra("dealAddSuccess", false);
                 if(dealSuccess) {
                     dealCounter++;
-                    dealCount.setText(" "+Integer.toString(dealCounter) + "/4" + " (" + subStatus + ") ");
+                    dealCount.setText(" "+Integer.toString(dealCounter) + "/1" + " (" + subStatus + ") ");
                     getSubscription();
                 }
             }
@@ -187,7 +187,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
             @Override
             public void run() {
                 AsyncHttpClient androidClient = new AsyncHttpClient();
-                androidClient.get("https://regionaldeals.de/mobile/api/subscriptions/subscription?userid="+ userId, new TextHttpResponseHandler() {
+                androidClient.get(context.getString(R.string.apiUrl) + "/mobile/api/subscriptions/subscription?userid="+ userId, new TextHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         Log.d("TAG", getString(R.string.token_failed) + responseString);

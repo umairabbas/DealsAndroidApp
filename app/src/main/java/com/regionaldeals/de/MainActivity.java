@@ -414,7 +414,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 AsyncHttpClient androidClient = new AsyncHttpClient();
-                androidClient.get("https://regionaldeals.de/mobile/api/subscriptions/subscription?userid="+ Integer.toString(user), new TextHttpResponseHandler() {
+                androidClient.get(context.getString(R.string.apiUrl) + "/mobile/api/subscriptions/subscription?userid="+ Integer.toString(user), new TextHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         Log.d("TAG", getString(R.string.token_failed) + responseString);
