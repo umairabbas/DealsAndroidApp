@@ -46,7 +46,7 @@ import cz.msebera.android.httpclient.Header;
  * Created by Umi on 19.12.2017.
  */
 
-public class CreateGutscheineActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class CreateGutscheineActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, FloatingActionButton.OnClickListener {
 
     private Toolbar toolbar;
     private Context context;
@@ -105,22 +105,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
         swipeRefreshLayout.setOnRefreshListener(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_new_deals);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(dealCounter>=1){
-                    Snackbar.make(view, getResources().getString(R.string.deals_limit), Snackbar.LENGTH_LONG).show();
-                }else if(dealCounter<1) {
-                    Intent startActivityIntent = new Intent(CreateGutscheineActivity.this, AddDealActivity.class);
-                    startActivityIntent.putExtra("isGutscheine", true);
-                    startActivityIntent.putExtra("userId", userId);
-                    startActivityForResult(startActivityIntent, ADD_GUT_REQUEST_CODE);
-                }//Should not reach here
-                else {
-                    Snackbar.make(view, "Error", Snackbar.LENGTH_LONG).show();
-                }
-            }
-        });
+        fab.setOnClickListener(this);
 
         deals = new ArrayList<>();
 
@@ -246,6 +231,28 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
     public void onRefresh() {
         // swipe refresh is performed, fetch the messages again
         new CreateGutscheineActivity.LoadDeals().execute();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.fab_new_deals) {
+            if (dealCounter >= 1) {
+                Snackbar.make(view, getResources().getString(R.string.deals_limit), Snackbar.LENGTH_LONG).show();
+            } else if (dealCounter < 1) {
+                Intent startActivityIntent = new Intent(CreateGutscheineActivity.this, AddDealActivity.class);
+                startActivityIntent.putExtra("isGutscheine", true);
+                startActivityIntent.putExtra("userId", userId);
+                startActivityForResult(startActivityIntent, ADD_GUT_REQUEST_CODE);
+            }//Should not reach here
+            else {
+                Snackbar.make(view, "Error", Snackbar.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 
     class LoadDeals extends AsyncTask<String, String, String> {

@@ -121,7 +121,7 @@
             <EditText android:id="@+id/input_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords"
+                android:inputType="numberDecimal"
                 android:hint="Shop Contact" />
         </android.support.design.widget.TextInputLayout>
 

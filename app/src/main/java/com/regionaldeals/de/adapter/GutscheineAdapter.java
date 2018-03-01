@@ -76,7 +76,7 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
         //gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         String imgUrl = deals.getGutscheinImageUrl(context) + "&imagecount=1&res=470x320";
         Picasso.with(context).load(imgUrl).placeholder(R.drawable.placeholder_2_300x200).into(holder.dealCoverUrl);
-        
+
 
         dealPosition = position;
         if(!isEdit){

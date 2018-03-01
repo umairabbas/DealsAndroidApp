@@ -79,56 +79,57 @@ public class NearbyAdapter extends BaseAdapter implements ActivityCompat.OnReque
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Get view for row item
         final View rowView = mInflater.inflate(R.layout.nearby_list_row, parent, false);
-        Shop recipe = (Shop) getItem(position);
+        if(mDataSource.size()>0) {
+            Shop recipe = (Shop) getItem(position);
 
 //        TextView Category =
 //                (TextView) rowView.findViewById(R.id.title);
-        TextView Name =
-                (TextView) rowView.findViewById(R.id.titleShop);
-        TextView Contact =
-                (TextView) rowView.findViewById(R.id.contactShop);
-        TextView Address =
-                (TextView) rowView.findViewById(R.id.addressShop);
-        TextView desc =
-                (TextView) rowView.findViewById(R.id.shopDesc);
+            TextView Name =
+                    (TextView) rowView.findViewById(R.id.titleShop);
+            TextView Contact =
+                    (TextView) rowView.findViewById(R.id.contactShop);
+            TextView Address =
+                    (TextView) rowView.findViewById(R.id.addressShop);
+            TextView desc =
+                    (TextView) rowView.findViewById(R.id.shopDesc);
 
-        Name.setText(recipe.getShopName());
-        Address.setText(recipe.getShopAddress());
-        Contact.setText(recipe.getShopContact());
-        desc.setText(recipe.getShopDetails());
+            Name.setText(recipe.getShopName());
+            Address.setText(recipe.getShopAddress());
+            Contact.setText(recipe.getShopContact());
+            desc.setText(recipe.getShopDetails());
 //        if(recipe.getShopCategories()!=null) {
 //            Category.setText(recipe.getShopCategories());
 //        }
-        contact = recipe.getShopContact();
-        final float lat = Float.parseFloat(recipe.getShopLocationLat());
-        final float lng = Float.parseFloat(recipe.getShopLocationLong());
-        final String address = recipe.getShopAddress();
+            contact = recipe.getShopContact();
+            final float lat = Float.parseFloat(recipe.getShopLocationLat());
+            final float lng = Float.parseFloat(recipe.getShopLocationLong());
+            final String address = recipe.getShopAddress();
 
-        Contact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    ActivityCompat.requestPermissions(act,
-                            new String[]{android.Manifest.permission.CALL_PHONE},
-                            MY_PERMISSIONS_REQUEST_CALL_PHONE);
-                    return;
-                } else {
-                    callPhone(contact);
+            Contact.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        ActivityCompat.requestPermissions(act,
+                                new String[]{android.Manifest.permission.CALL_PHONE},
+                                MY_PERMISSIONS_REQUEST_CALL_PHONE);
+                        return;
+                    } else {
+                        callPhone(contact);
+                    }
                 }
-            }
-        });
-        Address.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String uri = String.format(Locale.GERMANY, "geo:%f,%f?q=" + address, lat, lng);
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                intent.setPackage("com.google.android.apps.maps");
-                mContext.startActivity(intent);
-            }
-        });
+            });
+            Address.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String uri = String.format(Locale.GERMANY, "geo:%f,%f?q=" + address, lat, lng);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    intent.setPackage("com.google.android.apps.maps");
+                    mContext.startActivity(intent);
+                }
+            });
 
-
+        }
         return rowView;
     }
 }

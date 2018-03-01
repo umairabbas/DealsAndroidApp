@@ -18,13 +18,13 @@
             android:id="@+id/nav_einstellungen"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/menu_setting" />
-        <item
-            android:id="@+id/nav_hilfe"
-            android:icon="@drawable/ic_help_black_24dp"
-            android:title="@string/menu_help" />
+        <!--<item-->
+            <!--android:id="@+id/nav_hilfe"-->
+            <!--android:icon="@drawable/ic_help_black_24dp"-->
+            <!--android:title="@string/menu_help" />-->
         <item
             android:id="@+id/nav_uberDealSpok"
-            android:icon="@drawable/ic_location_city_black_24dp"
+            android:icon="@drawable/ic_help_black_24dp"
             android:title="@string/menu_about" />
         <item
             android:id="@+id/nav_appTeilen"
@@ -44,7 +44,7 @@
                 android:title="@string/menu_mydeals" />
             <item
                 android:id="@+id/meine_gutscheien"
-                android:icon="@drawable/ic_shopping_basket_black_24dp"
+                android:icon="@drawable/ic_redeem_black_24dp"
                 android:title="@string/menu_mycoupons" />
             <item
                 android:id="@+id/anzeigen_erstellen"

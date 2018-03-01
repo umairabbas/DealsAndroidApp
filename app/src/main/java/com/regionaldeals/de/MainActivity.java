@@ -181,10 +181,10 @@ public class MainActivity extends AppCompatActivity {
                     //    fragment = new Deals();
                     Snackbar.make(navigationView, "Coming soon.", Snackbar.LENGTH_SHORT).show();
                 }
-                else if (id == R.id.nav_hilfe) {
-                //    fragment = new Deals();
-                    Snackbar.make(navigationView, "Coming soon.", Snackbar.LENGTH_SHORT).show();
-                }
+//                else if (id == R.id.nav_hilfe) {
+//                //    fragment = new Deals();
+//                    Snackbar.make(navigationView, "Coming soon.", Snackbar.LENGTH_SHORT).show();
+//                }
                 else if (id == R.id.nav_uberDealSpok) {
                     Intent intent = new Intent(MainActivity.this, AboutActivity.class);
                     startActivity(intent);
@@ -303,6 +303,16 @@ public class MainActivity extends AppCompatActivity {
         }else if(intent.hasExtra("subscribed")){
             subscribed = intent.getBooleanExtra("subscribed", false);
             intent.removeExtra("subscribed");
+        }
+        if (intent.hasExtra("updateCity")) {
+            Boolean body = intent.getBooleanExtra("updateCity", false);
+            if(body){
+                if(intent.hasExtra("userCity")) {
+                    city = intent.getStringExtra("userCity");
+                }
+                //update push not.
+                new RegCall().execute();
+            }
         }
     }
 
