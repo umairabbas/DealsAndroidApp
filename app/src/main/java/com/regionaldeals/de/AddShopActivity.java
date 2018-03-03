@@ -128,7 +128,7 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
         shopCitySpinner = (Spinner) findViewById(R.id.spinner_city);
 
         SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-        String restoredCities = prefs.getString("citiesObject", null);
+        String restoredCities = prefs.getString("citiesString", null);
         String restoredCat = prefs.getString("categoriesObj", null);
 
 
