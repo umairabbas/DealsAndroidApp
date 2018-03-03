@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +27,8 @@ import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.entities.CitiesObject;
 
@@ -58,6 +61,8 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
     private Context context;
     private ListView lv1;
 
+    private List<CitiesObject> city =  new ArrayList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -66,7 +71,9 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
         context = this;
         //activity = this;
         SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
-        String restoredCities = prefs.getString("citiesObject", null);
+        String restoredCitiesObject = prefs.getString("citiesObject", "");
+        String restoredCities = prefs.getString("citiesString", null);
+
 
         lv1 = (ListView) findViewById(R.id.ListView01);
         lv1.setOnItemClickListener(this);
@@ -77,16 +84,35 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
             finish();
         }else {
             COUNTRIES = restoredCities.split(",");
+            Arrays.sort(COUNTRIES);
             lv1.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, COUNTRIES));
             mGestureDetector = new GestureDetector(context, new SideIndexGestureListener());
         }
+
+        if(restoredCitiesObject != null){
+            Gson gson = new Gson();
+            Type founderListType = new TypeToken<ArrayList<CitiesObject>>(){}.getType();
+            city = gson.fromJson(restoredCitiesObject, founderListType);
+        }
+
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
         String citySelected = COUNTRIES[i];
-        String placeJson = "{\"Name\":\"" + citySelected + "\", \"Address\": \"" + citySelected + "\"}";
+
+        String lat = null;
+        String lng = null;
+
+        for(CitiesObject c : city){
+            if(c.getCityName().equals(citySelected)){
+                lat = c.getCityLat().toString();
+                lng = c.getCityLong().toString();
+            }
+        }
+
+        String placeJson = "{\"Name\":\"" + citySelected + "\", \"lat\": \"" + lat + "\", \"lng\":\"" + lng + "\"}";
         SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
         editor.putString("locationObject", placeJson);
         editor.commit();

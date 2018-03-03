@@ -93,16 +93,6 @@ public class Deals extends Fragment implements //AdapterView.OnItemSelectedListe
             }
         );
 
-//        spinner = (Spinner) view.findViewById(R.id.spinnerInput);
-//        spinner.setVisibility(View.VISIBLE);
-//        ArrayAdapter<String>adapter = new ArrayAdapter<String>(getContext(),
-//                android.R.layout.simple_spinner_item, paths);
-//
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        isSpinnerInitial = true;
-//        spinner.setAdapter(adapter);
-//        spinner.setOnItemSelectedListener(this);
-
         locationLat = ((Main)getParentFragment()).getLat();
         locationLng = ((Main)getParentFragment()).getLng();
 

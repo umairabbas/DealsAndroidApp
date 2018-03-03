@@ -137,10 +137,10 @@ public class MainActivity extends AppCompatActivity {
         String restoredNot = prefs.getString("notificationToken", null);
         String restoredCat = prefs.getString("categoriesObj", null);
 
-        if (restoredText != null) {
-            try {
-                JSONObject obj = new JSONObject(restoredText);
-                userId = obj.getInt("userId");
+                if (restoredText != null) {
+                    try {
+                        JSONObject obj = new JSONObject(restoredText);
+                        userId = obj.getInt("userId");
                 String email = obj.getString("email");
                 emailMenu.setText(email);
             } catch (JSONException e) {
@@ -414,6 +414,7 @@ public class MainActivity extends AppCompatActivity {
                 emailMenu.setText(email);
                 //update Subscriptions
                 getSubscription(userId);
+                new RegCall().execute();
             }
         }
     }
@@ -562,6 +563,25 @@ public class MainActivity extends AppCompatActivity {
             super.onPreExecute();
         }
         protected String doInBackground(String... args) {
+//            long lat = 0;
+//            long lng = 0;
+
+            if(city.isEmpty()){
+                SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                String restoredText = prefs.getString("locationObject", null);
+                if (restoredText != null) {
+                    try {
+                        JSONObject obj = new JSONObject(restoredText);
+                        city = obj.getString("Name");
+//                        if(!obj.isNull("lat") && !obj.isNull("lng") ){
+//                            lat = obj.getLong("lat");
+//                            lng = obj.getLong("lng");
+//                        }
+                    }catch(Exception e){
+                    }
+                }
+            }
+
             try {
                 String message = "";
                 URL url = new URL(getApplicationContext().getString(R.string.apiUrl) + "/mobile/api/device/update_device");
@@ -578,11 +598,15 @@ public class MainActivity extends AppCompatActivity {
                 jsonParam.put("deviceToken", token);
                 jsonParam.put("deviceUuidImei", IMEINumber);
                 jsonParam.put("deviceAppLanguage", Locale.getDefault().getLanguage());
-                //jsonParam.put("deviceLocationLat", dlat);
-                //jsonParam.put("deviceLocationLong", dlng);
+//                jsonParam.put("deviceLocationLat", lat);
+//                jsonParam.put("deviceLocationLong", lng);
                 jsonParam.put("deviceCity", city);
                 jsonParam.put("deviceTimezone", 60);
-
+                if(userId == 0){
+                    jsonParam.put("userId", null);
+                }else {
+                    jsonParam.put("userId", userId);
+                }
                 Log.i("JSON", jsonParam.toString());
 
                 DataOutputStream os = new DataOutputStream(conn.getOutputStream());

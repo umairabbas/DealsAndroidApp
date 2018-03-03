@@ -69,6 +69,9 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
 
     @Override
     public void onBindViewHolder(GutscheineViewHolder holder, int position) {
+        if(allDeals.size() <= position){
+            return;
+        }
         final GutscheineObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getGutscheinTitle());
         holder.dealDescription.setText(deals.getShop().getShopName());//deals.getGutscheinDescription());

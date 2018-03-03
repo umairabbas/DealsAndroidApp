@@ -45,7 +45,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private List<GutscheineObject> deals;
+    private List<GutscheineObject> deals ;
     JSONParser jsonParser = new JSONParser();
     Context context;
     private final String URL_Deals = "/mobile/api/gutschein/list";
@@ -90,18 +90,6 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
-        filter = new IntentFilter("BroadcastReceiver");
-        myReceiver = new MyReceiver();
-
-        //spinner = (Spinner)view.findViewById(R.id.spinnerInput);
-        //spinner.setVisibility(View.VISIBLE);
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-//                android.R.layout.simple_spinner_item, paths);
-//
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        isSpinnerInitial = true;
-//        spinner.setAdapter(adapter);
-//        spinner.setOnItemSelectedListener(this);
         locationLat = ((Main)getParentFragment()).getLat();
         locationLng = ((Main)getParentFragment()).getLng();
 
@@ -132,9 +120,12 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
+        filter = new IntentFilter("BroadcastReceiver");
+        myReceiver = new MyReceiver();
+
         deals = new ArrayList<>();
-        // Loading JSON in Background Thread
-        //new Gutscheine.LoadDeals().execute();
+        mAdapter = new GutscheineAdapter(getActivity(), deals, Gutscheine.this);
+        songRecyclerView.setAdapter(mAdapter);
 
         // sfirst time fetch messages
         swipeRefreshLayout.post(
@@ -208,7 +199,7 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
 
             try {
                 dealArr = new JSONArray(json);
-
+                deals.clear();
                 if (dealArr != null) {
                     for (int i = 0; i < dealArr.length(); i++) {
                         JSONObject c = dealArr.getJSONObject(i);
@@ -216,6 +207,7 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
                         GutscheineObject newDeal = gson.fromJson(c.toString(), GutscheineObject.class);
                         deals.add(newDeal);
                     }
+
                 } else {
                     Log.d("Deals: ", "null");
                 }
@@ -229,30 +221,19 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
          * After completing background task Dismiss the progress dialog
          **/
         protected void onPostExecute(String file_url) {
-            // dismiss the dialog after getting all albums
-            //pDialog.dismiss();
-            // updating UI from Background Thread
-            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
-                    mAdapter = new GutscheineAdapter(getActivity(), deals, Gutscheine.this);
-                    songRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                 }
             });
-
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
     class UpdateDeals extends AsyncTask<String, String, String> {
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -273,8 +254,8 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
             Log.d("JSON: ", "> " + json);
 
             try {
-                deals.clear();
                 dealArr = new JSONArray(json);
+                deals.clear();
                 if (dealArr != null) {
                     for (int i = 0; i < dealArr.length(); i++) {
                         JSONObject c = dealArr.getJSONObject(i);
@@ -290,10 +271,6 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
             }
             return null;
         }
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(String file_url) {
             swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)

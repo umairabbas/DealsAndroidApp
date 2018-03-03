@@ -20,6 +20,7 @@ import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.DoubleNameValuePair;
 import com.regionaldeals.de.Utils.IntNameValuePair;
 import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.adapter.DealsAdapter;
 import com.regionaldeals.de.adapter.OnlineDealsAdapter;
 import com.regionaldeals.de.entities.DealObject;
 import com.google.gson.Gson;
@@ -82,6 +83,9 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
         swipeRefreshLayout.setOnRefreshListener(this);
 
         deals = new ArrayList<>();
+
+        mAdapter = new OnlineDealsAdapter(getActivity(), deals);
+        songRecyclerView.setAdapter(mAdapter);
         // Loading JSON in Background Thread
         swipeRefreshLayout.post(
                 new Runnable() {
@@ -215,7 +219,6 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
-            swipeRefreshLayout.setRefreshing(false);
             if(getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
@@ -223,11 +226,11 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
                     /**
                      * Updating parsed JSON data into ListView
                      * */
-                    mAdapter = new OnlineDealsAdapter(getActivity(), deals);
-                    songRecyclerView.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
+                        mAdapter.notifyDataSetChanged();
                 }
             });
+            swipeRefreshLayout.setRefreshing(false);
+
 
         }
     }

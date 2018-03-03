@@ -9,6 +9,35 @@ import java.io.Serializable;
 public class CitiesObject implements Serializable {
     private int id;
     private String cityName;
+    private String countryCode;
+    private Long cityLat;
+    private Long cityLong;
+
+    public CitiesObject(){}
+
+    public CitiesObject(int id, String cityName, String countryCode, Long cityLat, Long cityLong) {
+        this.id = id;
+        this.cityName = cityName;
+        this.countryCode = countryCode;
+        this.cityLat = cityLat;
+        this.cityLong = cityLong;
+    }
+
+    public Long getCityLat() {
+        return cityLat;
+    }
+
+    public void setCityLat(Long cityLat) {
+        this.cityLat = cityLat;
+    }
+
+    public Long getCityLong() {
+        return cityLong;
+    }
+
+    public void setCityLong(Long cityLong) {
+        this.cityLong = cityLong;
+    }
 
     public int getId() {
         return id;
@@ -34,5 +63,4 @@ public class CitiesObject implements Serializable {
         this.countryCode = countryCode;
     }
 
-    private String countryCode;
 }

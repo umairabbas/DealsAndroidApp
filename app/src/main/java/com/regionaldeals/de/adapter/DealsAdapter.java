@@ -75,7 +75,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
 
     @Override
     public void onBindViewHolder(DealsViewHolder holder, int position) {
-        if(allDeals.size() < position){
+        if(allDeals.size() <= position){
             return;
         }
         final DealObject deals = allDeals.get(position);

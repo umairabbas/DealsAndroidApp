@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.regionaldeals.de.Utils.DoubleNameValuePair;
 import com.regionaldeals.de.Utils.IntNameValuePair;
 import com.regionaldeals.de.Utils.JSONParser;
@@ -53,6 +54,8 @@ public class SplashActivity extends AppCompatActivity {
     private String[] COUNTRIES;
     private String message = "";
     private StringBuilder sb;
+    private List<CitiesObject> city =  new ArrayList<>();
+    //private CitiesObject city = new TypeToken<ArrayList<CitiesObject>>(){}.getType();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +95,21 @@ public class SplashActivity extends AppCompatActivity {
                 JSONObject jsonObj = new JSONObject(json);
                 data = jsonObj.getJSONArray("data");
                 message =  jsonObj.getString("message");
+                city.clear();
                 COUNTRIES = new String[data.length()];
                 for(int i=0; i<data.length(); i++){
                     JSONObject result = (JSONObject) data.get(i);
+                    CitiesObject c = new CitiesObject();
+                    c.setCityName(result.getString("cityName"));
+                    c.setCountryCode(result.getString("countryCode"));
+                    c.setId(result.getInt("id"));
                     COUNTRIES[i] = result.getString("cityName");
                     sb.append(COUNTRIES[i]).append(",");
+                    if(!result.isNull("cityLat") && !result.isNull("cityLong")) {
+                        c.setCityLat(result.getLong("cityLat"));
+                        c.setCityLong(result.getLong("cityLong"));
+                    }
+                    city.add(c);
                 }
                 Arrays.sort(COUNTRIES);
 
@@ -116,7 +129,10 @@ public class SplashActivity extends AppCompatActivity {
             }
 
             SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
-            editor.putString("citiesObject", sb.toString());
+            editor.putString("citiesString", sb.toString());
+            Gson gson = new Gson();
+            String json = gson.toJson(city);
+            editor.putString("citiesObject", json);
             editor.commit();
 
             runOnUiThread(new Runnable() {
@@ -161,7 +177,7 @@ public class SplashActivity extends AppCompatActivity {
     private void nextFlow(){
         SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
-        String restoredCities = prefs.getString("citiesObject", null);
+        String restoredCities = prefs.getString("citiesString", null);
 //        if (restoredCities == null) {
 //            new SplashActivity.loadCities().execute();
 //        }

@@ -64,6 +64,9 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
 
     @Override
     public void onBindViewHolder(OnlineDealsViewHolder holder, int position) {
+        if(allDeals.size() <= position){
+            return;
+        }
         final DealObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getDealTitle());
         holder.dealDescription.setText(deals.getDealDescription());
