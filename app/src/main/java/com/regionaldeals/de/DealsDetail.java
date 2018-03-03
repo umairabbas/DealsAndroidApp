@@ -13,9 +13,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,10 +45,14 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 /**
  * Created by Umi on 13.09.2017.
@@ -53,7 +60,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class DealsDetail extends AppCompatActivity implements
         GoogleMap.OnMarkerClickListener,
-        OnMapReadyCallback {
+        OnMapReadyCallback, BaseSliderView.OnSliderClickListener {
 
     public static final String EXTRA_POSITION = "position";
     private GoogleMap mMap;
@@ -77,6 +84,8 @@ public class DealsDetail extends AppCompatActivity implements
     private Boolean isGutschein = false;
     private String dealURL= "";
 
+    private List<String> images;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +102,6 @@ public class DealsDetail extends AppCompatActivity implements
         context = this;
         Intent intent = getIntent();
         int postion = intent.getIntExtra(EXTRA_POSITION, 0);
-
 
         TextView placeUrl = (TextView) findViewById(R.id.place_url);
         TextView titleUrl = (TextView) findViewById(R.id.urlTitle);
@@ -215,11 +223,15 @@ public class DealsDetail extends AppCompatActivity implements
         for(int a=1; a <= imgCount; a++){
             url_maps.put(imgTitle[a-1], coverUrl + Integer.toString(a) + "&res=470x320");
         }
+
+        images = new ArrayList<>();
         for(String name : url_maps.keySet()){
+            images.add(url_maps.get(name));
             TextSliderView textSliderView = new TextSliderView(this);
             textSliderView
                     .description(name)
                     .image(url_maps.get(name))
+                    .setOnSliderClickListener(this)
                     .setScaleType(BaseSliderView.ScaleType.Fit);
             //add your extra information
             textSliderView.bundle(new Bundle());
@@ -237,6 +249,31 @@ public class DealsDetail extends AppCompatActivity implements
             mDemoSlider.setDuration(600000);
         }
 
+        Fresco.initialize(this);
+
+//        for (int i = 0; i < images.size(); i++) {
+//            BaseSliderView baseSliderView = new BaseSliderView(context) {
+//                @Override
+//                public View getView() {
+//                    View v = LayoutInflater.from(getContext()).inflate(R.layout.image_slider, null);
+//                    ImageView target = (ImageView) v.findViewById(R.id.daimajia_slider_image);
+//                    bindEventAndShow(v, target);
+//                    return v;
+//                }
+//            };
+//
+//            baseSliderView.image(images.get(i));
+//            baseSliderView.setOnSliderClickListener(new BaseSliderView.OnSliderClickListener() {
+//                @Override
+//                public void onSliderClick(BaseSliderView slider) {
+//                    new ImageViewer.Builder(context, images)
+//                            .setStartPosition(0)
+//                            .show();
+//                    Log.d("MyActivity", "index selected:" + mDemoSlider.getCurrentPosition());
+//                }
+//            });
+//        }
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -248,6 +285,13 @@ public class DealsDetail extends AppCompatActivity implements
         ViewGroup.LayoutParams params = mapFragment.getView().getLayoutParams();
         params.height = height/2;
         mapFragment.getView().setLayoutParams(params);
+    }
+
+    @Override
+    public void onSliderClick(BaseSliderView slider) {
+        new ImageViewer.Builder(context, images)
+                .setStartPosition(0)
+                .show();
     }
 
     /** Called when the map is ready. */

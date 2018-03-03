@@ -45,6 +45,9 @@ dependencies {
     //image slider cover
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.slider:library:1.1.5@aar'
+    compile 'com.facebook.fresco:fresco:0.5.0'
+    compile 'jp.wasabeef:fresco-processors:2.0.0'
+    compile 'com.github.stfalcon:frescoimageviewer:0.5.0'
 
     compile 'com.intuit.sdp:sdp-android:1.0.3'
     compile 'com.mcxiaoke.volley:library:1.0.19'
