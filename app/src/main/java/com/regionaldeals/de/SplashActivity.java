@@ -106,8 +106,8 @@ public class SplashActivity extends AppCompatActivity {
                     COUNTRIES[i] = result.getString("cityName");
                     sb.append(COUNTRIES[i]).append(",");
                     if(!result.isNull("cityLat") && !result.isNull("cityLong")) {
-                        c.setCityLat(result.getLong("cityLat"));
-                        c.setCityLong(result.getLong("cityLong"));
+                        c.setCityLat(result.getDouble("cityLat"));
+                        c.setCityLong(result.getDouble("cityLong"));
                     }
                     city.add(c);
                 }

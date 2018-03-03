@@ -386,7 +386,8 @@ public class MainActivity extends AppCompatActivity {
                         .setDismissOnClick(true)
                         .setGravity(Gravity.BOTTOM)
                         .setPadding(R.dimen.tile_padding)
-                        .setText("Sie haben einen Gutschein gewonnen.\nBitte klicken Sie hier um zu sehen")
+                        .setText("Keine neuen Benachrichtigungen")
+                        //.setText("Sie haben einen Gutschein gewonnen.\nBitte klicken Sie hier um zu sehen")
                         .show();
             } else {
                 if (mTooltip.isShowing()) {

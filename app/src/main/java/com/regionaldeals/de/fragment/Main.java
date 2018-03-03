@@ -1,6 +1,8 @@
 package com.regionaldeals.de.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +21,10 @@ import com.regionaldeals.de.R;
 import com.regionaldeals.de.adapter.CustomFragmentPageAdapter;
 import com.regionaldeals.de.service.LocationStatic;
 
+import org.json.JSONObject;
+
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by Umi on 28.08.2017.
  */
@@ -34,6 +40,7 @@ public class Main extends Fragment {
     Intent intent;
     public static double latitude = 0.0;
     public static double longitude = 0.0;
+    private Context context;
 
     public Main() {
     }
@@ -50,7 +57,7 @@ public class Main extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-
+        context = getActivity();
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         viewPager = (ViewPager) view.findViewById(R.id.view_pager);
         cfpa = new CustomFragmentPageAdapter(getChildFragmentManager(), getContext());
@@ -71,6 +78,21 @@ public class Main extends Fragment {
         super.onResume();
         latitude  = LocationStatic.latitude; // latitude
         longitude = LocationStatic.longitude; // latitude
+
+        if(latitude == 0 || longitude == 0){
+            SharedPreferences prefs = getActivity().getSharedPreferences(getActivity().getString(R.string.sharedPredName), MODE_PRIVATE);
+            String restoredText = prefs.getString("locationObject", null);
+            if (restoredText != null) {
+                try {
+                    JSONObject obj = new JSONObject(restoredText);
+                        if(!obj.isNull("lat") && !obj.isNull("lng") ){
+                            latitude = obj.getDouble("lat");
+                            longitude = obj.getDouble("lng");
+                        }
+                }catch(Exception e){
+                }
+            }
+        }
     }
 
     @Override

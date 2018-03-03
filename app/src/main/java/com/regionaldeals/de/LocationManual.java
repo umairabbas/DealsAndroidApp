@@ -107,8 +107,8 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
 
         for(CitiesObject c : city){
             if(c.getCityName().equals(citySelected)){
-                lat = c.getCityLat().toString();
-                lng = c.getCityLong().toString();
+                lat = Double.toString(c.getCityLat());
+                lng = Double.toString(c.getCityLong());
             }
         }
 

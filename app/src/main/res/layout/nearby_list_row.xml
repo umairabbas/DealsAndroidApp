@@ -32,16 +32,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="2"
+        android:drawablePadding="10dp"
         android:paddingLeft="20dp" />
 
     <TextView
         android:id="@+id/addressShop"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_below="@+id/contactShop"
         android:textColor="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="2"
+        android:drawablePadding="10dp"
         android:paddingLeft="20dp" />
 
     <TextView
@@ -50,8 +52,9 @@
         android:layout_below="@+id/addressShop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="4"
+        android:maxLines="2"
         android:paddingLeft="20dp"
+        android:drawablePadding="10dp"
         android:layout_marginBottom="10dp"
         style="@style/ShopsDescText" />
 

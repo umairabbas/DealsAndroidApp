@@ -93,6 +93,10 @@ public class NearbyAdapter extends BaseAdapter implements ActivityCompat.OnReque
             TextView desc =
                     (TextView) rowView.findViewById(R.id.shopDesc);
 
+            Contact.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phone_24, 0, 0, 0);
+            Address.setCompoundDrawablesWithIntrinsicBounds(R.drawable.location_24, 0, 0, 0);
+            desc.setCompoundDrawablesWithIntrinsicBounds(R.drawable.details_24, 0, 0, 0);
+
             Name.setText(recipe.getShopName());
             Address.setText(recipe.getShopAddress());
             Contact.setText(recipe.getShopContact());

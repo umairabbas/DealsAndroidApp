@@ -10,8 +10,8 @@ public class CitiesObject implements Serializable {
     private int id;
     private String cityName;
     private String countryCode;
-    private Long cityLat;
-    private Long cityLong;
+    private double cityLat;
+    private double cityLong;
 
     public CitiesObject(){}
 
@@ -23,19 +23,19 @@ public class CitiesObject implements Serializable {
         this.cityLong = cityLong;
     }
 
-    public Long getCityLat() {
+    public double getCityLat() {
         return cityLat;
     }
 
-    public void setCityLat(Long cityLat) {
+    public void setCityLat(double cityLat) {
         this.cityLat = cityLat;
     }
 
-    public Long getCityLong() {
+    public double getCityLong() {
         return cityLong;
     }
 
-    public void setCityLong(Long cityLong) {
+    public void setCityLong(double cityLong) {
         this.cityLong = cityLong;
     }
 

@@ -30,8 +30,8 @@ public class LocationStatic extends Service implements LocationListener
     boolean canGetLocation = false;
 
     Location location; // location
-    public static double latitude; // latitude
-    public static double longitude; // longitude
+    public static double latitude = 0.0; // latitude
+    public static double longitude = 0.0; // longitude
 
     // The minimum distance to change Updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
