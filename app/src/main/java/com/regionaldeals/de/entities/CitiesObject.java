@@ -10,8 +10,8 @@ public class CitiesObject implements Serializable {
     private int id;
     private String cityName;
     private String countryCode;
-    private double cityLat;
-    private double cityLong;
+    private double cityLat = 50.78;
+    private double cityLong = 6.07;
 
     public CitiesObject(){}
 

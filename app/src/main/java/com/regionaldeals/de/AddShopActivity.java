@@ -41,6 +41,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -140,7 +143,7 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
             COUNTRIES = restoredCities.split(",");
         }
 
-
+        Arrays.sort(COUNTRIES);
         //Adapter Deals
         ArrayAdapter<String> adapterDeals = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, COUNTRIES);
