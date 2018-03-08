@@ -60,7 +60,7 @@ dependencies {
     compile 'com.braintreepayments.api:drop-in:3.+'
     compile 'com.loopj.android:android-async-http:1.4.9'
     //for pictures
-    compile 'com.squareup.picasso:picasso:2.+'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     //compile 'com.google.android.gms:play-services:11.+'
     //https://developers.google.com/android/guides/setup
