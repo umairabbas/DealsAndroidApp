@@ -22,6 +22,15 @@ public class GutscheineObject implements Serializable {
     private boolean gutscheinWin;
     private CategoryObject category;
     private int gutscheinImageCount;
+    private String gutscheinCode;
+
+    public String getGutscheinCode() {
+        return gutscheinCode;
+    }
+
+    public void setGutscheinCode(String gutscheinCode) {
+        this.gutscheinCode = gutscheinCode;
+    }
 
     public int getGutscheinImageCount() {
         return gutscheinImageCount;

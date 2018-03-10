@@ -110,6 +110,12 @@
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:allowBackup="true"
+            android:name=".NotificationsActivity"
+            android:label="@string/menu_notification"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".GooglePlacesAutocompleteActivity"></activity>
         <activity
             android:name=".LocationManual"

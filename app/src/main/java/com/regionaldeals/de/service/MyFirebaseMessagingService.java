@@ -137,12 +137,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(RemoteMessage remoteMessage) {
 
         String dealids = remoteMessage.getData().get("dealids");
+        String gutid = remoteMessage.getData().get("gutscheinid");
         String title = remoteMessage.getNotification().getTitle();
         String body = remoteMessage.getNotification().getBody();
 
         Intent intent = new Intent(this.getApplicationContext(), SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("notificationBody", dealids);
+        if(dealids!= null) {
+            intent.putExtra("notificationBody", dealids);
+        }
+        if(gutid!= null) {
+            intent.putExtra("notificationGut", gutid);
+        }
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 

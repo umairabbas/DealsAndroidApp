@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_centerVertical="true"
+    android:background="@color/colorWhite"
+    android:layout_height="wrap_content">
+
+    <!--<TextView-->
+    <!--android:id="@+id/shopCat"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/ShopsHeaderText"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:textStyle="bold"-->
+    <!--android:paddingLeft="20dp" />-->
+
+    <TextView
+        android:id="@+id/titleShop"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        style="@style/NotificationHeaderText" />
+
+    <TextView
+        android:id="@+id/addressShop"
+        android:layout_below="@+id/titleShop"
+        android:textColor="@color/colorLightBlack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:drawablePadding="10dp"
+        android:paddingLeft="20dp"
+        style="@style/ShopsDescText"/>
+
+    <TextView
+        android:id="@+id/shopDesc"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/addressShop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:paddingLeft="20dp"
+        android:drawablePadding="10dp"
+        style="@style/ShopsDescText" />
+
+
+</RelativeLayout>

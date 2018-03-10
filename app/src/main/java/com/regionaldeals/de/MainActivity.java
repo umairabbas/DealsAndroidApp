@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,6 +38,7 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.regionaldeals.de.service.LocationStatic;
 import com.regionaldeals.de.fragment.Main;
+import com.tooltip.OnClickListener;
 import com.tooltip.Tooltip;
 
 import org.json.JSONArray;
@@ -67,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     private String city = "";
     private String IMEINumber = "";
     private Boolean subscribed = false;
+    private Boolean notIconOn = false;
+    private MenuItem notMenuItem;
 
 //    public static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 101;
 //    private LocationManager mLocationManager;
@@ -174,8 +178,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(startActivityIntent);
                 }
                 else if (id == R.id.nav_benachrichtigungen) {
-                //    fragment = new Deals();
-                    Snackbar.make(navigationView, "Coming soon.", Snackbar.LENGTH_SHORT).show();
+                    Intent startActivityIntent = new Intent(MainActivity.this, NotificationsActivity.class);
+                    startActivity(startActivityIntent);
                 }
                 else if (id == R.id.nav_einstellungen) {
                     //    fragment = new Deals();
@@ -261,6 +265,9 @@ public class MainActivity extends AppCompatActivity {
             Intent startActivityIntent = new Intent(MainActivity.this, NotificationDealsActivity.class);
             startActivityIntent.putExtra("notificationBody", body);
             startActivity(startActivityIntent);
+        } else if (getIntent().hasExtra("notificationGut")) {
+            //Make notification icon color yellow
+            notIconOn = true;
         }
 
     }
@@ -300,6 +307,9 @@ public class MainActivity extends AppCompatActivity {
             startNotIntent.putExtra("notificationBody", intent.getStringExtra("notificationBody"));
             intent.removeExtra("notificationBody");
             startActivity(startNotIntent);
+        }else if(intent.hasExtra("notificationGut")){
+            notIconOn = true;
+            notMenuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_not_check));
         }else if(intent.hasExtra("subscribed")){
             subscribed = intent.getBooleanExtra("subscribed", false);
             intent.removeExtra("subscribed");
@@ -361,6 +371,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        notMenuItem = menu.findItem(R.id.notification);
+        if(notIconOn) {
+            notMenuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_not_check));
+        }
         return true;
     }
 
@@ -380,13 +394,22 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.notification) {
+            String text = "Keine neuen Benachrichtigungen";
+            if(notIconOn){
+                //text = "Sie haben eine neue Benachrichtigung.\nBitte klicken Sie hier, um zu sehen.";
+                notMenuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_notifications_none_white_24dp));
+                notIconOn = false;
+                Intent startActivityIntent = new Intent(MainActivity.this, NotificationsActivity.class);
+                startActivity(startActivityIntent);
+                return true;
+            }
 
             if (mTooltip == null) {
                 mTooltip = new Tooltip.Builder(findViewById(R.id.notification), R.style.Tooltip)
                         .setDismissOnClick(true)
                         .setGravity(Gravity.BOTTOM)
                         .setPadding(R.dimen.tile_padding)
-                        .setText("Keine neuen Benachrichtigungen")
+                        .setText(text)
                         //.setText("Sie haben einen Gutschein gewonnen.\nBitte klicken Sie hier um zu sehen")
                         .show();
             } else {
@@ -399,6 +422,14 @@ public class MainActivity extends AppCompatActivity {
             }
             item.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_notifications_none_white_24dp));
             //Toast.makeText(context, "Coming soon.", Toast.LENGTH_SHORT).show();
+
+//            mTooltip.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(@NonNull Tooltip tooltip) {
+//                    Intent startActivityIntent = new Intent(MainActivity.this, NotificationsActivity.class);
+//                    startActivity(startActivityIntent);
+//                }
+//            });
 
             return true;
         }

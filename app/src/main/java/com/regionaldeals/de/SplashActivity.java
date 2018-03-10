@@ -194,6 +194,12 @@ public class SplashActivity extends AppCompatActivity {
                     } else if (getIntent().hasExtra("dealids")) {     //should be redirect = true
                         String body = getIntent().getStringExtra("dealids");
                         startActivityIntent.putExtra("notificationBody", body);
+                    } else if(getIntent().hasExtra("notificationGut")) {
+                        String body = getIntent().getStringExtra("notificationGut");
+                        startActivityIntent.putExtra("notificationGut", body);
+                    }else if(getIntent().hasExtra("gutscheinid")){
+                        String body = getIntent().getStringExtra("notificationGut");
+                        startActivityIntent.putExtra("notificationGut", body);
                     }
                     startActivity(startActivityIntent);
                     SplashActivity.this.finish();
