@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -66,7 +67,7 @@ public class SubscribeActivity extends AppCompatActivity {
     private JSONArray planArr = null;
     private List<Plans> deals;
     private String planShortName;
-    private String userId;
+    private String userId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,24 +87,6 @@ public class SubscribeActivity extends AppCompatActivity {
         TextView currentSub = (TextView)findViewById(R.id.currentSub);
 
         deals = new ArrayList<>();
-
-        firstDealBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                v = view;
-                planShortName  = deals.get(0).getPlanShortName();
-                onBraintreeSubmit(view);
-            }
-        });
-
-        secDealBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                v = view;
-                planShortName  = deals.get(1).getPlanShortName();
-                onBraintreeSubmit(view);
-            }
-        });
 
         SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredSub = prefs.getString("subscriptionObject", null);
@@ -155,6 +138,32 @@ public class SubscribeActivity extends AppCompatActivity {
             e.printStackTrace();
         } catch (Throwable t) {
         }
+
+        firstDealBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(userId.isEmpty()){
+                    Snackbar.make(view, getResources().getString(R.string.loginerror), Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+                v = view;
+                planShortName  = deals.get(0).getPlanShortName();
+                onBraintreeSubmit(view);
+            }
+        });
+
+        secDealBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(userId.isEmpty()){
+                    Snackbar.make(view, getResources().getString(R.string.loginerror), Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+                v = view;
+                planShortName  = deals.get(1).getPlanShortName();
+                onBraintreeSubmit(view);
+            }
+        });
 
     }
 

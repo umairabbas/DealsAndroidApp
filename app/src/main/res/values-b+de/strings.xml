@@ -105,6 +105,8 @@
 
 
     <string name="suberror">Bitte machen Sie das erste Abonnement</string>
+    <string name="loginerror">Bitte zuerst anmelden</string>
+
 
     <!--
     Login/signup
@@ -114,6 +116,7 @@
     <string name="new_user">NEUER BENUTZER</string>
     <string name="password">Passwort</string>
     <string name="login">Anmeldung</string>
+    <string name="signout">Ausloggen</string>
     <string name="login_msg">Noch keinen Account? Erstelle einen</string>
     <string name="create_account">Benutzerkonto Anlegen</string>
     <string name="signup_msg">Schon ein Mitglied? Anmeldung</string>

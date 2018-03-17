@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private Activity activity;
     private int userId = 0;
     public static final int LOGIN_REQUEST_CODE = 1;
+    public static final int SIGNOUT_REQUEST_CODE = 2;
     private TextView emailMenu;
     private static boolean shouldRefresh = false;
     private String token = "";
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private Boolean subscribed = false;
     private Boolean notIconOn = false;
     private MenuItem notMenuItem;
+    private String email = "";
 
 //    public static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 101;
 //    private LocationManager mLocationManager;
@@ -108,14 +110,6 @@ public class MainActivity extends AppCompatActivity {
         final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
         ImageView loginImg = (ImageView) header.findViewById(R.id.imageView);
-        loginImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, LoginActivity.class);
-                startActivityForResult(intent, LOGIN_REQUEST_CODE);
-                shouldRefresh = true;
-            }
-        });
 
         emailMenu = (TextView)header.findViewById(R.id.textemail);
 
@@ -145,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject obj = new JSONObject(restoredText);
                         userId = obj.getInt("userId");
-                String email = obj.getString("email");
+                email = obj.getString("email");
                 emailMenu.setText(email);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -165,6 +159,23 @@ public class MainActivity extends AppCompatActivity {
         if(restoredCat == null){
             getCatFromServer();
         }
+
+        loginImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userId != 0) {
+                    //Already Loged in
+                    Intent intent = new Intent(context, SignoutActivity.class);
+                    intent.putExtra("uemail",email);
+                    shouldRefresh = true;
+                    startActivityForResult(intent, SIGNOUT_REQUEST_CODE);
+                } else {
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    shouldRefresh = true;
+                    startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                }
+            }
+        });
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -201,14 +212,14 @@ public class MainActivity extends AppCompatActivity {
                             .startChooser();
                 }
                 else if (id == R.id.abo_buchen) {
-                    if (userId != 0) {
+//                    if (userId != 0) {
                         Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
                         startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(context, LoginActivity.class);
-                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
-                        shouldRefresh = true;
-                    }
+//                    } else {
+//                        Intent intent = new Intent(context, LoginActivity.class);
+//                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
+//                        shouldRefresh = true;
+//                    }
 
                 }
                 else if (id == R.id.meine_anzeigen) {
@@ -446,6 +457,16 @@ public class MainActivity extends AppCompatActivity {
                 emailMenu.setText(email);
                 //update Subscriptions
                 getSubscription(userId);
+                new RegCall().execute();
+            }
+        }else if(requestCode == SIGNOUT_REQUEST_CODE){
+            if (resultCode == Activity.RESULT_OK) {
+                SharedPreferences.Editor e = getApplicationContext().getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                e.remove("userObject");
+                e.remove("subscriptionObject");
+                e.apply();
+                userId = 0;
+                emailMenu.setText(getResources().getString(R.string.login_signup));
                 new RegCall().execute();
             }
         }

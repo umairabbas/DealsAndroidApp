@@ -113,6 +113,7 @@
     <string name="deals_limit">You have reached deals limit for the current billing cycle</string>
 
     <string name="suberror">Kindly make subscription first</string>
+    <string name="loginerror">Kindly Login first</string>
 
     <!--
     Login/signup
@@ -122,6 +123,7 @@
     <string name="new_user">NEW USER</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="signout">Signout</string>
     <string name="login_msg">No account yet? Create one</string>
     <string name="create_account">Create Account</string>
     <string name="signup_msg">Already a member? Login</string>

@@ -93,6 +93,12 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
+            android:name=".SignoutActivity"
+            android:label="@string/signout"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:allowBackup="true"
             android:name=".ShopActivity"
             android:label="@string/shop"
             android:theme="@style/AppTheme"
@@ -122,11 +128,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".DealsDetail"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
         </activity>
         <!-- [START firebase_service] -->
         <service

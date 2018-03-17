@@ -147,7 +147,7 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
         context.registerReceiver(myReceiver, filter);
         //TODO: make seperate shouldrefresh bool for gut and deals etc
         if(((MainActivity) this.getActivity()).getShouldRefresh()) {
-            SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
+            SharedPreferences prefs = getActivity().getApplicationContext().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
             String restoredUser = prefs.getString("userObject", null);
             try {
                 if (restoredUser != null) {

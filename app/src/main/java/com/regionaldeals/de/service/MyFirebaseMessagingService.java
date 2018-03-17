@@ -160,7 +160,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         //.setLargeIcon(bmpic)/*Notification icon image*/
                         .setContentTitle(title)
                         .setContentText(body)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText("First deal title\nSecond deal title\nThird deal title\nForuth deal title is very very quite long title so that it takes many lines\nFifth deal title"))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
                         //.setStyle(new NotificationCompat.BigPictureStyle()
                         //       .bigPicture(bmpic))/*Notification with Image*/
                         .setAutoCancel(true)

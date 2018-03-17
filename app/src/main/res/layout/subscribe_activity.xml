@@ -78,7 +78,7 @@
                 android:id="@+id/tv1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="30dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/_12sdp" />
 
@@ -86,7 +86,7 @@
                 android:id="@+id/btn_1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="15dp"
                 android:padding="12dp"
                 android:background="@drawable/button_round_trans"
@@ -107,7 +107,7 @@
                 android:id="@+id/btn_2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="15dp"
                 android:padding="12dp"
                 android:enabled="false"
