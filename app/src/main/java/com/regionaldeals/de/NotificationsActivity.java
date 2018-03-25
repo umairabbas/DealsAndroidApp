@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -50,7 +51,7 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
     private NotificationsAdapter mAdapter;
     private Activity activity;
     private String userId = "";
-
+    private String android_id = "";
 
 
     @Override
@@ -84,6 +85,9 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
         shopList = new ArrayList<>();
         mAdapter = new NotificationsAdapter(context, shopList);
         mListView.setAdapter(mAdapter);
+
+        android_id = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
 
         new NotificationsActivity.LoadDeals().execute();
 
@@ -123,6 +127,7 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
             params.add(new BasicNameValuePair("userid", userId));
+            params.add(new BasicNameValuePair("deviceuuidimei", android_id));
 
             // getting JSON string from URL
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",

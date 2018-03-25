@@ -94,7 +94,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
                 JSONObject data = new JSONObject(restoredSub);
                 dealCounter = data.getInt("gutschein_listing");
                 subStatus = data.getString("subscriptionStatus");
-                dealCount.setText(" "+Integer.toString(dealCounter) + "/1" + " (" + subStatus + ") ");
+                dealCount.setText(" "+Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -159,7 +159,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
                 Boolean dealSuccess = data.getBooleanExtra("dealAddSuccess", false);
                 if(dealSuccess) {
                     dealCounter++;
-                    dealCount.setText(" "+Integer.toString(dealCounter) + "/1" + " (" + subStatus + ") ");
+                    dealCount.setText(" "+Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
                     getSubscription();
                 }
             }
@@ -236,9 +236,9 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
     @Override
     public void onClick(View view) {
         if(view.getId() == R.id.fab_new_deals) {
-            if (dealCounter >= 1) {
+            if (dealCounter >= 30) {
                 Snackbar.make(view, getResources().getString(R.string.deals_limit), Snackbar.LENGTH_LONG).show();
-            } else if (dealCounter < 1) {
+            } else if (dealCounter < 30) {
                 Intent startActivityIntent = new Intent(CreateGutscheineActivity.this, AddDealActivity.class);
                 startActivityIntent.putExtra("isGutscheine", true);
                 startActivityIntent.putExtra("userId", userId);

@@ -99,7 +99,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                 JSONObject data = new JSONObject(restoredSub);
                 dealCounter = data.getInt("deals_listing");
                 subStatus = data.getString("subscriptionStatus");
-                dealCount.setText(" "+Integer.toString(dealCounter) + "/4" + " (" + subStatus + ") ");
+                dealCount.setText(" "+Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -113,9 +113,9 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(dealCounter>=4){
+                if(dealCounter>=30){
                     Snackbar.make(view, getResources().getString(R.string.deals_limit), Snackbar.LENGTH_LONG).show();
-                }else if(dealCounter<4){
+                }else if(dealCounter<30){
                     Intent startActivityIntent = new Intent(CreateDealsActivity.this, AddDealActivity.class);
                     startActivityIntent.putExtra("userId", userId);
                     startActivityForResult(startActivityIntent, ADD_DEALS_REQUEST_CODE);
@@ -177,7 +177,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                 Boolean dealSuccess = data.getBooleanExtra("dealAddSuccess", false);
                 if(dealSuccess) {
                     dealCounter++;
-                    dealCount.setText(" "+Integer.toString(dealCounter) + "/4" + " (" + subStatus + ") ");
+                    dealCount.setText(" "+Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
                     getSubscription();
                 }
             }

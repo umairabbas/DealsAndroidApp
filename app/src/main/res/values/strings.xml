@@ -162,7 +162,7 @@
     <string name="del_deal">Delete Deal</string>
     <string name="website">Website</string>
 
-
+    <string name="imageDesc">Click to upload pictures \n(picture size in multiples of 480x320)</string>
 
     <string name="notificationTextEmpty">No new notifications</string>
 

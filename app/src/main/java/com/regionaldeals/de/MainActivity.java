@@ -321,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
         }else if(intent.hasExtra("notificationGut")){
             notIconOn = true;
             notMenuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_not_check));
+            notMenuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_not_check));
         }else if(intent.hasExtra("subscribed")){
             subscribed = intent.getBooleanExtra("subscribed", false);
             intent.removeExtra("subscribed");

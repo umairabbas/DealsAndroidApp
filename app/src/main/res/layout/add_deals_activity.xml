@@ -51,7 +51,7 @@
                     android:gravity="center"
                     android:textSize="18sp"
                     android:id="@+id/tvHeading1"
-                    android:text="Touch the icon to upload pictures"
+                    android:text="@string/imageDesc"
                     android:textColor="#fff"
                     android:textStyle="bold"/>
                 </LinearLayout>
