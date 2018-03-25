@@ -11,10 +11,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.regionaldeals.de.MainActivity;
+import com.regionaldeals.de.NotificationDealsActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.entities.NotificationsObject;
 import com.regionaldeals.de.entities.Shop;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -72,24 +75,48 @@ public class NotificationsAdapter  extends BaseAdapter{
             //desc.setCompoundDrawablesWithIntrinsicBounds(R.drawable.details_24, 0, 0, 0);
 
             Name.setText(recipe.getNotificationDetails());
-            Address.setText( recipe.getGutscheineObject().getShop().getShopName() + ", " + recipe.getGutscheineObject().getShop().getShopAddress());
-            desc.setText("CODE: "+ recipe.getGutscheineObject().getGutscheinCode());
 
-            desc.setTextColor(Color.RED);
+            if(recipe.getNotificationDate()!=0){
+                Date d = new Date(recipe.getNotificationDate());
+                desc.setText(d.toString());
+            }
 
-            final float lat = Float.parseFloat(recipe.getGutscheineObject().getShop().getShopLocationLat());
-            final float lng = Float.parseFloat(recipe.getGutscheineObject().getShop().getShopLocationLong());
-            final String address = recipe.getGutscheineObject().getShop().getShopAddress();
+            if(recipe.getGutscheineObject()!=null) {
+                Address.setText(recipe.getGutscheineObject().getShop().getShopName() + ", " + recipe.getGutscheineObject().getShop().getShopAddress());
+                desc.setText("CODE: " + recipe.getGutscheineObject().getGutscheinCode());
 
-            Address.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String uri = String.format(Locale.GERMANY, "geo:%f,%f?q=" + address, lat, lng);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                    intent.setPackage("com.google.android.apps.maps");
-                    mContext.startActivity(intent);
-                }
-            });
+                desc.setTextColor(Color.RED);
+
+                final float lat = Float.parseFloat(recipe.getGutscheineObject().getShop().getShopLocationLat());
+                final float lng = Float.parseFloat(recipe.getGutscheineObject().getShop().getShopLocationLong());
+                final String address = recipe.getGutscheineObject().getShop().getShopAddress();
+
+                Address.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String uri = String.format(Locale.GERMANY, "geo:%f,%f?q=" + address, lat, lng);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                        intent.setPackage("com.google.android.apps.maps");
+                        mContext.startActivity(intent);
+                    }
+                });
+
+            }else{
+                Address.setText(recipe.getNotificationText2().substring(0, 1).toUpperCase() + recipe.getNotificationText2().substring(1));
+                final String dealids = recipe.getNotificationText1();
+
+                rowView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent intent = new Intent(act, NotificationDealsActivity.class);
+                        intent.putExtra("notificationBody", dealids);
+                        act.startActivity(intent);
+
+                    }
+                });
+
+            }
 
         }
         return rowView;

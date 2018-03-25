@@ -131,10 +131,10 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
             Log.d("JSON: ", "> " + json);
 
             try {
-
+                System.out.print(URL_Deals);
                 shopList.clear();
                 JSONObject jO = new JSONObject(json);
-                if(jO.getString("message").equals("USER_NOTIFICATION_EMPTY")) {
+                if(jO.getString("message").equals("USER_NOTIFICATION_EMPTY") || jO.getString("message").equals("USER_NOTIFICATION_COUNT - 0")) {
                     //Snackbar.make(getView(), "Cannot find shops in this Category", Snackbar.LENGTH_SHORT).show();
                 }else {
                     shopArr = (JSONArray) jO.getJSONArray("data");
@@ -143,12 +143,24 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
                             JSONObject c = shopArr.getJSONObject(i);
                             NotificationsObject newDeal =  new NotificationsObject();
                             newDeal.setNotificationType(c.getInt("notificationType"));
+                            if(!c.isNull("notificationText1") && !c.isNull("notificationText2")) {
+                                newDeal.setNotificationText1(c.getString("notificationText1"));
+                                newDeal.setNotificationText2(c.getString("notificationText2"));
+                            }
+
                             newDeal.setNotificationDetails(c.getString("notificationDetails"));
                             if(newDeal.getNotificationType()==20) {
                                 Gson gson = new GsonBuilder().create();
                                 GutscheineObject g = gson.fromJson(c.getJSONObject("notificationObject").toString(), GutscheineObject.class);
                                 newDeal.setGutscheineObject(g);
+                            }else {
+                                newDeal.setGutscheineObject(null);
                             }
+
+                            try{
+                                newDeal.setNotificationDate(c.getLong("notificationDate"));
+                            }catch(Exception e){}
+
                             shopList.add(newDeal);
                         }
                     } else {
