@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.regionaldeals.de.LoginActivity;
 import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.ColorUtility;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.entities.DealObject;
 import com.squareup.picasso.Picasso;
@@ -69,12 +70,12 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
         }
         final DealObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getDealTitle());
-        holder.dealDescription.setText(deals.getDealDescription());
+        holder.dealDescription.setText(deals.getShop().getShopName() + ", " + deals.getShop().getShopCity().substring(0, 1).toUpperCase() +  deals.getShop().getShopCity().substring(1));
         holder.dealOldPrice.setText(Double.toString(deals.getOriginalPrice()) + " €");
         holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + " €");
         //gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         String imgUrl = deals.getDealImageUrl(context) + "&imagecount=1&res=470x320";
-        Picasso.with(context).load(imgUrl).placeholder(R.drawable.placeholder_2_300x200).into(holder.dealCoverUrl);
+        Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl);
 
         if(deals.getFavourite() == null) {
             holder.favoriteImageButton.setImageResource(R.drawable.not_favorite);

@@ -80,7 +80,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
         }
         final DealObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getDealTitle());
-        holder.dealDescription.setText(deals.getShop().getShopName() + ", "+ deals.getDealDescription() );
+        holder.dealDescription.setText(deals.getShop().getShopName() + ", " + deals.getShop().getShopCity().substring(0, 1).toUpperCase() +  deals.getShop().getShopCity().substring(1));
         holder.dealOldPrice.setText(Double.toString(deals.getOriginalPrice()) + "€");
         holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + "€");
 //        gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);

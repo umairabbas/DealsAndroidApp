@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.regionaldeals.de.LoginActivity;
 import com.regionaldeals.de.MainActivity;
 import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.ColorUtility;
 import com.regionaldeals.de.Utils.HttpClient;
 import com.regionaldeals.de.entities.GutscheineObject;
 import com.regionaldeals.de.fragment.Gutscheine;
@@ -74,11 +75,11 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
         }
         final GutscheineObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getGutscheinTitle());
-        holder.dealDescription.setText(deals.getShop().getShopName());//deals.getGutscheinDescription());
+        holder.dealDescription.setText(deals.getShop().getShopName() + ", " + deals.getShop().getShopCity().substring(0, 1).toUpperCase() +  deals.getShop().getShopCity().substring(1));//deals.getGutscheinDescription());
         holder.gut_price.setText(String.valueOf(deals.getGutscheinPrice()) + "€");
         //gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         String imgUrl = deals.getGutscheinImageUrl(context) + "&imagecount=1&res=470x320";
-        Picasso.with(context).load(imgUrl).placeholder(R.drawable.placeholder_2_300x200).into(holder.dealCoverUrl);
+        Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl);
 
 
         dealPosition = position;

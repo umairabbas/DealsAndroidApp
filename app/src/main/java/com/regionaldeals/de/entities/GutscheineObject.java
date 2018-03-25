@@ -19,7 +19,7 @@ public class GutscheineObject implements Serializable {
     private long gutscheinPrice;
     private String currency;
     private boolean gutscheinAvailed;
-    private boolean gutscheinWin;
+    private long gutscheinWinDate;
     private CategoryObject category;
     private int gutscheinImageCount;
     private String gutscheinCode;
@@ -40,7 +40,7 @@ public class GutscheineObject implements Serializable {
         this.gutscheinImageCount = gutscheinImageCount;
     }
 
-    public GutscheineObject(int gutscheinId, Shop shop, long createDate, long publishDate, long expiryDate, int timezone, String gutscheinTitle, String gutscheinImageUrl, String gutscheinDescription, long gutscheinPrice, String currency, boolean gutscheinAvailed, boolean gutscheinWin, CategoryObject category) {
+    public GutscheineObject(int gutscheinId, Shop shop, long createDate, long publishDate, long expiryDate, int timezone, String gutscheinTitle, String gutscheinImageUrl, String gutscheinDescription, long gutscheinPrice, String currency, boolean gutscheinAvailed, long gutscheinWin, CategoryObject category) {
         this.gutscheinId = gutscheinId;
         this.shop = shop;
         this.createDate = createDate;
@@ -53,7 +53,7 @@ public class GutscheineObject implements Serializable {
         this.gutscheinPrice = gutscheinPrice;
         this.currency = currency;
         this.gutscheinAvailed = gutscheinAvailed;
-        this.gutscheinWin = gutscheinWin;
+        this.gutscheinWinDate = gutscheinWin;
         this.category = category;
     }
 
@@ -153,12 +153,12 @@ public class GutscheineObject implements Serializable {
         this.gutscheinAvailed = gutscheinAvailed;
     }
 
-    public boolean isGutscheinWin() {
-        return gutscheinWin;
+    public long isGutscheinWin() {
+        return gutscheinWinDate;
     }
 
-    public void setGutscheinWin(boolean gutscheinWin) {
-        this.gutscheinWin = gutscheinWin;
+    public void setGutscheinWin(long gutscheinWin) {
+        this.gutscheinWinDate = gutscheinWin;
     }
 
     public CategoryObject getCategory() {
