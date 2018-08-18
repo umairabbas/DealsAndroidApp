@@ -1,6 +1,5 @@
 package com.regionaldeals.de.fragment;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.regionaldeals.de.MainActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.DoubleNameValuePair;
@@ -24,8 +25,6 @@ import com.regionaldeals.de.Utils.IntNameValuePair;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.adapter.DealsAdapter;
 import com.regionaldeals.de.entities.DealObject;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -42,7 +41,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Umi on 28.08.2017.
  */
 
-public class Deals extends Fragment implements //AdapterView.OnItemSelectedListener,
+public class Deals extends Fragment implements
         SwipeRefreshLayout.OnRefreshListener {
 
     private List<DealObject> deals;
@@ -63,6 +62,7 @@ public class Deals extends Fragment implements //AdapterView.OnItemSelectedListe
     public class MyReceiver extends BroadcastReceiver {
         public MyReceiver() {
         }
+
         @Override
         public void onReceive(Context context, Intent intent) {
             maxDistance = intent.getIntExtra("distance", maxDistance);
@@ -75,32 +75,33 @@ public class Deals extends Fragment implements //AdapterView.OnItemSelectedListe
         final View view = inflater.inflate(R.layout.fragment_gutscheine, container, false);
         context = getContext();
         getActivity().setTitle(getResources().getString(R.string.headerText));
-        songRecyclerView = (RecyclerView)view.findViewById(R.id.song_list);
+        songRecyclerView = (RecyclerView) view.findViewById(R.id.song_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
-        songRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
-            @Override
-            public void onScrollStateChanged(RecyclerView view, int scrollState) {
+        songRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                                                 @Override
+                                                 public void onScrollStateChanged(RecyclerView view, int scrollState) {
 
-            }
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int topRowVerticalPosition =(recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
-                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
-                }
-            }
+                                                 }
+
+                                                 @Override
+                                                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                                                     int topRowVerticalPosition = (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                                                     swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+                                                 }
+                                             }
         );
 
-        locationLat = ((Main)getParentFragment()).getLat();
-        locationLng = ((Main)getParentFragment()).getLng();
+        locationLat = ((Main) getParentFragment()).getLat();
+        locationLng = ((Main) getParentFragment()).getLng();
 
         SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredText = prefs.getString("locationObject", null);
         String restoredUser = prefs.getString("userObject", null);
         try {
-            if(locationLat == 0.0 || locationLng == 0.0) {
+            if (locationLat == 0.0 || locationLng == 0.0) {
                 if (restoredText != null) {
                     JSONObject obj = new JSONObject(restoredText);
                     String Lat = obj.getString("lat");
@@ -152,7 +153,7 @@ public class Deals extends Fragment implements //AdapterView.OnItemSelectedListe
     public void onResume() {
         super.onResume();
         context.registerReceiver(myReceiver, filter);
-        if(((MainActivity) this.getActivity()).getShouldRefresh()) {
+        if (((MainActivity) this.getActivity()).getShouldRefresh()) {
             SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
             String restoredUser = prefs.getString("userObject", null);
             try {
@@ -191,7 +192,7 @@ public class Deals extends Fragment implements //AdapterView.OnItemSelectedListe
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
             params.add(new BasicNameValuePair("userid", userId));
-            params.add(new IntNameValuePair("radius", maxDistance*1000));
+            params.add(new IntNameValuePair("radius", maxDistance * 1000));
 
             // getting JSON string from URL
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
@@ -219,7 +220,7 @@ public class Deals extends Fragment implements //AdapterView.OnItemSelectedListe
         }
 
         protected void onPostExecute(String file_url) {
-            if(getActivity() == null)
+            if (getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
