@@ -1,14 +1,12 @@
 package com.regionaldeals.de;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,12 +21,12 @@ import android.widget.Toast;
 import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
 import com.braintreepayments.api.dropin.DropInResult;
-import com.regionaldeals.de.Utils.HttpClient;
-import com.regionaldeals.de.entities.Plans;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.regionaldeals.de.Utils.HttpClient;
+import com.regionaldeals.de.entities.Plans;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,11 +78,11 @@ public class SubscribeActivity extends AppCompatActivity {
         context = this;
         activity = this;
 
-        firstDealBtn = (Button)findViewById(R.id.btn_1);
-        secDealBtn = (Button)findViewById(R.id.btn_2);
-        firstDealTv = (TextView)findViewById(R.id.tv1);
-        secDealTv = (TextView)findViewById(R.id.tv2);
-        TextView currentSub = (TextView)findViewById(R.id.currentSub);
+        firstDealBtn = (Button) findViewById(R.id.btn_1);
+        secDealBtn = (Button) findViewById(R.id.btn_2);
+        firstDealTv = (TextView) findViewById(R.id.tv1);
+        secDealTv = (TextView) findViewById(R.id.tv2);
+        TextView currentSub = (TextView) findViewById(R.id.currentSub);
 
         deals = new ArrayList<>();
 
@@ -112,18 +110,18 @@ public class SubscribeActivity extends AppCompatActivity {
                 SimpleDateFormat nextDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 String next = nextDate.format(d2);
 
-                currentSub.setText("Plan" + "\n" + planName +"\n" + "\n"
+                currentSub.setText("Plan" + "\n" + planName + "\n" + "\n"
                         + "Status" + "\n" + subStatus + "\n" + "\n"
-                        + getResources().getString(R.string.billing_cycle) + "\n" + Integer.toString(billingCycle)+ "/" + Integer.toString(numberBillingCycles) + "\n" + "\n"
+                        + getResources().getString(R.string.billing_cycle) + "\n" + Integer.toString(billingCycle) + "/" + Integer.toString(numberBillingCycles) + "\n" + "\n"
                         + getResources().getString(R.string.start_date) + "\n" + start + "\n" + "\n"
                         + getResources().getString(R.string.next_date) + "\n" + next + "\n"
-                        );
+                );
 
                 firstDealBtn.setVisibility(View.GONE);
                 firstDealTv.setVisibility(View.GONE);
                 secDealBtn.setVisibility(View.GONE);
                 secDealTv.setVisibility(View.GONE);
-            }else {
+            } else {
                 firstDealBtn.setEnabled(true);
                 secDealBtn.setEnabled(true);
                 getSubDataFromServer();
@@ -142,12 +140,12 @@ public class SubscribeActivity extends AppCompatActivity {
         firstDealBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(userId.isEmpty()){
+                if (userId.isEmpty()) {
                     Snackbar.make(view, getResources().getString(R.string.loginerror), Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 v = view;
-                planShortName  = deals.get(0).getPlanShortName();
+                planShortName = deals.get(0).getPlanShortName();
                 onBraintreeSubmit(view);
             }
         });
@@ -155,12 +153,12 @@ public class SubscribeActivity extends AppCompatActivity {
         secDealBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(userId.isEmpty()){
+                if (userId.isEmpty()) {
                     Snackbar.make(view, getResources().getString(R.string.loginerror), Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 v = view;
-                planShortName  = deals.get(1).getPlanShortName();
+                planShortName = deals.get(1).getPlanShortName();
                 onBraintreeSubmit(view);
             }
         });
@@ -177,13 +175,14 @@ public class SubscribeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void getSubDataFromServer(){
+    private void getSubDataFromServer() {
         AsyncHttpClient androidClient = new AsyncHttpClient();
         androidClient.get(context.getString(R.string.apiUrl) + PATH_TO_SERVER_SUB_DEALS, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("TAG", getString(R.string.token_failed) + responseString);
             }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseToken) {
                 Log.d("TAG", "Client token: " + responseToken);
@@ -204,10 +203,10 @@ public class SubscribeActivity extends AppCompatActivity {
                                 //TODO: make dynamic
                                 firstDealBtn.setText(deals.get(0).getPlanName());
                                 secDealBtn.setText(deals.get(1).getPlanName());
-                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                     firstDealTv.setText(Html.fromHtml(deals.get(0).getPlanDescription(), Html.FROM_HTML_MODE_COMPACT));
                                     secDealTv.setText(Html.fromHtml(deals.get(1).getPlanDescription(), Html.FROM_HTML_MODE_COMPACT));
-                                }else{
+                                } else {
                                     firstDealTv.setText(Html.fromHtml(deals.get(0).getPlanDescription()));
                                     secDealTv.setText(Html.fromHtml(deals.get(1).getPlanDescription()));
                                 }
@@ -225,13 +224,14 @@ public class SubscribeActivity extends AppCompatActivity {
         });
     }
 
-    private void getClientTokenFromServer(){
+    private void getClientTokenFromServer() {
         AsyncHttpClient androidClient = new AsyncHttpClient();
         androidClient.get(context.getString(R.string.apiUrl) + PATH_TO_SERVER, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("TAG", getString(R.string.token_failed) + responseString);
             }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseToken) {
                 Log.d("TAG", "Client token: " + responseToken);
@@ -294,7 +294,7 @@ public class SubscribeActivity extends AppCompatActivity {
                 JSONObject obj = new JSONObject(resultData);
 
                 msg = obj.getString("message");
-                if(msg.equals("PLANS_SUBSCRIPTIONS_OK") || msg.equals("PLANS_SUBSCRIPTIONS_UPDATE_OK")) {
+                if (msg.equals("PLANS_SUBSCRIPTIONS_OK") || msg.equals("PLANS_SUBSCRIPTIONS_UPDATE_OK")) {
 
                     JSONObject data = obj.getJSONObject("data");
                     JSONObject plan = data.getJSONObject("plan");
@@ -320,26 +320,27 @@ public class SubscribeActivity extends AppCompatActivity {
                                 //finish();
                             }
                         });
-                }else if(msg.equals("PLANS_SUBSCRIPTIONS_ALREADY_SUBSCRIBED")) {
-                    if(activity!=null)
+                } else if (msg.equals("PLANS_SUBSCRIPTIONS_ALREADY_SUBSCRIBED")) {
+                    if (activity != null)
                         activity.runOnUiThread(new Runnable() {
                             public void run() {
                                 Toast.makeText(context, "Already Subscribed!\n" + msg, Toast.LENGTH_SHORT).show();
                             }
                         });
                 } else {
-                    if(activity!=null)
-                    activity.runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(context, "Failed!\n" + msg, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    if (activity != null)
+                        activity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(context, "Failed!\n" + msg, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                 }
             } catch (Throwable t) {
                 t.printStackTrace();
             }
             return null;
         }
+
         protected void onPostExecute(String file_url) {
             //pDialog.dismiss();
 //            activity.runOnUiThread(new Runnable() {
@@ -354,31 +355,31 @@ public class SubscribeActivity extends AppCompatActivity {
         }
     }
 
-    private void sendPaymentNonceToServer(String paymentNonce){
+    private void sendPaymentNonceToServer(String paymentNonce) {
         this.paymentNonce = paymentNonce;
         new checkout().execute();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == BRAINTREE_REQUEST_CODE){
-            if (RESULT_OK == resultCode){
+        if (requestCode == BRAINTREE_REQUEST_CODE) {
+            if (RESULT_OK == resultCode) {
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
                 String paymentNonce = result.getPaymentMethodNonce().getNonce();
                 //send to your server
                 Log.d(TAG, "Testing the app here");
                 sendPaymentNonceToServer(paymentNonce);
-            }else if(resultCode == Activity.RESULT_CANCELED){
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 Log.d(TAG, "User cancelled payment");
-            }else {
-                Exception error = (Exception)data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+            } else {
+                Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
                 Log.d(TAG, " error exception");
                 Toast.makeText(context, "Kindly choose a different option", Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    public void onBraintreeSubmit(View view){
+    public void onBraintreeSubmit(View view) {
         DropInRequest dropInRequest = new DropInRequest().clientToken(clientToken);
         startActivityForResult(dropInRequest.getIntent(this), BRAINTREE_REQUEST_CODE);
     }

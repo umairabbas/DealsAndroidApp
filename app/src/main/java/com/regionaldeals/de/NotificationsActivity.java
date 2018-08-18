@@ -22,8 +22,6 @@ import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.adapter.NotificationsAdapter;
 import com.regionaldeals.de.entities.GutscheineObject;
 import com.regionaldeals.de.entities.NotificationsObject;
-import com.regionaldeals.de.entities.Shop;
-import com.regionaldeals.de.fragment.Gutscheine;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -38,7 +36,7 @@ import java.util.List;
  * Created by Umi on 10.03.2018.
  */
 
-public class NotificationsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class NotificationsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private Toolbar toolbar;
     private Context context;
     private final String URL_Deals = "/mobile/api/users/notifications";
@@ -65,8 +63,8 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mListView = (ListView)findViewById(R.id.shop_list);
-        nearbyText = (TextView)findViewById(R.id.nearbyEmpty);
+        mListView = (ListView) findViewById(R.id.shop_list);
+        nearbyText = (TextView) findViewById(R.id.nearbyEmpty);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
@@ -139,32 +137,33 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
                 System.out.print(URL_Deals);
                 shopList.clear();
                 JSONObject jO = new JSONObject(json);
-                if(jO.getString("message").equals("USER_NOTIFICATION_EMPTY") || jO.getString("message").equals("USER_NOTIFICATION_COUNT - 0")) {
+                if (jO.getString("message").equals("USER_NOTIFICATION_EMPTY") || jO.getString("message").equals("USER_NOTIFICATION_COUNT - 0")) {
                     //Snackbar.make(getView(), "Cannot find shops in this Category", Snackbar.LENGTH_SHORT).show();
-                }else {
+                } else {
                     shopArr = (JSONArray) jO.getJSONArray("data");
                     if (shopArr != null) {
                         for (int i = 0; i < shopArr.length(); i++) {
                             JSONObject c = shopArr.getJSONObject(i);
-                            NotificationsObject newDeal =  new NotificationsObject();
+                            NotificationsObject newDeal = new NotificationsObject();
                             newDeal.setNotificationType(c.getInt("notificationType"));
-                            if(!c.isNull("notificationText1") && !c.isNull("notificationText2")) {
+                            if (!c.isNull("notificationText1") && !c.isNull("notificationText2")) {
                                 newDeal.setNotificationText1(c.getString("notificationText1"));
                                 newDeal.setNotificationText2(c.getString("notificationText2"));
                             }
 
                             newDeal.setNotificationDetails(c.getString("notificationDetails"));
-                            if(newDeal.getNotificationType()==20) {
+                            if (newDeal.getNotificationType() == 20) {
                                 Gson gson = new GsonBuilder().create();
                                 GutscheineObject g = gson.fromJson(c.getJSONObject("notificationObject").toString(), GutscheineObject.class);
                                 newDeal.setGutscheineObject(g);
-                            }else {
+                            } else {
                                 newDeal.setGutscheineObject(null);
                             }
 
-                            try{
+                            try {
                                 newDeal.setNotificationDate(c.getLong("notificationDate"));
-                            }catch(Exception e){}
+                            } catch (Exception e) {
+                            }
 
                             shopList.add(newDeal);
                         }
@@ -181,13 +180,13 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
 
         protected void onPostExecute(String file_url) {
             swipeRefreshLayout.setRefreshing(false);
-            if(activity == null)
+            if (activity == null)
                 return;
             activity.runOnUiThread(new Runnable() {
                 public void run() {
-                    if(shopList.size()>0){
+                    if (shopList.size() > 0) {
                         nearbyText.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         nearbyText.setVisibility(View.VISIBLE);
                     }
                     mAdapter.notifyDataSetChanged();

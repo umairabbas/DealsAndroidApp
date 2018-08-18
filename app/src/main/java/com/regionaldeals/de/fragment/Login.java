@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.regionaldeals.de.R;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -47,7 +48,7 @@ public class Login extends Fragment {
     private String email = "";
     private String password = "";
     private Boolean isSuccess = false;
-    private String name ="";
+    private String name = "";
     private ProgressDialog progressDialog;
     private String message = "";
     private JSONObject jObject;
@@ -57,10 +58,14 @@ public class Login extends Fragment {
         // Required empty public constructor
     }
 
-    @BindView(R.id.input_email) EditText _emailText;
-    @BindView(R.id.input_password) EditText _passwordText;
-    @BindView(R.id.btn_login) Button _loginButton;
-    @BindView(R.id.link_signup) TextView _signupLink;
+    @BindView(R.id.input_email)
+    EditText _emailText;
+    @BindView(R.id.input_password)
+    EditText _passwordText;
+    @BindView(R.id.btn_login)
+    Button _loginButton;
+    @BindView(R.id.link_signup)
+    TextView _signupLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,7 +104,7 @@ public class Login extends Fragment {
 //                fragmentTransaction.commit();
             }
         });
-        return  v;
+        return v;
     }
 
     public void login() {
@@ -137,7 +142,7 @@ public class Login extends Fragment {
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Accept","application/json");
+                conn.setRequestProperty("Accept", "application/json");
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
                 conn.connect();
@@ -155,7 +160,7 @@ public class Login extends Fragment {
                 os.close();
 
                 Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-                Log.i("MSG" , conn.getResponseMessage());
+                Log.i("MSG", conn.getResponseMessage());
 
                 BufferedReader in;
 
@@ -177,17 +182,15 @@ public class Login extends Fragment {
 
                 conn.disconnect();
 
-                if(message.equals(getString(R.string.LOGIN_OK))) {
+                if (message.equals(getString(R.string.LOGIN_OK))) {
                     isSuccess = true;
                     String firstName = jObject.getString("firstName");
                     String lastName = jObject.getString("lastName");
                     name = firstName + " " + lastName;
-                }
-                else if (message.equals(getString(R.string.LOGIN_ERR_INVALID_CREDENTIALS))){
+                } else if (message.equals(getString(R.string.LOGIN_ERR_INVALID_CREDENTIALS))) {
                     isSuccess = false;
                     message = "Invalid Credentials";
-                }
-                else {
+                } else {
                     isSuccess = false;
                 }
             } catch (Exception e) {
@@ -204,13 +207,13 @@ public class Login extends Fragment {
             _loginButton.setEnabled(true);
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    if(isSuccess) {
+                    if (isSuccess) {
 
                         SharedPreferences.Editor editor = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
                         editor.putString("userObject", jObject.toString());
                         editor.commit();
 
-                        Toast.makeText(context, getResources().getString(R.string.welcome)+" " + name, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, getResources().getString(R.string.welcome) + " " + name, Toast.LENGTH_LONG).show();
                         try {
                             Intent intent = getActivity().getIntent();
                             intent.putExtra("userEmail", jObject.getString("email"));
@@ -221,7 +224,7 @@ public class Login extends Fragment {
                             e.printStackTrace();
                         }
                     } else {
-                        Toast.makeText(context,  getResources().getString(R.string.login_failed)+"\n" + message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, getResources().getString(R.string.login_failed) + "\n" + message, Toast.LENGTH_LONG).show();
                     }
                 }
             });

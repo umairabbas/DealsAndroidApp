@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,18 +14,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.regionaldeals.de.MainActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.DoubleNameValuePair;
 import com.regionaldeals.de.Utils.IntNameValuePair;
 import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.Utils.SharedPreferenceUtils;
 import com.regionaldeals.de.adapter.GutscheineAdapter;
 import com.regionaldeals.de.entities.GutscheineObject;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.regionaldeals.de.service.LocationStatic;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -37,7 +35,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
+import static com.regionaldeals.de.Constants.LOCATION_KEY;
+import static com.regionaldeals.de.Constants.USER_OBJECT_KEY;
 
 /**
  * Created by Umi on 28.08.2017.
@@ -45,28 +44,25 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private List<GutscheineObject> deals ;
+    private List<GutscheineObject> deals;
     JSONParser jsonParser = new JSONParser();
     Context context;
     private final String URL_Deals = "/mobile/api/gutschein/list";
     private JSONArray dealArr = null;
     private RecyclerView songRecyclerView;
     private GutscheineAdapter mAdapter;
-    private boolean isSpinnerInitial = true;
     private Double locationLat = 50.781203;
     private Double locationLng = 6.078068;
     private int maxDistance = 50;
-    //private Spinner spinner;
-    //private static final String[] paths = {"5 KM", "10 KM", "50 KM", "100 KM", "500 KM", "ALL"};
     private String userId = "";
     private SwipeRefreshLayout swipeRefreshLayout;
-    private SeekBar seekControl2 = null;
     private MyReceiver myReceiver;
     private IntentFilter filter;
 
     public class MyReceiver extends BroadcastReceiver {
         public MyReceiver() {
         }
+
         @Override
         public void onReceive(Context context, Intent intent) {
             maxDistance = intent.getIntExtra("distance", maxDistance);
@@ -85,19 +81,19 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
         View view = inflater.inflate(R.layout.fragment_gutscheine, container, false);
         getActivity().setTitle(getResources().getString(R.string.headerText));
         context = getContext();
-        songRecyclerView = (RecyclerView)view.findViewById(R.id.song_list);
+        songRecyclerView = (RecyclerView) view.findViewById(R.id.song_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
 
-        locationLat = ((Main)getParentFragment()).getLat();
-        locationLng = ((Main)getParentFragment()).getLng();
+        locationLat = ((Main) getParentFragment()).getLat();
+        locationLng = ((Main) getParentFragment()).getLng();
 
-        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
-        String restoredText = prefs.getString("locationObject", null);
-        String restoredUser = prefs.getString("userObject", null);
+        String restoredText = SharedPreferenceUtils.getInstance(getActivity()).getStringValue(LOCATION_KEY, null);
+        String restoredUser = SharedPreferenceUtils.getInstance(getActivity()).getStringValue(USER_OBJECT_KEY, null);
+
         try {
-            if(locationLat == 0.0 || locationLng == 0.0) {
+            if (locationLat == 0.0 || locationLng == 0.0) {
                 if (restoredText != null) {
                     JSONObject obj = new JSONObject(restoredText);
                     String Lat = obj.getString("lat");
@@ -146,9 +142,8 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
         super.onResume();
         context.registerReceiver(myReceiver, filter);
         //TODO: make seperate shouldrefresh bool for gut and deals etc
-        if(((MainActivity) this.getActivity()).getShouldRefresh()) {
-            SharedPreferences prefs = getActivity().getApplicationContext().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
-            String restoredUser = prefs.getString("userObject", null);
+        if (((MainActivity) getActivity()).getShouldRefresh()) {
+            String restoredUser = SharedPreferenceUtils.getInstance(getActivity()).getStringValue(USER_OBJECT_KEY, null);
             try {
                 if (restoredUser != null) {
                     JSONObject obj = new JSONObject(restoredUser);
@@ -171,7 +166,7 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
 
     /**
      * Background Async Task to Load all Albums by making http request
-     * */
+     */
     class LoadDeals extends AsyncTask<String, String, String> {
 
         /**
@@ -189,7 +184,7 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
             params.add(new BasicNameValuePair("userid", userId));
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
-            params.add(new IntNameValuePair("radius", maxDistance*1000));
+            params.add(new IntNameValuePair("radius", maxDistance * 1000));
 
             // getting JSON string from URL
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
@@ -221,7 +216,7 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
          * After completing background task Dismiss the progress dialog
          **/
         protected void onPostExecute(String file_url) {
-            if(getActivity() == null)
+            if (getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
@@ -246,7 +241,7 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
             params.add(new BasicNameValuePair("userid", userId));
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
-            params.add(new IntNameValuePair("radius", maxDistance*1000));
+            params.add(new IntNameValuePair("radius", maxDistance * 1000));
 
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",
                     params);
@@ -271,9 +266,10 @@ public class Gutscheine extends Fragment implements SwipeRefreshLayout.OnRefresh
             }
             return null;
         }
+
         protected void onPostExecute(String file_url) {
             swipeRefreshLayout.setRefreshing(false);
-            if(getActivity() == null)
+            if (getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {

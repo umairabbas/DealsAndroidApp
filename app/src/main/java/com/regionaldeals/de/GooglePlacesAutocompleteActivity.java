@@ -4,15 +4,6 @@ package com.regionaldeals.de;
  * Created by eumahay on 30/8/2017.
  */
 
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.maps.model.LatLng;
-
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -26,13 +17,21 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONObject;
 
 public class GooglePlacesAutocompleteActivity extends LocationActivityBase {
     /**
      * Request code for the autocomplete activity. This will be used to identify results from the
      * autocomplete activity in onActivityResult.
-     *
+     * <p>
      * https://github.com/googlesamples/android-play-places
      */
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
@@ -67,8 +66,7 @@ public class GooglePlacesAutocompleteActivity extends LocationActivityBase {
                     Intent startActivityIntent = new Intent(GooglePlacesAutocompleteActivity.this, MainActivity.class);
                     startActivity(startActivityIntent);
                     GooglePlacesAutocompleteActivity.this.finish();
-                }
-                else {
+                } else {
                     Snackbar mySnackbar = Snackbar.make(view, R.string.locationErrorMsg, Snackbar.LENGTH_SHORT);
                     mySnackbar.show();
                 }
@@ -97,8 +95,8 @@ public class GooglePlacesAutocompleteActivity extends LocationActivityBase {
                 JSONObject obj = new JSONObject(restoredText);
                 String locationName = obj.getString("Name");
                 String locationAddress = obj.getString("Address");
-                if(!locationName.isEmpty() && !locationAddress.isEmpty()) {
-                    mPlaceDetailsText.setText( "Name: " + locationName + "\n" +  "Address: " + locationAddress);
+                if (!locationName.isEmpty() && !locationAddress.isEmpty()) {
+                    mPlaceDetailsText.setText("Name: " + locationName + "\n" + "Address: " + locationAddress);
                 }
             } catch (Throwable t) {
             }
@@ -143,9 +141,9 @@ public class GooglePlacesAutocompleteActivity extends LocationActivityBase {
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 //Log.i(TAG, "Place Selected: " + place.getName());
 
-                mPlaceDetailsText.setText( "Name: \"" + place.getName() + "\n" +  "Address: " + place.getAddress());
+                mPlaceDetailsText.setText("Name: \"" + place.getName() + "\n" + "Address: " + place.getAddress());
 
-                            // MY_PREFS_NAME - a static String variable like:
+                // MY_PREFS_NAME - a static String variable like:
 
                 LatLng latlng = place.getLatLng();
 

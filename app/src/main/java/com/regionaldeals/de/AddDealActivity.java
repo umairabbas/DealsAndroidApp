@@ -36,15 +36,15 @@ import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.regionaldeals.de.Utils.RealPathUtil;
-import com.regionaldeals.de.Utils.HttpClient;
-import com.regionaldeals.de.entities.CategoryObject;
-import com.regionaldeals.de.entities.Shop;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
+import com.regionaldeals.de.Utils.HttpClient;
+import com.regionaldeals.de.Utils.RealPathUtil;
+import com.regionaldeals.de.entities.CategoryObject;
+import com.regionaldeals.de.entities.Shop;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
@@ -121,10 +121,10 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         context = this;
         activity = this;
 
-        if(getIntent().hasExtra("isGutscheine")) {
+        if (getIntent().hasExtra("isGutscheine")) {
             isGutscheine = getIntent().getBooleanExtra("isGutscheine", false);
         }
-        if(getIntent().hasExtra("userId")) {
+        if (getIntent().hasExtra("userId")) {
             userId = getIntent().getStringExtra("userId");
         }
 
@@ -143,9 +143,9 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         inputDPrice = (EditText) findViewById(R.id.input_dprice);
         inputUrl = (EditText) findViewById(R.id.input_url);
         attachImg = (ImageView) findViewById(R.id.ivAttachment);
-        LinearLayout dealType = (LinearLayout)findViewById(R.id.deal_type_layout);
+        LinearLayout dealType = (LinearLayout) findViewById(R.id.deal_type_layout);
 
-        if(isGutscheine){
+        if (isGutscheine) {
             inputOPrice.setVisibility(View.GONE);
             dealType.setVisibility(View.GONE);
             SERVER_URL = "/mobile/api/gutschein/upload-gutschein";
@@ -173,7 +173,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         });
 
         //Adapter Deals
-        ArrayAdapter<String>adapterDeals = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapterDeals = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, dealTypes);
         adapterDeals.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDeals.setAdapter(adapterDeals);
@@ -473,7 +473,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
             client.addFormPartInt("tz", 60);
             client.addFormPart("currency", "EUR");
 
-            if(isGutscheine){
+            if (isGutscheine) {
                 client.addFormPart("gutscheintitle", inputTitle.getText().toString());
                 client.addFormPart("gutscheindesc", inputDesc.getText().toString());
                 client.addFormPartDouble("gutscheinprice", Double.valueOf(inputDPrice.getText().toString()));
@@ -489,7 +489,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
             for (int j = 0; j < selectedFilePathList.size(); j++) {
                 byte[] bData = readBytesFromFile(selectedFilePathList.get(j));
                 int count = j + 1;
-                if(isGutscheine) {
+                if (isGutscheine) {
                     client.addFilePart("gutscheinimg_" + Integer.toString(count), fileName.get(j), bData);
                 } else {
                     client.addFilePart("dealimg_" + Integer.toString(count), fileName.get(j), bData);
@@ -501,25 +501,25 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
             resultData.toString();
             JSONObject jRes = new JSONObject(resultData);
             final String res = jRes.getString("message");
-            if(res.equals("DEALS_UPLOAD_OK") || res.equals("GUTSCHEIN_UPLOAD_OK")){
+            if (res.equals("DEALS_UPLOAD_OK") || res.equals("GUTSCHEIN_UPLOAD_OK")) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(context, "Success "+ res, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Success " + res, Toast.LENGTH_SHORT).show();
                         Intent intent = activity.getIntent();
                         intent.putExtra("dealAddSuccess", true);
                         activity.setResult(Activity.RESULT_OK, intent);
                         activity.finish();
                     }
                 });
-            } else if (res.equals("ERR_MAX_DEALS")){
+            } else if (res.equals("ERR_MAX_DEALS")) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(context, "Sorry. MAX Deals Reached! \n" + res, Toast.LENGTH_SHORT).show();
                     }
                 });
-            }else{
+            } else {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -530,7 +530,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-             Toast.makeText(context, "File Not Found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "File Not Found", Toast.LENGTH_SHORT).show();
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Toast.makeText(context, "URL error!", Toast.LENGTH_SHORT).show();
@@ -607,7 +607,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         private List<CategoryObject> values;
 
         public SpinAdapterCat(Context context, int textViewResourceId,
-                           List<CategoryObject> values) {
+                              List<CategoryObject> values) {
             super(context, textViewResourceId, values);
             this.context = context;
             this.values = values;

@@ -12,12 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.JSONParser;
@@ -31,6 +27,9 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
@@ -43,11 +42,16 @@ public class SignUp extends Fragment {
         // Required empty public constructor
     }
 
-    @BindView(R.id.input_name) EditText _nameText;
-    @BindView(R.id.input_email) EditText _emailText;
-    @BindView(R.id.input_password) EditText _passwordText;
-    @BindView(R.id.btn_signup) Button _signupButton;
-    @BindView(R.id.link_login) TextView _loginLink;
+    @BindView(R.id.input_name)
+    EditText _nameText;
+    @BindView(R.id.input_email)
+    EditText _emailText;
+    @BindView(R.id.input_password)
+    EditText _passwordText;
+    @BindView(R.id.btn_signup)
+    Button _signupButton;
+    @BindView(R.id.link_login)
+    TextView _loginLink;
     //@BindView(R.id.shopCheck) Switch _isShopKeeper;
 
     private ViewPager viewPager;
@@ -136,7 +140,7 @@ public class SignUp extends Fragment {
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Accept","application/json");
+                conn.setRequestProperty("Accept", "application/json");
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
 
@@ -160,7 +164,7 @@ public class SignUp extends Fragment {
                 os.close();
 
                 Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-                Log.i("MSG" , conn.getResponseMessage());
+                Log.i("MSG", conn.getResponseMessage());
 
                 String response = conn.getResponseMessage();
 
@@ -177,22 +181,19 @@ public class SignUp extends Fragment {
                 JSONObject jObject = new JSONObject(res.toString());
                 message = jObject.getString("message");
 
-                if(message.equals(getString(R.string.SIGNUP_OK))) {
+                if (message.equals(getString(R.string.SIGNUP_OK))) {
                     isSuccess = true;
                     displayMsg = "Successfully Registered";
                     //onSignupSuccess();
-                }
-                else if(message.equals(getString(R.string.SIGNUP_ERR_EMAIL_TAKEN))) {
+                } else if (message.equals(getString(R.string.SIGNUP_ERR_EMAIL_TAKEN))) {
                     isSuccess = false;
                     displayMsg = "Error! Email already taken";
                     //onSignupSuccess();
-                }
-                else if(message.equals(getString(R.string.SIGNUP_ERR_USERNAME_TAKEN))) {
+                } else if (message.equals(getString(R.string.SIGNUP_ERR_USERNAME_TAKEN))) {
                     isSuccess = false;
                     displayMsg = "Error! Username already taken";
                     //onSignupSuccess();
-                }
-                else {
+                } else {
                     isSuccess = false;
                     displayMsg = "Failed! Server error";
                     //onSignupFailed();
@@ -211,11 +212,11 @@ public class SignUp extends Fragment {
         protected void onPostExecute(String file_url) {
             progressDialog.dismiss();
             _signupButton.setEnabled(true);
-            if(getActivity() == null)
+            if (getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    if(isSuccess) {
+                    if (isSuccess) {
                         Toast.makeText(context, displayMsg, Toast.LENGTH_LONG).show();
                         viewPager.setCurrentItem(0);
                     } else {

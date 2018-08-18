@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,15 +15,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.DoubleNameValuePair;
 import com.regionaldeals.de.Utils.IntNameValuePair;
 import com.regionaldeals.de.Utils.JSONParser;
-import com.regionaldeals.de.adapter.DealsAdapter;
+import com.regionaldeals.de.Utils.SharedPreferenceUtils;
 import com.regionaldeals.de.adapter.OnlineDealsAdapter;
 import com.regionaldeals.de.entities.DealObject;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -35,7 +34,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
+import static com.regionaldeals.de.Constants.LOCATION_KEY;
+import static com.regionaldeals.de.Constants.USER_OBJECT_KEY;
 
 /**
  * Created by Umi on 28.08.2017.
@@ -62,6 +62,7 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
     public class MyReceiver extends BroadcastReceiver {
         public MyReceiver() {
         }
+
         @Override
         public void onReceive(Context context, Intent intent) {
             maxDistance = intent.getIntExtra("distance", maxDistance);
@@ -74,7 +75,7 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
         View view = inflater.inflate(R.layout.fragment_gutscheine, container, false);
         context = getContext();
         getActivity().setTitle(getResources().getString(R.string.headerText));
-        songRecyclerView = (RecyclerView)view.findViewById(R.id.song_list);
+        songRecyclerView = (RecyclerView) view.findViewById(R.id.song_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
@@ -96,14 +97,14 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
                 }
         );
 
-        locationLat = ((Main)getParentFragment()).getLat();
-        locationLng = ((Main)getParentFragment()).getLng();
+        locationLat = ((Main) getParentFragment()).getLat();
+        locationLng = ((Main) getParentFragment()).getLng();
 
-        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
-        String restoredText = prefs.getString("locationObject", null);
-        String restoredUser = prefs.getString("userObject", null);
+        String restoredText = SharedPreferenceUtils.getInstance(getActivity()).getStringValue(LOCATION_KEY, null);
+        String restoredUser = SharedPreferenceUtils.getInstance(getActivity()).getStringValue(USER_OBJECT_KEY, null);
+
         try {
-            if(locationLat == 0.0 || locationLng == 0.0) {
+            if (locationLat == 0.0 || locationLng == 0.0) {
                 if (restoredText != null) {
                     JSONObject obj = new JSONObject(restoredText);
                     String Lat = obj.getString("lat");
@@ -149,7 +150,7 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
 
     /**
      * Background Async Task to Load all Albums by making http request
-     * */
+     */
     class LoadDeals extends AsyncTask<String, String, String> {
 
         /**
@@ -174,7 +175,7 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
             params.add(new DoubleNameValuePair("lat", locationLat));
             params.add(new DoubleNameValuePair("long", locationLng));
             params.add(new BasicNameValuePair("userid", userId));
-            params.add(new IntNameValuePair("radius", maxDistance*1000));
+            params.add(new IntNameValuePair("radius", maxDistance * 1000));
             params.add(new NameValuePair() {
                 @Override
                 public String getName() {
@@ -219,14 +220,14 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
             // dismiss the dialog after getting all albums
             //pDialog.dismiss();
             // updating UI from Background Thread
-            if(getActivity() == null)
+            if (getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     /**
                      * Updating parsed JSON data into ListView
                      * */
-                        mAdapter.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();
                 }
             });
             swipeRefreshLayout.setRefreshing(false);

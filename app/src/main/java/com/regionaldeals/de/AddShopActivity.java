@@ -5,31 +5,40 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.GestureDetector;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.regionaldeals.de.adapter.DropDownListAdapter;
-import com.regionaldeals.de.entities.Shop;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
+import com.regionaldeals.de.adapter.DropDownListAdapter;
+import com.regionaldeals.de.entities.Shop;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,8 +51,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,18 +58,6 @@ import javax.net.ssl.HttpsURLConnection;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import android.graphics.drawable.BitmapDrawable;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 /**
  * Created by Umi on 28.10.2017.
@@ -76,7 +71,7 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
     EditText _detailText;
     @BindView(com.regionaldeals.de.R.id.input_contact)
     EditText _contactText;
-//    @BindView(R.id.input_address)
+    //    @BindView(R.id.input_address)
 //    EditText _addressText;
     @BindView(com.regionaldeals.de.R.id.input_tax)
     EditText _taxText;
@@ -114,10 +109,10 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
     private static String[] COUNTRIES;
 
     private PopupWindow pw;
-    private boolean expanded; 		//to  store information whether the selected values are displayed completely or in shortened representatn
-    public static boolean[] checkSelected;	// store select/unselect information about the values in the list
+    private boolean expanded;        //to  store information whether the selected values are displayed completely or in shortened representatn
+    public static boolean[] checkSelected;    // store select/unselect information about the values in the list
     private JSONArray catArr;
-    private ArrayList<String> items =  new ArrayList<String>();
+    private ArrayList<String> items = new ArrayList<String>();
     private String selectedCat = "";
 
     @Override
@@ -139,7 +134,7 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
             //should not be
             Toast.makeText(this, "Please restart or update app", Toast.LENGTH_LONG).show();
             finish();
-        }else {
+        } else {
             COUNTRIES = restoredCities.split(",");
         }
 
@@ -153,9 +148,9 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
 
         ButterKnife.bind(this);
 
-        Shop editShop = (Shop)getIntent().getSerializableExtra("EXTRA_SHOP_OBJ");
+        Shop editShop = (Shop) getIntent().getSerializableExtra("EXTRA_SHOP_OBJ");
 
-        if(editShop != null) {
+        if (editShop != null) {
             isEdit = true;
             lat = Double.parseDouble(editShop.getShopLocationLat());
             lng = Double.parseDouble(editShop.getShopLocationLong());
@@ -163,13 +158,13 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
             _detailText.setText(editShop.getShopDetails());
             _contactText.setText(editShop.getShopContact());
             _taxText.setText(editShop.getTaxNumber());
-            _placeText.setText(editShop.getShopAddress()+ "\n" + lat + ", " + lng);
-            address = editShop.getShopAddress()+ "\n" + lat + ", " + lng;
+            _placeText.setText(editShop.getShopAddress() + "\n" + lat + ", " + lng);
+            address = editShop.getShopAddress() + "\n" + lat + ", " + lng;
             shopActive = editShop.getActive();
             shopId = editShop.getShopId();
             _delButton.setVisibility(View.VISIBLE);
             int index = 0;
-            for (int i=0;i<COUNTRIES.length;i++) {
+            for (int i = 0; i < COUNTRIES.length; i++) {
                 if (COUNTRIES[i].equals(editShop.getShopCity())) {
                     index = i;
                     break;
@@ -250,15 +245,15 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
     /*
      * Function to set up initial settings: Creating the data source for drop-down list, initialising the checkselected[], set the drop-down list
      * */
-    private void initialize(String cat){
+    private void initialize(String cat) {
 
         items = new ArrayList<String>();
 
         try {
             catArr = new JSONArray(cat);
-            for(int i=0; i<catArr.length(); i++){
-                JSONObject catOb = (JSONObject)catArr.get(i);
-                String catt = (String)catOb.get("catName");
+            for (int i = 0; i < catArr.length(); i++) {
+                JSONObject catOb = (JSONObject) catArr.get(i);
+                String catt = (String) catOb.get("catName");
                 items.add(catt);
             }
         } catch (JSONException e) {
@@ -271,17 +266,17 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
             checkSelected[i] = false;
         }
 
-	/*SelectBox is the TextView where the selected values will be displayed in the form of "Item 1 & 'n' more".
-    	 * When this selectBox is clicked it will display all the selected values
-    	 * and when clicked again it will display in shortened representation as before.
-    	 * */
+        /*SelectBox is the TextView where the selected values will be displayed in the form of "Item 1 & 'n' more".
+         * When this selectBox is clicked it will display all the selected values
+         * and when clicked again it will display in shortened representation as before.
+         * */
         final TextView tv = (TextView) findViewById(R.id.SelectBox);
         tv.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                if(!expanded){
+                if (!expanded) {
                     //display all selected values
                     String selected = "";
                     int flag = 0;
@@ -292,11 +287,10 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
                             flag = 1;
                         }
                     }
-                    if(flag==1)
+                    if (flag == 1)
                         tv.setText(selected);
-                    expanded =true;
-                }
-                else{
+                    expanded = true;
+                } else {
                     //display shortened representation of selected values
                     tv.setText(DropDownListAdapter.getSelected());
                     expanded = false;
@@ -305,12 +299,12 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
         });
 
         //onClickListener to initiate the dropDown list
-        Button createButton = (Button)findViewById(R.id.create);
+        Button createButton = (Button) findViewById(R.id.create);
         createButton.setOnClickListener(new OnClickListener() {
 
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                initiatePopUp(items,tv);
+                initiatePopUp(items, tv);
             }
         });
     }
@@ -318,14 +312,14 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
     /*
      * Function to set up the pop-up window which acts as drop-down list
      * */
-    private void initiatePopUp(ArrayList<String> items, TextView tv){
-        LayoutInflater inflater = (LayoutInflater)AddShopActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    private void initiatePopUp(ArrayList<String> items, TextView tv) {
+        LayoutInflater inflater = (LayoutInflater) AddShopActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //get the pop-up window i.e.  drop-down layout
-        LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.pop_up_window, (ViewGroup)findViewById(R.id.PopUpView));
+        LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.pop_up_window, (ViewGroup) findViewById(R.id.PopUpView));
 
         //get the view to which drop-down layout is to be anchored
-        RelativeLayout layout1 = (RelativeLayout)findViewById(R.id.relativeLayout1);
+        RelativeLayout layout1 = (RelativeLayout) findViewById(R.id.relativeLayout1);
         pw = new PopupWindow(layout, LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT, true);
 
         //Pop-up window background cannot be null if we want the pop-up to listen touch events outside its window
@@ -430,13 +424,13 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                conn.setRequestProperty("Accept","application/json");
+                conn.setRequestProperty("Accept", "application/json");
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
                 conn.connect();
 
                 JSONObject jsonParam = new JSONObject();
-                if(isEdit && shopId != -1){
+                if (isEdit && shopId != -1) {
                     jsonParam.put("shopId", shopId);
                     jsonParam.put("active", shopActive);
                 } else {
@@ -467,7 +461,7 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
                 os.close();
 
                 Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-                Log.i("MSG" , conn.getResponseMessage());
+                Log.i("MSG", conn.getResponseMessage());
 
                 BufferedReader in;
 
@@ -489,7 +483,7 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
 
                 conn.disconnect();
 
-                if(message.equals(getString(com.regionaldeals.de.R.string.SHOPS_UPLOAD_OK))) {
+                if (message.equals(getString(com.regionaldeals.de.R.string.SHOPS_UPLOAD_OK))) {
                     isSuccess = true;
                 }
 //                else if (message.equals(getString(R.string.LOGIN_ERR_INVALID_CREDENTIALS))){
@@ -513,11 +507,11 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
             _shopButton.setEnabled(true);
             runOnUiThread(new Runnable() {
                 public void run() {
-                    if(isSuccess) {
+                    if (isSuccess) {
                         Toast.makeText(context, "Shop Added\n" + message, Toast.LENGTH_LONG).show();
                         finish();
                     } else {
-                        Toast.makeText(context,  "Failed\n" + message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Failed\n" + message, Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -538,11 +532,11 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
                         "&shopid=" + shopId);
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("PUT");
-                conn.setRequestProperty("Accept","application/json");
+                conn.setRequestProperty("Accept", "application/json");
                 conn.setDoOutput(true);
 
                 Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-                Log.i("MSG" , conn.getResponseMessage());
+                Log.i("MSG", conn.getResponseMessage());
 
                 String response = conn.getResponseMessage();
 
@@ -559,14 +553,12 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
                 JSONObject jObject = new JSONObject(res.toString());
                 message = jObject.getString("message");
 
-                if(message.equals(getString(com.regionaldeals.de.R.string.SHOPS_REMOVE_OK))) {
+                if (message.equals(getString(com.regionaldeals.de.R.string.SHOPS_REMOVE_OK))) {
                     isSuccess = true;
-                }
-                else if (message.equals(getString(com.regionaldeals.de.R.string.SHOPS_REMOVE_ERR))){
+                } else if (message.equals(getString(com.regionaldeals.de.R.string.SHOPS_REMOVE_ERR))) {
                     isSuccess = false;
                     message = "Cannot remove shop";
-                }
-                else {
+                } else {
                     isSuccess = false;
                 }
             } catch (Exception e) {
@@ -583,11 +575,11 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
             _delButton.setEnabled(true);
             runOnUiThread(new Runnable() {
                 public void run() {
-                    if(isSuccess) {
+                    if (isSuccess) {
                         Toast.makeText(context, "Shop Removed\n", Toast.LENGTH_LONG).show();
                         finish();
                     } else {
-                        Toast.makeText(context,  "Failed\n" + message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Failed\n" + message, Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -633,7 +625,7 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
             _contactText.setError(null);
         }
 
-        if(lat==0 ||lng==0 || address.isEmpty()) {
+        if (lat == 0 || lng == 0 || address.isEmpty()) {
             _placeText.setError("enter shop location");
             valid = false;
         } else {
@@ -644,7 +636,7 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
         try {
             for (int i = 0; i < items.size(); i++) {
                 if (checkSelected[i] == true) {
-                    JSONObject catOb = (JSONObject)catArr.get(i);
+                    JSONObject catOb = (JSONObject) catArr.get(i);
                     selectedCat += catOb.getString("catShortName");
                     selectedCat += ";";
                 }
@@ -653,10 +645,10 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
             e.printStackTrace();
         }
 
-        if(selectedCat.isEmpty() || selectedCat.equals("")){
+        if (selectedCat.isEmpty() || selectedCat.equals("")) {
             valid = false;
             Toast.makeText(context, "Please select a Category first.", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             selectedCat = selectedCat.substring(0, selectedCat.length() - 1);
         }
 

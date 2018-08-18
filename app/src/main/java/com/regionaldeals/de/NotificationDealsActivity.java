@@ -58,7 +58,7 @@ public class NotificationDealsActivity extends AppCompatActivity {
 
         ids = getIntent().getStringExtra("notificationBody");
 
-        songRecyclerView = (RecyclerView)findViewById(R.id.create_deals_list);
+        songRecyclerView = (RecyclerView) findViewById(R.id.create_deals_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
@@ -122,7 +122,7 @@ public class NotificationDealsActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(String file_url) {
-            if(activity == null)
+            if (activity == null)
                 return;
             activity.runOnUiThread(new Runnable() {
                 public void run() {

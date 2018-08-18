@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +22,7 @@ import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.DoubleNameValuePair;
 import com.regionaldeals.de.Utils.IntNameValuePair;
 import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.Utils.SharedPreferenceUtils;
 import com.regionaldeals.de.adapter.DealsAdapter;
 import com.regionaldeals.de.entities.DealObject;
 
@@ -35,7 +35,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
+import static com.regionaldeals.de.Constants.LOCATION_KEY;
+import static com.regionaldeals.de.Constants.USER_OBJECT_KEY;
 
 /**
  * Created by Umi on 28.08.2017.
@@ -97,9 +98,8 @@ public class Deals extends Fragment implements
         locationLat = ((Main) getParentFragment()).getLat();
         locationLng = ((Main) getParentFragment()).getLng();
 
-        SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
-        String restoredText = prefs.getString("locationObject", null);
-        String restoredUser = prefs.getString("userObject", null);
+        String restoredText = SharedPreferenceUtils.getInstance(getActivity()).getStringValue(LOCATION_KEY, null);
+        String restoredUser = SharedPreferenceUtils.getInstance(getActivity()).getStringValue(USER_OBJECT_KEY, null);
         try {
             if (locationLat == 0.0 || locationLng == 0.0) {
                 if (restoredText != null) {
@@ -154,8 +154,7 @@ public class Deals extends Fragment implements
         super.onResume();
         context.registerReceiver(myReceiver, filter);
         if (((MainActivity) this.getActivity()).getShouldRefresh()) {
-            SharedPreferences prefs = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
-            String restoredUser = prefs.getString("userObject", null);
+            String restoredUser = SharedPreferenceUtils.getInstance(getActivity()).getStringValue(USER_OBJECT_KEY, null);
             try {
                 if (restoredUser != null) {
                     JSONObject obj = new JSONObject(restoredUser);

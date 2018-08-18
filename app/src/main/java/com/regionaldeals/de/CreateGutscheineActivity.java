@@ -22,14 +22,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.adapter.GutscheineAdapter;
 import com.regionaldeals.de.entities.GutscheineObject;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -76,7 +76,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        songRecyclerView = (RecyclerView)findViewById(R.id.create_deals_list);
+        songRecyclerView = (RecyclerView) findViewById(R.id.create_deals_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         dealCount = (TextView) findViewById(R.id.dealsCount);
         songRecyclerView.setLayoutManager(linearLayoutManager);
@@ -94,7 +94,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
                 JSONObject data = new JSONObject(restoredSub);
                 dealCounter = data.getInt("gutschein_listing");
                 subStatus = data.getString("subscriptionStatus");
-                dealCount.setText(" "+Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
+                dealCount.setText(" " + Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -122,6 +122,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
     }
 
     private final String URL_Shops = "/mobile/api/shops/list";
+
     private void getShopsFromServer() {
         AsyncHttpClient androidClient = new AsyncHttpClient();
         RequestParams params = new RequestParams("userid", userId);
@@ -131,6 +132,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
                 Toast.makeText(context, "Cannot find shops..\nReport us back!", Toast.LENGTH_LONG).show();
                 finish();
             }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseToken) {
                 try {
@@ -157,9 +159,9 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
         if (requestCode == ADD_GUT_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 Boolean dealSuccess = data.getBooleanExtra("dealAddSuccess", false);
-                if(dealSuccess) {
+                if (dealSuccess) {
                     dealCounter++;
-                    dealCount.setText(" "+Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
+                    dealCount.setText(" " + Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
                     getSubscription();
                 }
             }
@@ -172,18 +174,19 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
             @Override
             public void run() {
                 AsyncHttpClient androidClient = new AsyncHttpClient();
-                androidClient.get(context.getString(R.string.apiUrl) + "/mobile/api/subscriptions/subscription?userid="+ userId, new TextHttpResponseHandler() {
+                androidClient.get(context.getString(R.string.apiUrl) + "/mobile/api/subscriptions/subscription?userid=" + userId, new TextHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         Log.d("TAG", getString(R.string.token_failed) + responseString);
                     }
+
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String response) {
                         Log.d("TAG", "Client token: " + response);
                         try {
                             JSONObject obj = new JSONObject(response);
                             String msg = obj.getString("message");
-                            if(msg.equals("PLANS_SUBSCRIPTIONS_OK")) {
+                            if (msg.equals("PLANS_SUBSCRIPTIONS_OK")) {
                                 JSONObject data = obj.getJSONObject("data");
                                 JSONObject plan = data.getJSONObject("plan");
                                 SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
@@ -195,7 +198,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
                                 editor.commit();
                             }
                             //should never come
-                            else{
+                            else {
                                 SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
                                 editor.remove("subscriptionObject");
                                 editor.commit();
@@ -235,7 +238,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.fab_new_deals) {
+        if (view.getId() == R.id.fab_new_deals) {
             if (dealCounter >= 30) {
                 Snackbar.make(view, getResources().getString(R.string.deals_limit), Snackbar.LENGTH_LONG).show();
             } else if (dealCounter < 30) {
@@ -296,7 +299,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
 
         protected void onPostExecute(String file_url) {
             swipeRefreshLayout.setRefreshing(false);
-            if(activity == null)
+            if (activity == null)
                 return;
             activity.runOnUiThread(new Runnable() {
                 public void run() {

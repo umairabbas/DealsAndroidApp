@@ -34,7 +34,7 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
     private Activity activity;
     private List<GutscheineObject> allDeals;
     private GradientDrawable gradientDrawable;
-    private int [] androidColors;
+    private int[] androidColors;
     private Gutscheine fragment;
     private int gutId = 0;
     private String userId = "";
@@ -46,16 +46,17 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
     public GutscheineAdapter(Context context, List<GutscheineObject> allDeals, Gutscheine frag) {
         fragment = frag;
         this.context = context;
-        activity = (Activity)context;
+        activity = (Activity) context;
         this.allDeals = allDeals;
         gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
         androidColors = context.getResources().getIntArray(R.array.androidcolors);
     }
+
     public GutscheineAdapter(Context context, List<GutscheineObject> allDeals, Boolean editGutscheien) {
         isEdit = editGutscheien;
         this.context = context;
-        activity = (Activity)context;
+        activity = (Activity) context;
         this.allDeals = allDeals;
         gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
@@ -70,12 +71,12 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
 
     @Override
     public void onBindViewHolder(GutscheineViewHolder holder, int position) {
-        if(allDeals.size() <= position){
+        if (allDeals.size() <= position) {
             return;
         }
         final GutscheineObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getGutscheinTitle());
-        holder.dealDescription.setText(deals.getShop().getShopName() + ", " + deals.getShop().getShopCity().substring(0, 1).toUpperCase() +  deals.getShop().getShopCity().substring(1));//deals.getGutscheinDescription());
+        holder.dealDescription.setText(deals.getShop().getShopName() + ", " + deals.getShop().getShopCity().substring(0, 1).toUpperCase() + deals.getShop().getShopCity().substring(1));//deals.getGutscheinDescription());
         holder.gut_price.setText(String.valueOf(deals.getGutscheinPrice()) + "€");
         //gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         String imgUrl = deals.getGutscheinImageUrl(context) + "&imagecount=1&res=470x320";
@@ -83,8 +84,8 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
 
 
         dealPosition = position;
-        if(!isEdit){
-            if(deals.isGutscheinAvailed()){
+        if (!isEdit) {
+            if (deals.isGutscheinAvailed()) {
                 holder.mitmachenLay.setEnabled(false);
                 holder.mitMachenBtn.setColorFilter(activity.getResources().getColor(R.color.colorAccent));
             } else {
@@ -149,13 +150,13 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
                 resultData = client.getResponse();
                 resultData.toString();
 
-            }
-            catch(Throwable t) {
+            } catch (Throwable t) {
                 t.printStackTrace();
             }
 
             return null;
         }
+
         /**
          * After completing background task Dismiss the progress dialog
          **/
@@ -166,8 +167,8 @@ public class GutscheineAdapter extends RecyclerView.Adapter<GutscheineViewHolder
                     Toast.makeText(context, resultData, Toast.LENGTH_SHORT).show();
                 }
             });
-            for(int i=0; i<allDeals.size(); i++){
-                if(allDeals.get(i).getGutscheinId() == gutId){
+            for (int i = 0; i < allDeals.size(); i++) {
+                if (allDeals.get(i).getGutscheinId() == gutId) {
                     allDeals.get(i).setGutscheinAvailed(true);
                     notifyDataSetChanged();
                     break;

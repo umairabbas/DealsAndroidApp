@@ -13,32 +13,29 @@ import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.CameraPosition;
-import com.regionaldeals.de.entities.DealObject;
-import com.regionaldeals.de.entities.GutscheineObject;
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.daimajia.slider.library.Animations.DescriptionAnimation;
-import com.daimajia.slider.library.SliderLayout;
-
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
+import com.regionaldeals.de.entities.DealObject;
+import com.regionaldeals.de.entities.GutscheineObject;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,8 +49,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 /**
  * Created by Umi on 13.09.2017.
@@ -83,7 +78,7 @@ public class DealsDetail extends AppCompatActivity implements
 
     //for gutscheien del
     private Boolean isGutschein = false;
-    private String dealURL= "";
+    private String dealURL = "";
 
     private List<String> images;
 
@@ -96,8 +91,8 @@ public class DealsDetail extends AppCompatActivity implements
         // Set Collapsing Toolbar layout to the screen
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        delBtn = (Button)findViewById(R.id.btn_deal_del);
-        TextView exp = (TextView)findViewById(R.id.exp_date);
+        delBtn = (Button) findViewById(R.id.btn_deal_del);
+        TextView exp = (TextView) findViewById(R.id.exp_date);
         // Set title of Detail page
         // collapsingToolbar.setTitle(getString(R.string.item_title));
         context = this;
@@ -107,31 +102,31 @@ public class DealsDetail extends AppCompatActivity implements
         TextView placeUrl = (TextView) findViewById(R.id.place_url);
         TextView titleUrl = (TextView) findViewById(R.id.urlTitle);
 
-        if(intent.hasExtra("currDeal")) {
+        if (intent.hasExtra("currDeal")) {
             DealObject currDeal = (DealObject) getIntent().getSerializableExtra("currDeal");
             dealId = currDeal.getDealId();
             shopId = currDeal.getShop().getShopId();
             exp.setText(DateFormat.format("dd/MM/yyyy", new Date(currDeal.getDateExpire())).toString());
-            if(currDeal.getDealUrl() != null)
-            if(!currDeal.getDealUrl().isEmpty()) {
-                dealURL = currDeal.getDealUrl();
-                titleUrl.setVisibility(View.VISIBLE);
-                placeUrl.setText(dealURL);
-                placeUrl.setVisibility(View.VISIBLE);
-                placeUrl.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (!dealURL.startsWith("http://") && !dealURL.startsWith("https://")) {
-                            dealURL = "http://" + dealURL;
+            if (currDeal.getDealUrl() != null)
+                if (!currDeal.getDealUrl().isEmpty()) {
+                    dealURL = currDeal.getDealUrl();
+                    titleUrl.setVisibility(View.VISIBLE);
+                    placeUrl.setText(dealURL);
+                    placeUrl.setVisibility(View.VISIBLE);
+                    placeUrl.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (!dealURL.startsWith("http://") && !dealURL.startsWith("https://")) {
+                                dealURL = "http://" + dealURL;
+                            }
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dealURL));
+                            startActivity(browserIntent);
                         }
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dealURL));
-                        startActivity(browserIntent);
-                    }
-                });
-            }
+                    });
+                }
         }
 
-        if(intent.hasExtra("currGut")) {
+        if (intent.hasExtra("currGut")) {
             GutscheineObject currGut = (GutscheineObject) getIntent().getSerializableExtra("currGut");
             dealId = currGut.getGutscheinId();
             shopId = currGut.getShop().getShopId();
@@ -145,28 +140,28 @@ public class DealsDetail extends AppCompatActivity implements
         Double locationLong = intent.getDoubleExtra("long", 6.0839);
         int imgCount = intent.getIntExtra("imgCount", 1);
         String contact = "";
-        if(intent.hasExtra("contact")){
+        if (intent.hasExtra("contact")) {
             contact = intent.getStringExtra("contact");
         }
         String shopName = "";
-        if(intent.hasExtra("shopName")){
+        if (intent.hasExtra("shopName")) {
             shopName = intent.getStringExtra("shopName");
         }
         String address = "";
-        if(intent.hasExtra("address")){
+        if (intent.hasExtra("address")) {
             address = intent.getStringExtra("address");
         }
 
         Boolean enableDeleteBtn = false;
-        if(intent.hasExtra("deleteEnable")) {
+        if (intent.hasExtra("deleteEnable")) {
             enableDeleteBtn = intent.getBooleanExtra("deleteEnable", false);
         }
-        if(intent.hasExtra("isGutschein")) {
+        if (intent.hasExtra("isGutschein")) {
             isGutschein = intent.getBooleanExtra("isGutschein", false);
         }
 
 
-        if(enableDeleteBtn){
+        if (enableDeleteBtn) {
             delBtn.setVisibility(View.VISIBLE);
             SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
             String restoredUser = prefs.getString("userObject", null);
@@ -211,9 +206,9 @@ public class DealsDetail extends AppCompatActivity implements
 
         //ImageView placePicutre = (ImageView) findViewById(R.id.image);
         //Picasso.with(this).load(coverUrl).into(placePicutre);
-        mDemoSlider = (SliderLayout)findViewById(R.id.image);
+        mDemoSlider = (SliderLayout) findViewById(R.id.image);
 
-        HashMap<String,String> url_maps = new HashMap<String, String>();
+        HashMap<String, String> url_maps = new HashMap<String, String>();
         String[] imgTitle = {
                 " ",
                 "  ",
@@ -221,12 +216,12 @@ public class DealsDetail extends AppCompatActivity implements
                 "    ",
                 "     ",
         };
-        for(int a=1; a <= imgCount; a++){
-            url_maps.put(imgTitle[a-1], coverUrl + Integer.toString(a) + "&res=470x320");
+        for (int a = 1; a <= imgCount; a++) {
+            url_maps.put(imgTitle[a - 1], coverUrl + Integer.toString(a) + "&res=470x320");
         }
 
         images = new ArrayList<>();
-        for(String name : url_maps.keySet()){
+        for (String name : url_maps.keySet()) {
             images.add(url_maps.get(name));
             TextSliderView textSliderView = new TextSliderView(this);
             textSliderView
@@ -237,7 +232,7 @@ public class DealsDetail extends AppCompatActivity implements
             //add your extra information
             textSliderView.bundle(new Bundle());
             textSliderView.getBundle()
-                    .putString("extra",name);
+                    .putString("extra", name);
             mDemoSlider.addSlider(textSliderView);
             mDemoSlider.stopAutoCycle();
 
@@ -245,7 +240,7 @@ public class DealsDetail extends AppCompatActivity implements
 
         //mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
         mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        if(imgCount==1) {
+        if (imgCount == 1) {
             mDemoSlider.setCustomAnimation(new DescriptionAnimation());
             mDemoSlider.setDuration(600000);
         }
@@ -284,7 +279,7 @@ public class DealsDetail extends AppCompatActivity implements
         this.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int height = displaymetrics.heightPixels;
         ViewGroup.LayoutParams params = mapFragment.getView().getLayoutParams();
-        params.height = height/2;
+        params.height = height / 2;
         mapFragment.getView().setLayoutParams(params);
     }
 
@@ -295,7 +290,9 @@ public class DealsDetail extends AppCompatActivity implements
                 .show();
     }
 
-    /** Called when the map is ready. */
+    /**
+     * Called when the map is ready.
+     */
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
@@ -323,7 +320,9 @@ public class DealsDetail extends AppCompatActivity implements
         mMap.setOnMarkerClickListener(this);
     }
 
-    /** Called when the user clicks a marker. */
+    /**
+     * Called when the user clicks a marker.
+     */
     @Override
     public boolean onMarkerClick(final Marker marker) {
 
@@ -346,6 +345,7 @@ public class DealsDetail extends AppCompatActivity implements
 
         return super.onOptionsItemSelected(item);
     }
+
     class DealDeleteCall extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
@@ -356,9 +356,9 @@ public class DealsDetail extends AppCompatActivity implements
             try {
                 message = "";
                 URL url;
-                if(isGutschein){
+                if (isGutschein) {
                     URL_DealDel = "/mobile/api/gutschein/deactivate";
-                    url = new URL(getString(R.string.apiUrl) + URL_DealDel + "?gutscheinid="+ dealId + "&userid=" + userId +
+                    url = new URL(getString(R.string.apiUrl) + URL_DealDel + "?gutscheinid=" + dealId + "&userid=" + userId +
                             "&shopid=" + shopId);
                 } else {
                     url = new URL(getString(R.string.apiUrl) + URL_DealDel + "?dealid=" + dealId + "&userid=" + userId +
@@ -366,11 +366,11 @@ public class DealsDetail extends AppCompatActivity implements
                 }
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("PUT");
-                conn.setRequestProperty("Accept","application/json");
+                conn.setRequestProperty("Accept", "application/json");
                 conn.setDoOutput(true);
 
                 Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-                Log.i("MSG" , conn.getResponseMessage());
+                Log.i("MSG", conn.getResponseMessage());
 
                 String response = conn.getResponseMessage();
                 BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -386,14 +386,12 @@ public class DealsDetail extends AppCompatActivity implements
                 JSONObject jObject = new JSONObject(res.toString());
                 message = jObject.getString("message");
 
-                if(message.equals(getString(R.string.DEALS_REMOVE_OK)) || message.equals(getString(R.string.GUTSCHEIN_REMOVE_OK))) {
+                if (message.equals(getString(R.string.DEALS_REMOVE_OK)) || message.equals(getString(R.string.GUTSCHEIN_REMOVE_OK))) {
                     isSuccess = true;
-                }
-                else if (message.equals(getString(R.string.DEALS_REMOVE_ERR)) || message.equals(getString(R.string.GUTSCHEIN_REMOVE_ERR))){
+                } else if (message.equals(getString(R.string.DEALS_REMOVE_ERR)) || message.equals(getString(R.string.GUTSCHEIN_REMOVE_ERR))) {
                     isSuccess = false;
                     message = "Cannot remove deal";
-                }
-                else {
+                } else {
                     isSuccess = false;
                 }
             } catch (Exception e) {
@@ -410,11 +408,11 @@ public class DealsDetail extends AppCompatActivity implements
             delBtn.setEnabled(true);
             runOnUiThread(new Runnable() {
                 public void run() {
-                    if(isSuccess) {
+                    if (isSuccess) {
                         Toast.makeText(context, "Deal Removed\n", Toast.LENGTH_LONG).show();
                         finish();
                     } else {
-                        Toast.makeText(context,  "Failed\n" + message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Failed\n" + message, Toast.LENGTH_LONG).show();
                     }
                 }
             });

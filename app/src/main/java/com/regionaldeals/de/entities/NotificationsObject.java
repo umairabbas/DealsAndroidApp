@@ -11,8 +11,8 @@ public class NotificationsObject implements Serializable {
     private String notificationDetails;
     private GutscheineObject gutscheineObject;
     private long notificationDate = 0;
-    private String  notificationText1;
-    private String  notificationText2;
+    private String notificationText1;
+    private String notificationText2;
 
     public String getNotificationText2() {
         return notificationText2;

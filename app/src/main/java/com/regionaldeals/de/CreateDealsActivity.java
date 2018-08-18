@@ -22,15 +22,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.adapter.DealsAdapter;
 import com.regionaldeals.de.entities.DealObject;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.regionaldeals.de.entities.Shop;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -38,11 +37,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -81,7 +77,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        songRecyclerView = (RecyclerView)findViewById(R.id.create_deals_list);
+        songRecyclerView = (RecyclerView) findViewById(R.id.create_deals_list);
         dealCount = (TextView) findViewById(R.id.dealsCount);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         songRecyclerView.setLayoutManager(linearLayoutManager);
@@ -99,7 +95,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                 JSONObject data = new JSONObject(restoredSub);
                 dealCounter = data.getInt("deals_listing");
                 subStatus = data.getString("subscriptionStatus");
-                dealCount.setText(" "+Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
+                dealCount.setText(" " + Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -113,9 +109,9 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(dealCounter>=30){
+                if (dealCounter >= 30) {
                     Snackbar.make(view, getResources().getString(R.string.deals_limit), Snackbar.LENGTH_LONG).show();
-                }else if(dealCounter<30){
+                } else if (dealCounter < 30) {
                     Intent startActivityIntent = new Intent(CreateDealsActivity.this, AddDealActivity.class);
                     startActivityIntent.putExtra("userId", userId);
                     startActivityForResult(startActivityIntent, ADD_DEALS_REQUEST_CODE);
@@ -140,7 +136,9 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                 }
         );
     }
+
     private final String URL_Shops = "/mobile/api/shops/list";
+
     private void getShopsFromServer() {
         AsyncHttpClient androidClient = new AsyncHttpClient();
         RequestParams params = new RequestParams("userid", userId);
@@ -150,6 +148,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                 Toast.makeText(context, "Cannot find shops..\nReport us back!", Toast.LENGTH_LONG).show();
                 finish();
             }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, String responseToken) {
                 try {
@@ -170,14 +169,15 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADD_DEALS_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 Boolean dealSuccess = data.getBooleanExtra("dealAddSuccess", false);
-                if(dealSuccess) {
+                if (dealSuccess) {
                     dealCounter++;
-                    dealCount.setText(" "+Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
+                    dealCount.setText(" " + Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
                     getSubscription();
                 }
             }
@@ -190,18 +190,19 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
             @Override
             public void run() {
                 AsyncHttpClient androidClient = new AsyncHttpClient();
-                androidClient.get("https://regionaldeals.de/mobile/api/subscriptions/subscription?userid="+ userId, new TextHttpResponseHandler() {
+                androidClient.get("https://regionaldeals.de/mobile/api/subscriptions/subscription?userid=" + userId, new TextHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         Log.d("TAG", getString(R.string.token_failed) + responseString);
                     }
+
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String response) {
                         Log.d("TAG", "Client token: " + response);
                         try {
                             JSONObject obj = new JSONObject(response);
                             String msg = obj.getString("message");
-                            if(msg.equals("PLANS_SUBSCRIPTIONS_OK")) {
+                            if (msg.equals("PLANS_SUBSCRIPTIONS_OK")) {
                                 JSONObject data = obj.getJSONObject("data");
                                 JSONObject plan = data.getJSONObject("plan");
                                 SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
@@ -213,7 +214,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                                 editor.commit();
                             }
                             //should never come
-                            else{
+                            else {
                                 SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
                                 editor.remove("subscriptionObject");
                                 editor.commit();
@@ -294,7 +295,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
 
         protected void onPostExecute(String file_url) {
             swipeRefreshLayout.setRefreshing(false);
-            if(activity == null)
+            if (activity == null)
                 return;
             activity.runOnUiThread(new Runnable() {
                 public void run() {

@@ -4,26 +4,10 @@ package com.regionaldeals.de.service;
  * Created by Umi on 14.01.2018.
  */
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.regionaldeals.de.R;
-
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.UUID;
-
-import javax.net.ssl.HttpsURLConnection;
 
 
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
@@ -51,7 +35,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     /**
      * Persist token to third-party servers.
-     *
+     * <p>
      * Modify this method to associate the user's FCM InstanceID token with any server-side account
      * maintained by your application.
      *
@@ -61,6 +45,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         // TODO: Implement this method to send token to your app server.
         this.token = token;
     }
+
     private String token = "";
 //    class RegCall extends AsyncTask<String, String, String> {
 //        @Override

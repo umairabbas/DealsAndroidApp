@@ -34,13 +34,13 @@ import javax.net.ssl.HttpsURLConnection;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
+public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder> {
 
     private Context context;
     private Activity activity;
     private GradientDrawable gradientDrawable;
     private List<DealObject> allDeals;
-    private int [] androidColors;
+    private int[] androidColors;
     private String URLFav = "/mobile/api/deals/favourite-click";
     private Boolean favChecked = true;
     private Boolean skipFav = false;
@@ -48,7 +48,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
 
     public DealsAdapter(Context context, List<DealObject> allDeals) {
         this.context = context;
-        activity = (Activity)context;
+        activity = (Activity) context;
         this.allDeals = allDeals;
         gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
@@ -57,7 +57,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
 
     public DealsAdapter(Context context, List<DealObject> allDeals, Boolean isFromFav, Boolean skipFavBtn) {
         this.context = context;
-        activity = (Activity)context;
+        activity = (Activity) context;
         this.allDeals = allDeals;
         gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
@@ -75,19 +75,19 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
 
     @Override
     public void onBindViewHolder(DealsViewHolder holder, int position) {
-        if(allDeals.size() <= position){
+        if (allDeals.size() <= position) {
             return;
         }
         final DealObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getDealTitle());
-        holder.dealDescription.setText(deals.getShop().getShopName() + ", " + deals.getShop().getShopCity().substring(0, 1).toUpperCase() +  deals.getShop().getShopCity().substring(1));
+        holder.dealDescription.setText(deals.getShop().getShopName() + ", " + deals.getShop().getShopCity().substring(0, 1).toUpperCase() + deals.getShop().getShopCity().substring(1));
         holder.dealOldPrice.setText(Double.toString(deals.getOriginalPrice()) + "€");
         holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + "€");
 //        gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         String imgUrl = deals.getDealImageUrl(context) + "&imagecount=1&res=470x320";
         Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl);
 
-        if(!skipFav) {
+        if (!skipFav) {
             if (deals.getFavourite() == null) {
                 //int imageResource = activity.getResources().getIdentifier("@drawable/not_favorite", null, activity.getPackageName());
                 holder.favoriteImageButton.setImageResource(R.drawable.not_favorite);
@@ -99,35 +99,35 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
         } else {
             holder.favoriteImageButton.setVisibility(View.GONE);
         }
-            holder.favoriteImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FavView = v;
-                    Context context = v.getContext();
-                    dealId = deals.getDealId();
-                    dealType = deals.getDealType();
-                    if(deals.getFavourite() == null){
-                        favChecked = true;
-                    } else {
-                        favChecked = false;
-                    }
-                    SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-                    String restoredText = prefs.getString("userObject", null);
-                    if (restoredText != null) {
-                        try {
-                            JSONObject obj = new JSONObject(restoredText);
-                            userId = obj.getString("userId");
-                            new DealsAdapter.favClick().execute();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (Throwable t) {
-                        }
-                    } else {
-                        Intent intent = new Intent(context, LoginActivity.class);
-                        context.startActivity(intent);
-                    }
+        holder.favoriteImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FavView = v;
+                Context context = v.getContext();
+                dealId = deals.getDealId();
+                dealType = deals.getDealType();
+                if (deals.getFavourite() == null) {
+                    favChecked = true;
+                } else {
+                    favChecked = false;
                 }
-            });
+                SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
+                String restoredText = prefs.getString("userObject", null);
+                if (restoredText != null) {
+                    try {
+                        JSONObject obj = new JSONObject(restoredText);
+                        userId = obj.getString("userId");
+                        new DealsAdapter.favClick().execute();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (Throwable t) {
+                    }
+                } else {
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    context.startActivity(intent);
+                }
+            }
+        });
 
     }
 
@@ -155,6 +155,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
         protected void onPreExecute() {
             super.onPreExecute();
         }
+
         protected String doInBackground(String... args) {
             try {
                 message = "";
@@ -164,11 +165,11 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
                         "&dealid=" + Integer.toString(dealId) + "&favcheck=" + Boolean.toString(favChecked));
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("PUT");
-                conn.setRequestProperty("Accept","application/json");
+                conn.setRequestProperty("Accept", "application/json");
                 conn.setDoOutput(true);
 
                 Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-                Log.i("MSG" , conn.getResponseMessage());
+                Log.i("MSG", conn.getResponseMessage());
 
                 String response = conn.getResponseMessage();
 
@@ -185,24 +186,20 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
                 JSONObject jObject = new JSONObject(res.toString());
                 message = jObject.getString("message");
 
-                if(message.equals(activity.getString(R.string.DEALS_FAV_CHECK))) {
+                if (message.equals(activity.getString(R.string.DEALS_FAV_CHECK))) {
                     isSuccess = true;
                     displayMsg = "Added to Favourites";
                     //onSignupSuccess();
-                }
-                else if(message.equals(activity.getString(R.string.DEALS_FAV_UNCHECK))) {
+                } else if (message.equals(activity.getString(R.string.DEALS_FAV_UNCHECK))) {
                     isSuccess = true;
                     displayMsg = "Removed from Favourites";
-                }
-                else if(message.equals(activity.getString(R.string.ONLINE_FAV_UNCHECK))) {
+                } else if (message.equals(activity.getString(R.string.ONLINE_FAV_UNCHECK))) {
                     isSuccess = true;
                     displayMsg = "Removed from Favourites";
-                }
-                else if(message.equals(activity.getString(R.string.DEALS_FAV_ERR))) {
+                } else if (message.equals(activity.getString(R.string.DEALS_FAV_ERR))) {
                     isSuccess = false;
                     displayMsg = "Error. Cannot do right now.. Try later";
-                }
-                else {
+                } else {
                     isSuccess = false;
                     displayMsg = "Failed! Server error";
                 }
@@ -215,22 +212,22 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder>{
         }
 
         protected void onPostExecute(String file_url) {
-            if(isSuccess)
-            for(int i=0; i<allDeals.size(); i++){
-                if(allDeals.get(i).getDealId() == dealId){
-                    if(fromFav){
-                        allDeals.remove(i);
-                    } else {
-                        if (favChecked) {
-                            allDeals.get(i).setFavourite(true);
+            if (isSuccess)
+                for (int i = 0; i < allDeals.size(); i++) {
+                    if (allDeals.get(i).getDealId() == dealId) {
+                        if (fromFav) {
+                            allDeals.remove(i);
                         } else {
-                            allDeals.get(i).setFavourite(null);
+                            if (favChecked) {
+                                allDeals.get(i).setFavourite(true);
+                            } else {
+                                allDeals.get(i).setFavourite(null);
+                            }
                         }
+                        notifyDataSetChanged();
+                        break;
                     }
-                    notifyDataSetChanged();
-                    break;
                 }
-            }
             activity.runOnUiThread(new Runnable() {
                 public void run() {
                     Snackbar.make(FavView, displayMsg,

@@ -3,6 +3,7 @@ package com.regionaldeals.de.service;
 /**
  * Created by Umi on 14.01.2018.
  */
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -14,14 +15,8 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-//import com.firebase.jobdispatcher.Constraint;
-//import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-//import com.firebase.jobdispatcher.GooglePlayDriver;
-//import com.firebase.jobdispatcher.Job;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.regionaldeals.de.MainActivity;
-import com.regionaldeals.de.NotificationDealsActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.SplashActivity;
 
@@ -33,6 +28,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
     Bitmap bitmap;
+
     /**
      * Called when message is received.
      *
@@ -87,8 +83,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     /*
-*To get a Bitmap image from the URL received
-* */
+     *To get a Bitmap image from the URL received
+     * */
     public Bitmap getBitmapfromUrl(String imageUrl) {
         try {
             URL url = new URL(imageUrl);
@@ -113,14 +109,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Schedule a job using FirebaseJobDispatcher.
      */
 //    private void scheduleJob() {
-        // [START dispatch_job]
+    // [START dispatch_job]
 //        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
 //        Job myJob = dispatcher.newJobBuilder()
 //                .setService(MyJobService.class)
 //                .setTag("my-job-tag")
 //                .build();
 //        dispatcher.schedule(myJob);
-        // [END dispatch_job]
+    // [END dispatch_job]
 //    }
 
     /**
@@ -132,7 +128,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     /**
      * Create and show a simple notification containing the received FCM message.
-     *
      */
     private void sendNotification(RemoteMessage remoteMessage) {
 
@@ -143,17 +138,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Intent intent = new Intent(this.getApplicationContext(), SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        if(dealids!= null) {
+        if (dealids != null) {
             intent.putExtra("notificationBody", dealids);
         }
-        if(gutid!= null) {
+        if (gutid != null) {
             intent.putExtra("notificationGut", gutid);
         }
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = getString(R.string.default_notification_channel_id);
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, channelId)
                         .setSmallIcon(R.drawable.ic_launcher_not)

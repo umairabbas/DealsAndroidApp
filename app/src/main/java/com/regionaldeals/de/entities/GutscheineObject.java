@@ -3,6 +3,7 @@ package com.regionaldeals.de.entities;
 import android.content.Context;
 
 import com.regionaldeals.de.R;
+
 import java.io.Serializable;
 
 public class GutscheineObject implements Serializable {

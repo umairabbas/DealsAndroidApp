@@ -4,19 +4,19 @@ package com.regionaldeals.de.adapter;
  * Created by Umi on 04.02.2018.
  */
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.view.View.OnClickListener;
 
 import com.regionaldeals.de.AddShopActivity;
 import com.regionaldeals.de.R;
+
+import java.util.ArrayList;
 
 public class DropDownListAdapter extends BaseAdapter {
 
@@ -26,7 +26,7 @@ public class DropDownListAdapter extends BaseAdapter {
     private int selectedCount = 0;
     private static String firstSelected = "";
     private ViewHolder holder;
-    private static String selected = "";	//shortened selected values representation
+    private static String selected = "";    //shortened selected values representation
 
     public static String getSelected() {
         return selected;
@@ -90,7 +90,7 @@ public class DropDownListAdapter extends BaseAdapter {
             }
         });
 
-        if(AddShopActivity.checkSelected[position])
+        if (AddShopActivity.checkSelected[position])
             holder.chkbox.setChecked(true);
         else
             holder.chkbox.setChecked(false);
@@ -101,7 +101,7 @@ public class DropDownListAdapter extends BaseAdapter {
     /*
      * Function which updates the selected values display and information(checkSelected[])
      * */
-    private void setText(int position1){
+    private void setText(int position1) {
         if (!AddShopActivity.checkSelected[position1]) {
             AddShopActivity.checkSelected[position1] = true;
             selectedCount++;
@@ -128,8 +128,8 @@ public class DropDownListAdapter extends BaseAdapter {
                     break;
                 }
             }
-            mSelectedItems.setText(firstSelected + " & "+ (selectedCount - 1) + " more");
-            setSelected(firstSelected + " & "+ (selectedCount - 1) + " more");
+            mSelectedItems.setText(firstSelected + " & " + (selectedCount - 1) + " more");
+            setSelected(firstSelected + " & " + (selectedCount - 1) + " more");
         }
     }
 

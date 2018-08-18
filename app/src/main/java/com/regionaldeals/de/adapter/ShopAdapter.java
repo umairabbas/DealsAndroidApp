@@ -2,12 +2,10 @@ package com.regionaldeals.de.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.regionaldeals.de.AddShopActivity;
@@ -87,7 +85,8 @@ public class ShopAdapter extends BaseAdapter {
                 Intent intent = new Intent(context, AddShopActivity.class);
                 intent.putExtra("EXTRA_SHOP_OBJ", s);
                 context.startActivity(intent);
-            }}));
+            }
+        }));
 
         return rowView;
     }

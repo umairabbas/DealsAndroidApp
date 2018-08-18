@@ -12,10 +12,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.regionaldeals.de.AddShopActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.entities.Shop;
-import com.regionaldeals.de.fragment.NearBy;
 
 import java.util.List;
 import java.util.Locale;
@@ -65,7 +63,7 @@ public class NearbyAdapter extends BaseAdapter implements ActivityCompat.OnReque
         }
     }
 
-    private void callPhone(String contact){
+    private void callPhone(String contact) {
         Intent intent = new Intent(Intent.ACTION_CALL);
         intent.setData(Uri.parse("tel:" + contact));
         if (ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
@@ -79,7 +77,7 @@ public class NearbyAdapter extends BaseAdapter implements ActivityCompat.OnReque
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Get view for row item
         final View rowView = mInflater.inflate(R.layout.nearby_list_row, parent, false);
-        if(mDataSource.size()>0) {
+        if (mDataSource.size() > 0) {
             Shop recipe = (Shop) getItem(position);
 
 //        TextView Category =

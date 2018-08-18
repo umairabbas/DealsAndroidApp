@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.regionaldeals.de.MainActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.adapter.CustomFragmentPageAdapter;
 import com.regionaldeals.de.service.LocationStatic;
@@ -45,11 +44,11 @@ public class Main extends Fragment {
     public Main() {
     }
 
-    public static double getLat(){
+    public static double getLat() {
         return latitude;
     }
 
-    public static double getLng(){
+    public static double getLng() {
         return longitude;
     }
 
@@ -76,20 +75,20 @@ public class Main extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        latitude  = LocationStatic.latitude; // latitude
+        latitude = LocationStatic.latitude; // latitude
         longitude = LocationStatic.longitude; // latitude
 
-        if(latitude == 0 || longitude == 0){
+        if (latitude == 0 || longitude == 0) {
             SharedPreferences prefs = getActivity().getSharedPreferences(getActivity().getString(R.string.sharedPredName), MODE_PRIVATE);
             String restoredText = prefs.getString("locationObject", null);
             if (restoredText != null) {
                 try {
                     JSONObject obj = new JSONObject(restoredText);
-                        if(!obj.isNull("lat") && !obj.isNull("lng") ){
-                            latitude = obj.getDouble("lat");
-                            longitude = obj.getDouble("lng");
-                        }
-                }catch(Exception e){
+                    if (!obj.isNull("lat") && !obj.isNull("lng")) {
+                        latitude = obj.getDouble("lat");
+                        longitude = obj.getDouble("lng");
+                    }
+                } catch (Exception e) {
                 }
             }
         }
@@ -102,12 +101,15 @@ public class Main extends Fragment {
         final TextView seekTitle2 = (TextView) view.findViewById(R.id.seekBarTitle);
         seekControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChanged = 0;
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
+
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 progressChanged = progress;
             }
+
             public void onStartTrackingTouch(SeekBar seekBar) {
                 // TODO Auto-generated method stub
             }
+
             public void onStopTrackingTouch(SeekBar seekBar) {
                 System.out.print("sd");
                 seekTitle2.setText(progressChanged + " KM");

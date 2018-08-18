@@ -11,11 +11,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.regionaldeals.de.MainActivity;
 import com.regionaldeals.de.NotificationDealsActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.entities.NotificationsObject;
-import com.regionaldeals.de.entities.Shop;
 
 import java.util.Date;
 import java.util.List;
@@ -25,7 +23,7 @@ import java.util.Locale;
  * Created by Umi on 10.03.2018.
  */
 
-public class NotificationsAdapter  extends BaseAdapter{
+public class NotificationsAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
@@ -58,7 +56,7 @@ public class NotificationsAdapter  extends BaseAdapter{
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Get view for row item
         final View rowView = mInflater.inflate(R.layout.notifications_list_row, parent, false);
-        if(mDataSource.size()>0) {
+        if (mDataSource.size() > 0) {
             NotificationsObject recipe = (NotificationsObject) getItem(position);
 
 //        TextView Category =
@@ -76,12 +74,12 @@ public class NotificationsAdapter  extends BaseAdapter{
 
             Name.setText(recipe.getNotificationDetails());
 
-            if(recipe.getNotificationDate()!=0){
+            if (recipe.getNotificationDate() != 0) {
                 Date d = new Date(recipe.getNotificationDate());
                 desc.setText(d.toString());
             }
 
-            if(recipe.getGutscheineObject()!=null) {
+            if (recipe.getGutscheineObject() != null) {
                 Address.setText(recipe.getGutscheineObject().getShop().getShopName() + ", " + recipe.getGutscheineObject().getShop().getShopAddress());
                 desc.setText("CODE: " + recipe.getGutscheineObject().getGutscheinCode());
 
@@ -101,7 +99,7 @@ public class NotificationsAdapter  extends BaseAdapter{
                     }
                 });
 
-            }else{
+            } else {
                 Address.setText(recipe.getNotificationText2().substring(0, 1).toUpperCase() + recipe.getNotificationText2().substring(1));
                 final String dealids = recipe.getNotificationText1();
 

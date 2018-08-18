@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    public void setCurrentFragItem(int pos){
+    public void setCurrentFragItem(int pos) {
 
     }
 

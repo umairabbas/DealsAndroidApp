@@ -13,7 +13,8 @@ public class CitiesObject implements Serializable {
     private double cityLat = 50.78;
     private double cityLong = 6.07;
 
-    public CitiesObject(){}
+    public CitiesObject() {
+    }
 
     public CitiesObject(int id, String cityName, String countryCode, Long cityLat, Long cityLong) {
         this.id = id;

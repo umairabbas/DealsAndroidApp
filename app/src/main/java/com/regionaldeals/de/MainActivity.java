@@ -51,7 +51,11 @@ import javax.net.ssl.HttpsURLConnection;
 
 import cz.msebera.android.httpclient.Header;
 
-import static com.regionaldeals.de.Constants.*;
+import static com.regionaldeals.de.Constants.CAT_OBJECT_KEY;
+import static com.regionaldeals.de.Constants.LOCATION_KEY;
+import static com.regionaldeals.de.Constants.NOT_TOKEN_KEY;
+import static com.regionaldeals.de.Constants.SUB_OBJECT_KEY;
+import static com.regionaldeals.de.Constants.USER_OBJECT_KEY;
 
 public class MainActivity extends AppCompatActivity {
 

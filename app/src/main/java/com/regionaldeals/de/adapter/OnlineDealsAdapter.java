@@ -38,19 +38,19 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Umi on 07.10.2017.
  */
 
-public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHolder>{
+public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHolder> {
 
     private Context context;
     private List<DealObject> allDeals;
     private GradientDrawable gradientDrawable;
-    private int [] androidColors;
+    private int[] androidColors;
     private Activity activity;
     private String URLFav = "/mobile/api/deals/favourite-click";
     private Boolean favChecked = true;
 
     public OnlineDealsAdapter(Context context, List<DealObject> allDeals) {
         this.context = context;
-        activity = (Activity)context;
+        activity = (Activity) context;
         this.allDeals = allDeals;
         gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
@@ -65,22 +65,22 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
 
     @Override
     public void onBindViewHolder(OnlineDealsViewHolder holder, int position) {
-        if(allDeals.size() <= position){
+        if (allDeals.size() <= position) {
             return;
         }
         final DealObject deals = allDeals.get(position);
         holder.dealTitle.setText(deals.getDealTitle());
-        holder.dealDescription.setText(deals.getShop().getShopName() + ", " + deals.getShop().getShopCity().substring(0, 1).toUpperCase() +  deals.getShop().getShopCity().substring(1));
+        holder.dealDescription.setText(deals.getShop().getShopName() + ", " + deals.getShop().getShopCity().substring(0, 1).toUpperCase() + deals.getShop().getShopCity().substring(1));
         holder.dealOldPrice.setText(Double.toString(deals.getOriginalPrice()) + " €");
         holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + " €");
         //gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         String imgUrl = deals.getDealImageUrl(context) + "&imagecount=1&res=470x320";
         Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl);
 
-        if(deals.getFavourite() == null) {
+        if (deals.getFavourite() == null) {
             holder.favoriteImageButton.setImageResource(R.drawable.not_favorite);
             //holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.colorGrey));
-        } else if(deals.getFavourite()==true) {
+        } else if (deals.getFavourite() == true) {
             holder.favoriteImageButton.setImageResource(R.drawable.favorite);
             //holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.green));
         }
@@ -90,7 +90,7 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
                 FavView = v;
                 Context context = v.getContext();
                 dealId = deals.getDealId();
-                if(deals.getFavourite() == null){
+                if (deals.getFavourite() == null) {
                     favChecked = true;
                 } else {
                     favChecked = false;
@@ -137,6 +137,7 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
         protected void onPreExecute() {
             super.onPreExecute();
         }
+
         protected String doInBackground(String... args) {
             try {
                 message = "";
@@ -145,11 +146,11 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
                         "&dealid=" + Integer.toString(dealId) + "&favcheck=" + Boolean.toString(favChecked));
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("PUT");
-                conn.setRequestProperty("Accept","application/json");
+                conn.setRequestProperty("Accept", "application/json");
                 conn.setDoOutput(true);
 
                 Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-                Log.i("MSG" , conn.getResponseMessage());
+                Log.i("MSG", conn.getResponseMessage());
 
                 String response = conn.getResponseMessage();
 
@@ -166,20 +167,17 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
                 JSONObject jObject = new JSONObject(res.toString());
                 message = jObject.getString("message");
 
-                if(message.equals(activity.getString(R.string.DEALS_FAV_CHECK))) {
+                if (message.equals(activity.getString(R.string.DEALS_FAV_CHECK))) {
                     isSuccess = true;
                     displayMsg = "Added to Favourites";
                     //onSignupSuccess();
-                }
-                else if(message.equals(activity.getString(R.string.DEALS_FAV_UNCHECK))) {
+                } else if (message.equals(activity.getString(R.string.DEALS_FAV_UNCHECK))) {
                     isSuccess = true;
                     displayMsg = "Removed from Favourites";
-                }
-                else if(message.equals(activity.getString(R.string.DEALS_FAV_ERR))) {
+                } else if (message.equals(activity.getString(R.string.DEALS_FAV_ERR))) {
                     isSuccess = false;
                     displayMsg = "Error. Cannot do right now.. Try later";
-                }
-                else {
+                } else {
                     isSuccess = false;
                     displayMsg = "Failed! Server error";
                 }
@@ -198,18 +196,18 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
                             Snackbar.LENGTH_LONG).show();
                 }
             });
-            if(isSuccess)
-            for(int i=0; i<allDeals.size(); i++){
-                if(allDeals.get(i).getDealId() == dealId){
-                    if (favChecked) {
-                        allDeals.get(i).setFavourite(true);
-                    } else {
-                        allDeals.get(i).setFavourite(null);
+            if (isSuccess)
+                for (int i = 0; i < allDeals.size(); i++) {
+                    if (allDeals.get(i).getDealId() == dealId) {
+                        if (favChecked) {
+                            allDeals.get(i).setFavourite(true);
+                        } else {
+                            allDeals.get(i).setFavourite(null);
+                        }
+                        notifyDataSetChanged();
+                        break;
                     }
-                    notifyDataSetChanged();
-                    break;
                 }
-            }
         }
     }
 }

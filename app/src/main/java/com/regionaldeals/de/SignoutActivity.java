@@ -40,7 +40,7 @@ public class SignoutActivity extends AppCompatActivity {
 
         TextView email = findViewById(R.id.textEmail);
 
-        if(getIntent().hasExtra("uemail")) {
+        if (getIntent().hasExtra("uemail")) {
             email.setText(getIntent().getStringExtra("uemail"));
         }
 

@@ -14,7 +14,6 @@ public class DealObject implements Serializable {
 
     private int dealId;
     private String dealTitle;
-    //private String dealImageUrl;
     private String dealDescription;
     private long createDate;
     private long publishDate;
@@ -96,7 +95,6 @@ public class DealObject implements Serializable {
     public DealObject(int dealId, String dealTitle, String dealDescription, long dateCreated, long datePublished, long dateExpire, String timezone, long originalPrice, long dealPrice, String currency, Shop shop) {
         this.dealId = dealId;
         this.dealTitle = dealTitle;
-        //this.dealImageUrl = dealImageUrl;
         this.dealDescription = dealDescription;
         this.createDate = dateCreated;
         this.publishDate = datePublished;
@@ -159,10 +157,6 @@ public class DealObject implements Serializable {
     public String getDealImageUrl(Context c) {
         return c.getString(R.string.apiUrl) + "/mobile/api/deals/dealimage?dealid=" + dealId + "&" + "dealtype=" + getDealType();
     }
-
-    //public void setDealImageUrl(String dealImageUrl) {
-    //    this.dealImageUrl = dealImageUrl;
-    //}
 
     public String getDealDescription() {
         return dealDescription;

@@ -14,11 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.adapter.ShopAdapter;
 import com.regionaldeals.de.entities.Shop;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -51,7 +51,7 @@ public class ShopActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(!isFirst) {
+        if (!isFirst) {
             new LoadShop().execute();
         } else {
             isFirst = false;

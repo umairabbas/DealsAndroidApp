@@ -54,7 +54,7 @@ public class AboutActivity extends AppCompatActivity {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             version = pInfo.versionName;
             int verCode = pInfo.versionCode;
-            version.concat(" ("+Integer.toString(verCode) + ")");
+            version.concat(" (" + Integer.toString(verCode) + ")");
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -114,7 +114,7 @@ public class AboutActivity extends AppCompatActivity {
         }
     }
 
-    private void callPhone(){
+    private void callPhone() {
         Intent intent = new Intent(Intent.ACTION_CALL);
         intent.setData(Uri.parse("tel:" + "+491629499014"));
         if (ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {

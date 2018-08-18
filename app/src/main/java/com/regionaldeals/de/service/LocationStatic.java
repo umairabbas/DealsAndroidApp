@@ -1,24 +1,23 @@
 package com.regionaldeals.de.service;
 
-import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+
 import java.util.List;
 
 /**
  * Created by Umi on 15.02.2018.
  */
 
-public class LocationStatic extends Service implements LocationListener
-{
+public class LocationStatic extends Service implements LocationListener {
 
     // flag for GPS status
     boolean isGPSEnabled = false;
@@ -42,18 +41,16 @@ public class LocationStatic extends Service implements LocationListener
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
-    public LocationStatic(){
+    public LocationStatic() {
 
     }
 
-    public LocationStatic(Context context)
-    {
+    public LocationStatic(Context context) {
         getLocation(context);
     }
 
     @Override
-    public void onLocationChanged(Location location)
-    {
+    public void onLocationChanged(Location location) {
         if (location != null) {
             Log.v("Location Changed", location.getLatitude() + " and " + location.getLongitude());
             latitude = location.getLatitude();
@@ -63,23 +60,19 @@ public class LocationStatic extends Service implements LocationListener
     }
 
     @Override
-    public void onProviderDisabled(String provider)
-    {
+    public void onProviderDisabled(String provider) {
     }
 
     @Override
-    public void onProviderEnabled(String provider)
-    {
+    public void onProviderEnabled(String provider) {
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras)
-    {
+    public void onStatusChanged(String provider, int status, Bundle extras) {
     }
 
     @Override
-    public IBinder onBind(Intent arg0)
-    {
+    public IBinder onBind(Intent arg0) {
         return null;
     }
 

@@ -16,17 +16,19 @@ import com.regionaldeals.de.fragment.Gutscheine;
 import com.regionaldeals.de.fragment.OnlineDeals;
 import com.regionaldeals.de.fragment.NearBy;
 
-public class CustomFragmentPageAdapter extends FragmentPagerAdapter{
+public class CustomFragmentPageAdapter extends FragmentPagerAdapter {
     private static final String TAG = CustomFragmentPageAdapter.class.getSimpleName();
     private static final int FRAGMENT_COUNT = 5;
     private Context context;
+
     public CustomFragmentPageAdapter(FragmentManager fm, Context con) {
         super(fm);
         context = con;
     }
+
     @Override
     public Fragment getItem(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 return new Gutscheine();
             case 1:
@@ -42,13 +44,15 @@ public class CustomFragmentPageAdapter extends FragmentPagerAdapter{
         }
         return null;
     }
+
     @Override
     public int getCount() {
         return FRAGMENT_COUNT;
     }
+
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position){
+        switch (position) {
             case 0:
                 return context.getResources().getString(R.string.gutscheine);
             case 1:
