@@ -4,8 +4,6 @@ package com.regionaldeals.de;
  * Created by Umi on 28.08.2017.
  */
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,48 +14,37 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.regionaldeals.de.Utils.DoubleNameValuePair;
-import com.regionaldeals.de.Utils.IntNameValuePair;
 import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.Utils.SharedPreferenceUtils;
 import com.regionaldeals.de.entities.CitiesObject;
-import com.regionaldeals.de.entities.DealObject;
-import com.regionaldeals.de.fragment.Deals;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
+import static com.regionaldeals.de.Constants.CITIES_KEY;
+import static com.regionaldeals.de.Constants.LOCATION_KEY;
+
 public class SplashActivity extends AppCompatActivity {
-    private static final String TAG = SplashActivity.class.getSimpleName();
     private final int SPLASH_DISPLAY_LENGTH = 1500;
     private JSONParser jsonParser = new JSONParser();
-    private Context context;
-    private Activity activity;
     public static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 99;
     private final String URL_Cities = "/mobile/api/device/citieslist";
     private JSONArray data;
     private String[] COUNTRIES;
     private String message = "";
     private StringBuilder sb;
-    private List<CitiesObject> city =  new ArrayList<>();
-    //private CitiesObject city = new TypeToken<ArrayList<CitiesObject>>(){}.getType();
+    private List<CitiesObject> city = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,20 +52,15 @@ public class SplashActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        SharedPreferenceUtils.getInstance(this);
+
         ActionBar actionBar = getSupportActionBar();
-        context = this;
-        activity = this;
-        if(null != actionBar){
+        if (null != actionBar) {
             actionBar.hide();
         }
 
         getLocation();
-        //        if (getIntent().getExtras() != null) {
-//            for (String key : getIntent().getExtras().keySet()) {
-//                Object value = getIntent().getExtras().get(key);
-//                Log.d(TAG, "Key: " + key + " Value: " + value);
-//            }
-//        }
     }
 
     class loadCities extends AsyncTask<String, String, String> {
@@ -86,20 +68,21 @@ public class SplashActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
         }
+
         protected String doInBackground(String... args) {
             sb = new StringBuilder();
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             // getting JSON string from URL
-            String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Cities, "GET",
+            String json = jsonParser.makeHttpRequest(getString(R.string.apiUrl) + URL_Cities, "GET",
                     params);
             Log.d("JSON: ", "> " + json);
             try {
                 JSONObject jsonObj = new JSONObject(json);
                 data = jsonObj.getJSONArray("data");
-                message =  jsonObj.getString("message");
+                message = jsonObj.getString("message");
                 city.clear();
                 COUNTRIES = new String[data.length()];
-                for(int i=0; i<data.length(); i++){
+                for (int i = 0; i < data.length(); i++) {
                     JSONObject result = (JSONObject) data.get(i);
                     CitiesObject c = new CitiesObject();
                     c.setCityName(result.getString("cityName"));
@@ -107,7 +90,7 @@ public class SplashActivity extends AppCompatActivity {
                     c.setId(result.getInt("id"));
                     COUNTRIES[i] = result.getString("cityName");
                     sb.append(COUNTRIES[i]).append(",");
-                    if(!result.isNull("cityLat") && !result.isNull("cityLong")) {
+                    if (!result.isNull("cityLat") && !result.isNull("cityLong")) {
                         c.setCityLat(result.getDouble("cityLat"));
                         c.setCityLong(result.getDouble("cityLong"));
                     }
@@ -120,12 +103,13 @@ public class SplashActivity extends AppCompatActivity {
             }
             return null;
         }
+
         protected void onPostExecute(String file_url) {
-            if(message.equals("CITIES_LIST_OK") && COUNTRIES.length > 1){
+            if (message.equals("CITIES_LIST_OK") && COUNTRIES.length > 1) {
                 //all good
             } else {
                 Arrays.sort(DEFAULTCOUNTRIES);
-                for(int i=0; i< DEFAULTCOUNTRIES.length; i++){
+                for (int i = 0; i < DEFAULTCOUNTRIES.length; i++) {
                     sb.append(DEFAULTCOUNTRIES[i]).append(",");
                 }
             }
@@ -148,13 +132,13 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void getLocation() {
-        int status = context.getPackageManager().checkPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                context.getPackageName());
+        int status = getPackageManager().checkPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                getPackageName());
         if (status == PackageManager.PERMISSION_GRANTED) {
             nextFlow();
-        }else{
-            ActivityCompat.requestPermissions( activity, new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
-                    MY_PERMISSION_ACCESS_COURSE_LOCATION );
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSION_ACCESS_COURSE_LOCATION);
         }
     }
 
@@ -167,7 +151,7 @@ public class SplashActivity extends AppCompatActivity {
                     // permission was granted, yay!
                     getLocation();
                 } else {
-                    Toast.makeText(context, "Cannot get user location", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Cannot get user location", Toast.LENGTH_SHORT).show();
                     nextFlow();
                 }
                 return;
@@ -176,13 +160,11 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
-    private void nextFlow(){
-        SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
-        String restoredText = prefs.getString("locationObject", null);
-        String restoredCities = prefs.getString("citiesString", null);
-//        if (restoredCities == null) {
-//            new SplashActivity.loadCities().execute();
-//        }
+    private void nextFlow() {
+
+        String restoredText = SharedPreferenceUtils.getInstance(this).getStringValue(LOCATION_KEY, null);
+        String restoredCities = SharedPreferenceUtils.getInstance(this).getStringValue(CITIES_KEY, null);
+
         if (restoredText != null) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -194,10 +176,10 @@ public class SplashActivity extends AppCompatActivity {
                     } else if (getIntent().hasExtra("dealids")) {     //should be redirect = true
                         String body = getIntent().getStringExtra("dealids");
                         startActivityIntent.putExtra("notificationBody", body);
-                    } else if(getIntent().hasExtra("notificationGut")) {
+                    } else if (getIntent().hasExtra("notificationGut")) {
                         String body = getIntent().getStringExtra("notificationGut");
                         startActivityIntent.putExtra("notificationGut", body);
-                    }else if(getIntent().hasExtra("gutscheinid")){
+                    } else if (getIntent().hasExtra("gutscheinid")) {
                         String body = getIntent().getStringExtra("notificationGut");
                         startActivityIntent.putExtra("notificationGut", body);
                     }
@@ -205,7 +187,7 @@ public class SplashActivity extends AppCompatActivity {
                     SplashActivity.this.finish();
                 }
             }, SPLASH_DISPLAY_LENGTH);
-        }else if(restoredCities != null){
+        } else if (restoredCities != null) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -214,7 +196,7 @@ public class SplashActivity extends AppCompatActivity {
                     SplashActivity.this.finish();
                 }
             }, SPLASH_DISPLAY_LENGTH);
-        }else {
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

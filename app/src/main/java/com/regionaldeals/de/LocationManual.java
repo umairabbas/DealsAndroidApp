@@ -1,48 +1,40 @@
 package com.regionaldeals.de;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.GestureDetector;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.regionaldeals.de.Utils.SharedPreferenceUtils;
+import com.regionaldeals.de.entities.CitiesObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.view.GestureDetector;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.regionaldeals.de.Utils.JSONParser;
-import com.regionaldeals.de.entities.CitiesObject;
-
-import org.apache.http.NameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import static com.regionaldeals.de.Constants.CITIES_KEY;
+import static com.regionaldeals.de.Constants.CITIES_OBJECT_KEY;
+import static com.regionaldeals.de.Constants.LOCATION_KEY;
 
 /**
  * Created by Umi on 09.09.2017.
  */
 
-public class LocationManual extends AppCompatActivity implements ListView.OnItemClickListener
-{
+public class LocationManual extends AppCompatActivity implements ListView.OnItemClickListener {
     private GestureDetector mGestureDetector;
 
     // x and y coordinates within our side index
@@ -58,22 +50,17 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
     // list with items for side index
     private ArrayList<Object[]> indexList = null;
 
-    private Context context;
     private ListView lv1;
 
-    private List<CitiesObject> city =  new ArrayList<>();
+    private List<CitiesObject> city = new ArrayList<>();
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_manual);
-        context = this;
-        //activity = this;
-        SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
-        String restoredCitiesObject = prefs.getString("citiesObject", "");
-        String restoredCities = prefs.getString("citiesString", null);
 
+        String restoredCitiesObject = SharedPreferenceUtils.getInstance(this).getStringValue(CITIES_OBJECT_KEY, "");
+        String restoredCities = SharedPreferenceUtils.getInstance(this).getStringValue(CITIES_KEY, null);
 
         lv1 = (ListView) findViewById(R.id.ListView01);
         lv1.setOnItemClickListener(this);
@@ -82,16 +69,17 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
             //should not be
             Toast.makeText(this, "Please restart or update app", Toast.LENGTH_LONG).show();
             finish();
-        }else {
+        } else {
             COUNTRIES = restoredCities.split(",");
             Arrays.sort(COUNTRIES);
-            lv1.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, COUNTRIES));
-            mGestureDetector = new GestureDetector(context, new SideIndexGestureListener());
+            lv1.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, COUNTRIES));
+            mGestureDetector = new GestureDetector(this, new SideIndexGestureListener());
         }
 
-        if(restoredCitiesObject != null){
+        if (restoredCitiesObject != null) {
             Gson gson = new Gson();
-            Type founderListType = new TypeToken<ArrayList<CitiesObject>>(){}.getType();
+            Type founderListType = new TypeToken<ArrayList<CitiesObject>>() {
+            }.getType();
             city = gson.fromJson(restoredCitiesObject, founderListType);
         }
 
@@ -105,40 +93,34 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
         String lat = null;
         String lng = null;
 
-        for(CitiesObject c : city){
-            if(c.getCityName().equals(citySelected)){
+        for (CitiesObject c : city) {
+            if (c.getCityName().equals(citySelected)) {
                 lat = Double.toString(c.getCityLat());
                 lng = Double.toString(c.getCityLong());
             }
         }
 
         String placeJson = "{\"Name\":\"" + citySelected + "\", \"lat\": \"" + lat + "\", \"lng\":\"" + lng + "\"}";
-        SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
-        editor.putString("locationObject", placeJson);
-        editor.commit();
+        SharedPreferenceUtils.getInstance(this).setValue(LOCATION_KEY, placeJson);
 
         Intent startActivityIntent = new Intent(LocationManual.this, MainActivity.class);
-        startActivityIntent.putExtra("userCity",citySelected);
+        startActivityIntent.putExtra("userCity", citySelected);
         startActivityIntent.putExtra("updateCity", true);
         startActivity(startActivityIntent);
-        LocationManual.this.finish();
+        finish();
 
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
-        if (mGestureDetector.onTouchEvent(event))
-        {
+    public boolean onTouchEvent(MotionEvent event) {
+        if (mGestureDetector.onTouchEvent(event)) {
             return true;
-        } else
-        {
+        } else {
             return false;
         }
     }
 
-    private ArrayList<Object[]> createIndex(String[] strArr)
-    {
+    private ArrayList<Object[]> createIndex(String[] strArr) {
         ArrayList<Object[]> tmpIndexList = new ArrayList<Object[]>();
         Object[] tmpIndexItem = null;
 
@@ -147,15 +129,13 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
         String currentLetter = null;
         String strItem = null;
 
-        for (int j = 0; j < strArr.length; j++)
-        {
+        for (int j = 0; j < strArr.length; j++) {
             strItem = strArr[j];
             currentLetter = strItem.substring(0, 1);
 
             // every time new letters comes
             // save it to index list
-            if (!currentLetter.equals(tmpLetter))
-            {
+            if (!currentLetter.equals(tmpLetter)) {
                 tmpIndexItem = new Object[3];
                 tmpIndexItem[0] = tmpLetter;
                 tmpIndexItem[1] = tmpPos - 1;
@@ -176,8 +156,7 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
         tmpIndexList.add(tmpIndexItem);
 
         // and remove first temporary empty entry
-        if (tmpIndexList != null && tmpIndexList.size() > 0)
-        {
+        if (tmpIndexList != null && tmpIndexList.size() > 0) {
             tmpIndexList.remove(0);
         }
 
@@ -185,9 +164,8 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus)
-    {
-    //public void onCitiesResult(){
+    public void onWindowFocusChanged(boolean hasFocus) {
+        //public void onCitiesResult(){
 
         final ListView listView = (ListView) findViewById(R.id.ListView01);
         LinearLayout sideIndex = (LinearLayout) findViewById(R.id.sideIndex);
@@ -209,8 +187,7 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
         int tmpIndexListSize = indexListSize;
 
         // handling that case when indexListSize > indexMaxSize
-        while (tmpIndexListSize > indexMaxSize)
-        {
+        while (tmpIndexListSize > indexMaxSize) {
             tmpIndexListSize = tmpIndexListSize / 2;
         }
 
@@ -222,8 +199,7 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
         Object[] tmpIndexItem = null;
 
         // show every m-th letter
-        for (double i = 1; i <= indexListSize; i = i + delta)
-        {
+        for (double i = 1; i <= indexListSize; i = i + delta) {
             tmpIndexItem = indexList.get((int) i - 1);
             tmpLetter = tmpIndexItem[0].toString();
             tmpTV = new TextView(this);
@@ -236,11 +212,9 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
         }
 
         // and set a touch listener for it
-        sideIndex.setOnTouchListener(new OnTouchListener()
-        {
+        sideIndex.setOnTouchListener(new OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
+            public boolean onTouch(View v, MotionEvent event) {
                 // now you know coordinates of touch
                 sideIndexX = event.getX();
                 sideIndexY = event.getY();
@@ -254,12 +228,10 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
     }
 
     class SideIndexGestureListener extends
-            GestureDetector.SimpleOnGestureListener
-    {
+            GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2,
-                                float distanceX, float distanceY)
-        {
+                                float distanceX, float distanceY) {
             // we know already coordinates of first touch
             // we know as well a scroll distance
             sideIndexX = sideIndexX - distanceX;
@@ -268,8 +240,7 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
             // when the user scrolls within our side index
             // we can show for every position in it a proper
             // item in the country list
-            if (sideIndexX >= 0 && sideIndexY >= 0)
-            {
+            if (sideIndexX >= 0 && sideIndexY >= 0) {
                 displayListItem();
             }
 
@@ -277,8 +248,7 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
         }
     }
 
-    public void displayListItem()
-    {
+    public void displayListItem() {
         // compute number of pixels for every side index item
         double pixelPerIndexItem = (double) sideIndexHeight / indexListSize;
 
@@ -304,108 +274,6 @@ public class LocationManual extends AppCompatActivity implements ListView.OnItem
     }
 
     // an array with countries to display in the list
-    private static String[] COUNTRIES;// = new String[];
-//            {
-//                    "Aachen",
-//                    "Augsburg",
-//                    "Bergisch",
-//                    "Berlin",
-//                    "Bielefeld",
-//                    "Bochum",
-//                    "Bonn",
-//                    "Bottrop",
-//                    "Braunschweig",
-//                    "Bremen",
-//                    "Bremerhaven",
-//                    "Chemnitz",
-//                    "Cottbus",
-//                    "Darmstadt",
-//                    "Dessau-Roßlau",
-//                    "Dortmund",
-//                    "Dresden",
-//                    "Duisburg",
-//                    "Düren",
-//                    "Düsseldorf",
-//                    "Erfurt",
-//                    "Erlangen",
-//                    "Essen",
-//                    "Esslingen",
-//                    "Flensburg",
-//                    "Frankfurt",
-//                    "Freiburg",
-//                    "Fürth",
-//                    "Gelsenkirchen",
-//                    "Gera",
-//                    "Gladbach",
-//                    "Göttingen",
-//                    "Gütersloh",
-//                    "Hagen",
-//                    "Halle",
-//                    "Hamburg",
-//                    "Hamm",
-//                    "Hanau",
-//                    "Hannover",
-//                    "Heidelberg",
-//                    "Heilbronn",
-//                    "Herne",
-//                    "Hildesheim",
-//                    "Ingolstadt",
-//                    "Iserlohn",
-//                    "Jena",
-//                    "Kaiserslautern",
-//                    "Karlsruhe",
-//                    "Kassel",
-//                    "Kiel",
-//                    "Koblenz",
-//                    "Krefeld",
-//                    "Köln",
-//                    "Leipzig",
-//                    "Leverkusen",
-//                    "Ludwigsburg",
-//                    "Ludwigshafen",
-//                    "Lübeck",
-//                    "Lünen",
-//                    "Magdeburg",
-//                    "Mainz",
-//                    "Mannheim",
-//                    "Marl",
-//                    "Minden",
-//                    "Moers",
-//                    "Mönchengladbach",
-//                    "Mülheim",
-//                    "München",
-//                    "Münster",
-//                    "Neuss",
-//                    "Nürnberg",
-//                    "Oberhausen",
-//                    "Offenbach",
-//                    "Oldenburg",
-//                    "Osnabrück",
-//                    "Paderborn",
-//                    "Pforzheim",
-//                    "Potsdam",
-//                    "Ratingen",
-//                    "Recklinghausen",
-//                    "Regensburg",
-//                    "Remscheid",
-//                    "Reutlingen",
-//                    "Rostock",
-//                    "Saarbrücken",
-//                    "Salzgitter",
-//                    "Schwerin",
-//                    "Siegen",
-//                    "Solingen",
-//                    "Stuttgart",
-//                    "Trier",
-//                    "Tübingen",
-//                    "Ulm",
-//                    "Velbert",
-//                    "Villingen-Schwenn.",
-//                    "Wiesbaden",
-//                    "Witten",
-//                    "Wolfsburg",
-//                    "Wuppertal",
-//                    "Würzburg",
-//                    "Zwickau"
-//            };
+    private static String[] COUNTRIES;
+
 }
