@@ -73,16 +73,13 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
         holder.dealDescription.setText(deals.getShop().getShopName() + ", " + deals.getShop().getShopCity().substring(0, 1).toUpperCase() + deals.getShop().getShopCity().substring(1));
         holder.dealOldPrice.setText(Double.toString(deals.getOriginalPrice()) + " €");
         holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + " €");
-        //gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         String imgUrl = deals.getDealImageUrl(context) + "&imagecount=1&res=470x320";
         Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl);
 
         if (deals.getFavourite() == null) {
             holder.favoriteImageButton.setImageResource(R.drawable.not_favorite);
-            //holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.colorGrey));
         } else if (deals.getFavourite() == true) {
             holder.favoriteImageButton.setImageResource(R.drawable.favorite);
-            //holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.green));
         }
         holder.favoriteImageButton.setOnClickListener(new View.OnClickListener() {
             @Override

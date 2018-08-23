@@ -1,5 +1,6 @@
 package com.regionaldeals.de.service;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -78,7 +79,7 @@ public class LocationStatic extends Service implements LocationListener {
 
     public void getLocation(Context context) {
         try {
-            int status = context.getPackageManager().checkPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION,
+            int status = context.getPackageManager().checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION,
                     context.getPackageName());
             if (status == PackageManager.PERMISSION_GRANTED) {
                 locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);

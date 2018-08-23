@@ -26,20 +26,10 @@ public class GutscheineViewHolder extends RecyclerView.ViewHolder {
     public ImageView dealCoverUrl;
     public ImageView mitMachenBtn;
     public LinearLayout mitmachenLay;
-    private Activity context;
-
-    public GutscheineViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl, ImageButton mitBtn) {
-        super(itemView);
-        this.dealTitle = dealTitle;
-        this.dealDescription = dealDescription;
-        this.dealCoverUrl = dealCoverUrl;
-        this.mitMachenBtn = mitBtn;
-
-    }
 
     public GutscheineViewHolder(View itemView, final List<GutscheineObject> allDeals, final boolean canEdit) {
         super(itemView);
-        context = (Activity) itemView.getContext();
+        Activity context = (Activity) itemView.getContext();
         dealTitle = (TextView) itemView.findViewById(R.id.deal_title);
         dealDescription = (TextView) itemView.findViewById(R.id.deal_description);
         gut_price = (TextView) itemView.findViewById(R.id.gut_price);

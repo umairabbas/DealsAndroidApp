@@ -3,7 +3,6 @@ package com.regionaldeals.de.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
@@ -17,6 +16,7 @@ import com.regionaldeals.de.LoginActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.ColorUtility;
 import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.Utils.SharedPreferenceUtils;
 import com.regionaldeals.de.entities.DealObject;
 import com.squareup.picasso.Picasso;
 
@@ -32,7 +32,7 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import static android.content.Context.MODE_PRIVATE;
+import static com.regionaldeals.de.Constants.USER_OBJECT_KEY;
 
 public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder> {
 
@@ -40,7 +40,6 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder> {
     private Activity activity;
     private GradientDrawable gradientDrawable;
     private List<DealObject> allDeals;
-    private int[] androidColors;
     private String URLFav = "/mobile/api/deals/favourite-click";
     private Boolean favChecked = true;
     private Boolean skipFav = false;
@@ -52,7 +51,6 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder> {
         this.allDeals = allDeals;
         gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
-        androidColors = context.getResources().getIntArray(R.array.androidcolors);
     }
 
     public DealsAdapter(Context context, List<DealObject> allDeals, Boolean isFromFav, Boolean skipFavBtn) {
@@ -61,7 +59,6 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder> {
         this.allDeals = allDeals;
         gradientDrawable = new GradientDrawable();
         gradientDrawable.setShape(GradientDrawable.RECTANGLE);
-        androidColors = context.getResources().getIntArray(R.array.androidcolors);
         fromFav = isFromFav;
         skipFav = skipFavBtn;
     }
@@ -83,18 +80,14 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder> {
         holder.dealDescription.setText(deals.getShop().getShopName() + ", " + deals.getShop().getShopCity().substring(0, 1).toUpperCase() + deals.getShop().getShopCity().substring(1));
         holder.dealOldPrice.setText(Double.toString(deals.getOriginalPrice()) + "€");
         holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + "€");
-//        gradientDrawable.setColor(androidColors[new Random().nextInt(androidColors.length)]);
         String imgUrl = deals.getDealImageUrl(context) + "&imagecount=1&res=470x320";
         Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl);
 
         if (!skipFav) {
             if (deals.getFavourite() == null) {
-                //int imageResource = activity.getResources().getIdentifier("@drawable/not_favorite", null, activity.getPackageName());
                 holder.favoriteImageButton.setImageResource(R.drawable.not_favorite);
-                //holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.colorGrey));
             } else if (deals.getFavourite() == true) {
                 holder.favoriteImageButton.setImageResource(R.drawable.favorite);
-                //holder.favoriteImageButton.setColorFilter(activity.getResources().getColor(R.color.green));
             }
         } else {
             holder.favoriteImageButton.setVisibility(View.GONE);
@@ -111,8 +104,8 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsViewHolder> {
                 } else {
                     favChecked = false;
                 }
-                SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-                String restoredText = prefs.getString("userObject", null);
+                String restoredText = SharedPreferenceUtils.getInstance(context).getStringValue(USER_OBJECT_KEY, null);
+
                 if (restoredText != null) {
                     try {
                         JSONObject obj = new JSONObject(restoredText);

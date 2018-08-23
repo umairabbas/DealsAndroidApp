@@ -49,32 +49,16 @@ public class ShopAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         // Get view for row item
         final View rowView = mInflater.inflate(R.layout.shop_list_row, parent, false);
-        // Get title element
-//        TextView serialText =
-//                (TextView) rowView.findViewById(R.id.serial);
         TextView subtitleTextView =
                 (TextView) rowView.findViewById(R.id.title);
         TextView detailTextView =
                 (TextView) rowView.findViewById(R.id.title2);
-//        Button add_deal_button =
-//                (Button) rowView.findViewById(R.id.add_deal_button);
-//        Button edit_shop_button =
-//                (Button) rowView.findViewById(R.id.edit_shop_button);
 
         Shop recipe = (Shop) getItem(position);
 
-//        serialText.setText(Integer.toString(recipe.getShopId()));
         subtitleTextView.setText(recipe.getShopName());
         detailTextView.setText(recipe.getShopAddress());
 
-//        add_deal_button.setOnClickListener((new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int j = position;
-//                Shop s = mDataSource.get(j);
-//                Context context = v.getContext();
-//                Snackbar.make(v, "COMING SOON", Snackbar.LENGTH_SHORT).show();
-//            }}));
 
         rowView.setOnClickListener((new View.OnClickListener() {
             @Override

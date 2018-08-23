@@ -59,18 +59,12 @@ public class NotificationsAdapter extends BaseAdapter {
         if (mDataSource.size() > 0) {
             NotificationsObject recipe = (NotificationsObject) getItem(position);
 
-//        TextView Category =
-//                (TextView) rowView.findViewById(R.id.title);
             TextView Name =
                     (TextView) rowView.findViewById(R.id.titleShop);
             TextView Address =
                     (TextView) rowView.findViewById(R.id.addressShop);
             TextView desc =
                     (TextView) rowView.findViewById(R.id.shopDesc);
-
-            //Contact.setCompoundDrawablesWithIntrinsicBounds(R.drawable.phone_24, 0, 0, 0);
-            //Address.setCompoundDrawablesWithIntrinsicBounds(R.drawable.location_24, 0, 0, 0);
-            //desc.setCompoundDrawablesWithIntrinsicBounds(R.drawable.details_24, 0, 0, 0);
 
             Name.setText(recipe.getNotificationDetails());
 

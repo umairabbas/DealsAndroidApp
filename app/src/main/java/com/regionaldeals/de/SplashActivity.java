@@ -4,6 +4,7 @@ package com.regionaldeals.de;
  * Created by Umi on 28.08.2017.
  */
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -137,7 +138,8 @@ public class SplashActivity extends AppCompatActivity {
         if (status == PackageManager.PERMISSION_GRANTED) {
             nextFlow();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSION_ACCESS_COURSE_LOCATION);
         }
     }

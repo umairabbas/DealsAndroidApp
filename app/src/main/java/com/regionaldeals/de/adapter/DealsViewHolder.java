@@ -26,13 +26,6 @@ public class DealsViewHolder extends RecyclerView.ViewHolder {
     public ImageView dealCoverUrl;
     public ImageButton favoriteImageButton;
 
-//    public DealsViewHolder(View itemView, TextView dealTitle, TextView dealDescription, ImageView dealCoverUrl) {
-//        super(itemView);
-//        this.dealTitle = dealTitle;
-//        this.dealDescription = dealDescription;
-//        this.dealCoverUrl = dealCoverUrl;
-//    }
-
     public DealsViewHolder(View itemView, final List<DealObject> allDeals, final boolean canEdit) {
         super(itemView);
 

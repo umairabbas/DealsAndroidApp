@@ -17,7 +17,6 @@ import com.regionaldeals.de.fragment.OnlineDeals;
 import com.regionaldeals.de.fragment.NearBy;
 
 public class CustomFragmentPageAdapter extends FragmentPagerAdapter {
-    private static final String TAG = CustomFragmentPageAdapter.class.getSimpleName();
     private static final int FRAGMENT_COUNT = 5;
     private Context context;
 
@@ -37,8 +36,6 @@ public class CustomFragmentPageAdapter extends FragmentPagerAdapter {
                 return new OnlineDeals();
             case 3:
                 return new NearBy();
-//            case 4:
-//                return new DealsHeute();
             case 4:
                 return new Favourite();
         }
@@ -61,8 +58,6 @@ public class CustomFragmentPageAdapter extends FragmentPagerAdapter {
                 return context.getResources().getString(R.string.online_deals);
             case 3:
                 return context.getResources().getString(R.string.nearby);
-//            case 4:
-//                return "Deals Heute";
             case 4:
                 return context.getResources().getString(R.string.favouriten);
         }

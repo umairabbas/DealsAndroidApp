@@ -80,8 +80,6 @@ public class NearbyAdapter extends BaseAdapter implements ActivityCompat.OnReque
         if (mDataSource.size() > 0) {
             Shop recipe = (Shop) getItem(position);
 
-//        TextView Category =
-//                (TextView) rowView.findViewById(R.id.title);
             TextView Name =
                     (TextView) rowView.findViewById(R.id.titleShop);
             TextView Contact =
@@ -99,9 +97,6 @@ public class NearbyAdapter extends BaseAdapter implements ActivityCompat.OnReque
             Address.setText(recipe.getShopAddress());
             Contact.setText(recipe.getShopContact());
             desc.setText(recipe.getShopDetails());
-//        if(recipe.getShopCategories()!=null) {
-//            Category.setText(recipe.getShopCategories());
-//        }
             contact = recipe.getShopContact();
             final float lat = Float.parseFloat(recipe.getShopLocationLat());
             final float lng = Float.parseFloat(recipe.getShopLocationLong());

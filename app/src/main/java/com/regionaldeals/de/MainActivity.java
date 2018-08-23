@@ -51,11 +51,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import cz.msebera.android.httpclient.Header;
 
-import static com.regionaldeals.de.Constants.CAT_OBJECT_KEY;
-import static com.regionaldeals.de.Constants.LOCATION_KEY;
-import static com.regionaldeals.de.Constants.NOT_TOKEN_KEY;
-import static com.regionaldeals.de.Constants.SUB_OBJECT_KEY;
-import static com.regionaldeals.de.Constants.USER_OBJECT_KEY;
+import static com.regionaldeals.de.Constants.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
     private Boolean notIconOn = false;
     private MenuItem notMenuItem;
     private String email = "";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -344,7 +339,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.notification) {
             String text = "Keine neuen Benachrichtigungen";
             if (notIconOn) {
@@ -421,7 +415,7 @@ public class MainActivity extends AppCompatActivity {
                             if (msg.equals("PLANS_SUBSCRIPTIONS_OK")) {
                                 subscribed = true;
                                 JSONObject data = obj.getJSONObject("data");
-                                JSONObject plan = data.getJSONObject("plan");
+                                //JSONObject plan = data.getJSONObject("plan");
                                 SharedPreferenceUtils.getInstance(MainActivity.this).setValue(SUB_OBJECT_KEY, data.toString());
                             } else if (msg.equals("PLANS_SUBSCRIPTIONS_NILL")) {
                                 subscribed = false;
@@ -444,10 +438,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class RegCall extends AsyncTask<String, String, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
         protected String doInBackground(String... args) {
 
@@ -519,15 +509,7 @@ public class MainActivity extends AppCompatActivity {
                 conn.disconnect();
 
                 if (status == 200 && message.equals("DEVICE_DATA_UPDATE_OK")) {
-                    if (MainActivity.this != null) {
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                SharedPreferenceUtils.getInstance(MainActivity.this).setValue(NOT_TOKEN_KEY, token);
-                                Toast.makeText(MainActivity.this, "Notifications activated", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-                    }
+                    SharedPreferenceUtils.getInstance(MainActivity.this).setValue(NOT_TOKEN_KEY, token);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -535,7 +517,5 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
-        protected void onPostExecute(String file_url) {
-        }
     }
 }

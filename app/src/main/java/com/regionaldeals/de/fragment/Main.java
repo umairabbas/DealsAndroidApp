@@ -1,8 +1,6 @@
 package com.regionaldeals.de.fragment;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,12 +15,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.SharedPreferenceUtils;
 import com.regionaldeals.de.adapter.CustomFragmentPageAdapter;
 import com.regionaldeals.de.service.LocationStatic;
 
 import org.json.JSONObject;
 
-import static android.content.Context.MODE_PRIVATE;
+import static com.regionaldeals.de.Constants.LOCATION_KEY;
 
 /**
  * Created by Umi on 28.08.2017.
@@ -39,7 +38,6 @@ public class Main extends Fragment {
     Intent intent;
     public static double latitude = 0.0;
     public static double longitude = 0.0;
-    private Context context;
 
     public Main() {
     }
@@ -56,7 +54,6 @@ public class Main extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        context = getActivity();
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         viewPager = (ViewPager) view.findViewById(R.id.view_pager);
         cfpa = new CustomFragmentPageAdapter(getChildFragmentManager(), getContext());
@@ -67,7 +64,7 @@ public class Main extends Fragment {
         intent = new Intent();
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         intent.setAction("BroadcastReceiver");
-        intent.putExtra("Foo", "Bar");
+//        intent.putExtra("Foo", "Bar");
 
         return view;
     }
@@ -75,12 +72,11 @@ public class Main extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        latitude = LocationStatic.latitude; // latitude
-        longitude = LocationStatic.longitude; // latitude
+        latitude = LocationStatic.latitude;
+        longitude = LocationStatic.longitude;
 
         if (latitude == 0 || longitude == 0) {
-            SharedPreferences prefs = getActivity().getSharedPreferences(getActivity().getString(R.string.sharedPredName), MODE_PRIVATE);
-            String restoredText = prefs.getString("locationObject", null);
+            String restoredText = SharedPreferenceUtils.getInstance(getContext()).getStringValue(LOCATION_KEY, null);
             if (restoredText != null) {
                 try {
                     JSONObject obj = new JSONObject(restoredText);
