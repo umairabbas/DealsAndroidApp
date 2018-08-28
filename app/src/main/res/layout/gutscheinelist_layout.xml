@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="@dimen/card_height"
     android:layout_gravity="center"
-    android:layout_marginBottom="@dimen/md_keylines"
     android:layout_marginLeft="@dimen/md_keylines"
     android:layout_marginRight="@dimen/md_keylines"
+    android:layout_marginBottom="@dimen/md_keylines"
     android:foreground="?attr/selectableItemBackground">
 
     <RelativeLayout
@@ -24,90 +23,156 @@
             android:foreground="@drawable/gradient_shape"
             android:scaleType="fitXY" />
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="1"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/card_image_gut"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:layout_alignBottom="@+id/card_image_gut"
-            android:paddingBottom="10dp"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.9"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:paddingBottom="@dimen/margin_small">
 
             <TextView
                 android:id="@+id/deal_title"
                 style="@style/DealsHeaderText"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="deal_title" />
-
-
-            <LinearLayout
-                android:id="@+id/description_layout"
-                android:orientation="horizontal"
-                android:weightSum="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_weight="0.15"
-                    android:id="@+id/gut_price"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:text="5k"
-                    style="@style/DealsPriceText" />
-
-                <TextView
-                    android:layout_weight="0.78"
-                    android:id="@+id/deal_description"
-                    style="@style/DealsDescText"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:text="deal_description_is_very_long_then_what_will_be_overwritten" />
-
-            </LinearLayout>
-
-
-
-        </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/mitmachenlay"
-                android:orientation="vertical"
                 android:layout_width="0dp"
-                android:layout_weight="0.1"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:text="deal_title"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/action_button"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:layout_gravity="center"
-                    android:paddingBottom="0dp"
-                    android:id="@+id/action_button"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:tint="@color/colorLightWhite"
-                    android:src="@drawable/ic_redeem_black_24dp"
-                    />
+            <TextView
+                android:id="@+id/gut_price"
+                style="@style/DealsPriceText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="5000k"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/deal_title"/>
 
-                <TextView
-                    android:id="@+id/mit_text"
-                    style="@style/MitmachenText"
-                    android:layout_width="wrap_content"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mitmachen" />
+            <TextView
+                android:id="@+id/deal_description"
+                style="@style/DealsDescText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="deal_degsc"
+                android:paddingLeft="@dimen/margin_small"
+                app:layout_constraintLeft_toRightOf="@id/gut_price"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/deal_title"
+                app:layout_constraintRight_toLeftOf="@id/action_button"
+                />
 
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/imageView_mitmachen"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:paddingBottom="0dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_redeem_black_24dp"
+                android:tint="@color/colorLightWhite"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/mit_text"
+                style="@style/MitmachenText"
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/mitmachen"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageView_mitmachen"
+                />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="1"-->
+        <!--android:layout_marginLeft="@dimen/_10sdp"-->
+        <!--android:layout_marginRight="@dimen/_10sdp"-->
+        <!--android:layout_alignBottom="@+id/card_image_gut"-->
+        <!--android:paddingBottom="@dimen/margin_small"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_weight="0.9"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/deal_title"-->
+        <!--style="@style/DealsHeaderText"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:text="deal_title" />-->
+
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/description_layout"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<TextView-->
+        <!--android:layout_weight="0.15"-->
+        <!--android:id="@+id/gut_price"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:text="5k"-->
+        <!--style="@style/DealsPriceText" />-->
+
+        <!--<TextView-->
+        <!--android:layout_weight="0.78"-->
+        <!--android:id="@+id/deal_description"-->
+        <!--style="@style/DealsDescText"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:text="deal_description_is_very_long_then_what_will_be_overwritten" />-->
+
+        <!--</LinearLayout>-->
+
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/mitmachenlay"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_weight="0.1"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--<ImageView-->
+        <!--android:scaleType="fitCenter"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:paddingBottom="0dp"-->
+        <!--android:id="@+id/action_button"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:tint="@color/colorLightWhite"-->
+        <!--android:src="@drawable/ic_redeem_black_24dp"-->
+        <!--/>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/mit_text"-->
+        <!--style="@style/MitmachenText"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/mitmachen" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--</LinearLayout>-->
 
     </RelativeLayout>
 

@@ -29,8 +29,6 @@ import static com.regionaldeals.de.Constants.LOCATION_KEY;
 
 public class Main extends Fragment {
 
-    private static final String TAG = Main.class.getSimpleName();
-
     private TabLayout tabLayout;
     private ViewPager viewPager;
     CustomFragmentPageAdapter cfpa;

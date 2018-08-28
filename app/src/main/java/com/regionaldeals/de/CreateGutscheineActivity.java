@@ -306,7 +306,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
                     /**
                      * Updating parsed JSON data into ListView
                      * */
-                    mAdapter = new GutscheineAdapter(true, null);
+                    mAdapter = new GutscheineAdapter(true);
                     mAdapter.getAllDeals().addAll(deals);
                     songRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();

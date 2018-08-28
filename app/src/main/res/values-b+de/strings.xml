@@ -166,6 +166,7 @@
     <string name="city">Region</string>
     <string name="select_string">Wählen Sie eine Kategorie</string>
     <string name="cat">Kategorie</string>
+    <string name="error_dealsList">Angebot kann nicht geladen werden. Versuch es noch einmal</string>
 
 
 </resources>

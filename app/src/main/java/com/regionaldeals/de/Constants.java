@@ -9,5 +9,9 @@ public class Constants {
     public static String NOT_TOKEN_KEY = "notificationToken";
     public static String CAT_OBJECT_KEY = "categoriesObj";
 
+    public static String DEALS_OBJECT = "DEALS_OBJECT";
+
+
+
 
 }

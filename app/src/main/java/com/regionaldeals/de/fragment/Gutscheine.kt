@@ -14,34 +14,28 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.regionaldeals.de.Constants.LOCATION_KEY
-import com.regionaldeals.de.Constants.USER_OBJECT_KEY
-import com.regionaldeals.de.LoginActivity
-import com.regionaldeals.de.MainActivity
-import com.regionaldeals.de.R
-import com.regionaldeals.de.Utils.SharedPreferenceUtils
+import com.regionaldeals.de.*
+import com.regionaldeals.de.Utils.PrefsHelper
 import com.regionaldeals.de.adapter.GutscheineAdapter
 import com.regionaldeals.de.entities.GutscheineObject
-import org.json.JSONException
-import org.json.JSONObject
+import kotlinx.android.synthetic.main.fragment_gutscheine.*
 
 /**
  * Created by Umi on 28.08.2017.
  */
 
-class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener, GutscheineAdapter.ItemClickListener {
 
-    private val URL_Deals = "/mobile/api/gutschein/list"
+    private val mUrlDeals = "/mobile/api/gutschein/list"
+    private val mMitMachenUrl = "/mobile/api/gutschein/gutscheinclick"
     private var gutRecyclerView: RecyclerView? = null
     private lateinit var mAdapter: GutscheineAdapter
-    private var locationLat: Double? = 50.781203
-    private var locationLng: Double? = 6.078068
     private var maxDistance = 50
-    private var userId = ""
     private var swipeRefreshLayout: SwipeRefreshLayout? = null
     private var myReceiver: MyReceiver? = null
     private var filter: IntentFilter? = null
     private var model: DealsViewModel? = null
+    private lateinit var prefHelper: PrefsHelper
 
     inner class MyReceiver : BroadcastReceiver() {
 
@@ -59,7 +53,6 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             mAdapter.allDeals.addAll(gutscheinResults!!.results)
             activity?.runOnUiThread {
                 mAdapter.notifyDataSetChanged()
-                swipeRefreshLayout?.isRefreshing = false
             }
         })
     }
@@ -77,43 +70,20 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        gutRecyclerView = view.findViewById<View>(R.id.song_list) as RecyclerView
+        prefHelper = PrefsHelper.getInstance(context!!)
+
+        this.gutRecyclerView = view.findViewById<View>(R.id.rV_gutschein) as RecyclerView
         val linearLayoutManager = LinearLayoutManager(activity)
         gutRecyclerView?.layoutManager = linearLayoutManager
         gutRecyclerView?.setHasFixedSize(true)
 
-        locationLat = Main.latitude
-        locationLng = Main.longitude
-
-        val restoredText = SharedPreferenceUtils.getInstance(activity).getStringValue(LOCATION_KEY, null)
-        val restoredUser = SharedPreferenceUtils.getInstance(activity).getStringValue(USER_OBJECT_KEY, null)
-
-        try {
-            if (locationLat == 0.0 || locationLng == 0.0) {
-                if (restoredText != null) {
-                    val obj = JSONObject(restoredText)
-                    val Lat = obj.getString("lat")
-                    val Lng = obj.getString("lng")
-                    if (!Lat.isEmpty() && !Lng.isEmpty()) {
-                        locationLat = java.lang.Double.parseDouble(Lat)
-                        locationLng = java.lang.Double.parseDouble(Lng)
-                    }
-                }
-            }
-            if (restoredUser != null) {
-                val obj = JSONObject(restoredUser)
-                userId = obj.getString("userId")
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        } catch (t: Throwable) {
-        }
-
         swipeRefreshLayout = view.findViewById<View>(R.id.swipe_refresh_layout) as SwipeRefreshLayout
         swipeRefreshLayout?.setOnRefreshListener(this)
 
-        mAdapter = GutscheineAdapter(false) { mitmachenClick(it) }
+        mAdapter = GutscheineAdapter(false)
         gutRecyclerView?.adapter = mAdapter
+
+        mAdapter.setClickListener(this)
 
         swipeRefreshLayout?.post { loadDeals() }
 
@@ -123,28 +93,15 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_gutscheine, container, false)
-        activity?.title = resources.getString(R.string.headerText)
-        return view
+        return inflater.inflate(R.layout.fragment_gutscheine, container, false)
     }
-
 
     override fun onResume() {
         super.onResume()
         context?.registerReceiver(myReceiver, filter)
         //TODO: make seperate shouldrefresh bool for gut and deals etc
         if ((activity as MainActivity).shouldRefresh) {
-            val restoredUser = SharedPreferenceUtils.getInstance(activity).getStringValue(USER_OBJECT_KEY, null)
-            try {
-                if (restoredUser != null) {
-                    val obj = JSONObject(restoredUser)
-                    userId = obj.getString("userId")
-                }
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            } catch (t: Throwable) {
-            }
-
+            prefHelper.syncUserId(context!!)
             onRefresh()
             (this.activity as MainActivity).shouldRefresh = false
         }
@@ -154,30 +111,55 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         loadDeals()
     }
 
+    override fun onItemClick(obj: GutscheineObject) {
+        onDealClick(obj)
+    }
+
+    override fun onItemMitmachenClick(obj: GutscheineObject) {
+        mitmachenClick(obj)
+    }
+
     private fun loadDeals() {
 
         swipeRefreshLayout?.isRefreshing = true
 
         val requestParams = arrayListOf<Pair<String, Any?>>()
-        requestParams.add(Pair("userid", userId))
-        requestParams.add(Pair("lat", locationLat))
-        requestParams.add(Pair("long", locationLng))
+        requestParams.add(Pair("userid", prefHelper.userId))
+        requestParams.add(Pair("lat", prefHelper.locationLat))
+        requestParams.add(Pair("long", prefHelper.locationLng))
         requestParams.add(Pair("radius", maxDistance * 1000))
 
-        model?.loadGutschein(URL_Deals, requestParams)
+        model?.loadGutschein(mUrlDeals, requestParams) {
+            activity?.runOnUiThread {
+                swipeRefreshLayout?.isRefreshing = false
+                if (it) {
+                    rV_gutschein.visibility = View.VISIBLE
+                    tvStatus.visibility = View.GONE
+                } else {
+                    rV_gutschein.visibility = View.GONE
+                    tvStatus.visibility = View.VISIBLE
+                    tvStatus.text = getString(R.string.error_dealsList)
+                }
+            }
+        }
 
     }
 
-    private fun mitmachenClick(deals: GutscheineObject) {
-        var suburl = "/mobile/api/gutschein/gutscheinclick"
-        val gutId = deals.gutscheinId
+    private fun onDealClick(deal: GutscheineObject) {
+        val intent = Intent(activity, DealsDetailActivity::class.java)
+        intent.putExtra(Constants.DEALS_OBJECT, deal)
+        intent.putExtra("deleteEnable", false)
+        intent.putExtra("isGutschein", true)
+        activity?.startActivity(intent)
+    }
 
-        if (userId.isNotEmpty()) {
-            val formData = listOf("userid" to userId, "gutscheinid" to gutId)
-            model?.mitmachenGutschein(suburl, formData) {
+    private fun mitmachenClick(deal: GutscheineObject) {
+        if (prefHelper.userId.isNotEmpty()) {
+            val formData = listOf("userid" to prefHelper.userId, "gutscheinid" to deal.gutscheinId)
+            model?.mitmachenGutschein(mMitMachenUrl, formData) {
                 if (it) {
                     for (curr: GutscheineObject in mAdapter.allDeals) {
-                        if (curr.gutscheinId == gutId) {
+                        if (curr.gutscheinId == deal.gutscheinId) {
                             curr.isGutscheinAvailed = true
                         }
                     }

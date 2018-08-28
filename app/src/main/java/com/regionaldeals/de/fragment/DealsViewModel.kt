@@ -14,14 +14,19 @@ class DealsViewModel : ViewModel() {
     init {
     }
 
-    fun loadGutschein(url: String, params: ArrayList<Pair<String, Any?>>) {
+    fun loadGutschein(url: String, params: ArrayList<Pair<String, Any?>>, responseHandler: (status: Boolean) -> Unit?) {
         dealsDataProvider.getGutschein(url, params) { gutResult ->
-            gutscheinLiveDataList.value?.results?.clear()
-            gutscheinLiveDataList.postValue(gutResult)
+            if (gutResult != null) {
+                gutscheinLiveDataList.value?.results?.clear()
+                gutscheinLiveDataList.postValue(gutResult)
+                responseHandler.invoke(true)
+            } else {
+                responseHandler.invoke(false)
+            }
         }
     }
 
-    fun mitmachenGutschein(url: String, params: List<Pair<String, Any>>, responseHandler:(res: Boolean) -> Unit? ) {
+    fun mitmachenGutschein(url: String, params: List<Pair<String, Any>>, responseHandler: (res: Boolean) -> Unit?) {
         dealsDataProvider.setMitmachenGutschein(url, params) { gutResult ->
             responseHandler.invoke(gutResult)
         }

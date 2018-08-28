@@ -126,6 +126,10 @@
             android:name=".DealsDetail"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".DealsDetailActivity"
+            android:screenOrientation="portrait">
+        </activity>
         <!-- [START firebase_service] -->
         <service
             android:name=".service.MyFirebaseMessagingService">

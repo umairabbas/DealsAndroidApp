@@ -76,7 +76,7 @@ public class Deals extends Fragment implements
         final View view = inflater.inflate(R.layout.fragment_gutscheine, container, false);
         context = getContext();
         getActivity().setTitle(getResources().getString(R.string.headerText));
-        songRecyclerView = (RecyclerView) view.findViewById(R.id.song_list);
+        songRecyclerView = (RecyclerView) view.findViewById(R.id.rV_gutschein);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         songRecyclerView.setLayoutManager(linearLayoutManager);
         songRecyclerView.setHasFixedSize(true);
