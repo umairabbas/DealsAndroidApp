@@ -19,8 +19,8 @@ class DealsDataProvider {
         mainUrl.httpGet(params).header(Pair("Content-Type", "application/json"))
                 .responseObject(DealsDataDeserializer()) { _, response, result ->
 
-                    if (response.httpStatusCode != 200) {
-                        if (response.httpStatusCode == 204) {
+                    if (response.statusCode != 200) {
+                        if (response.statusCode == 204) {
                             //Return Empty
                             responseHandler.invoke(DealResults())
                         } else {
@@ -43,8 +43,8 @@ class DealsDataProvider {
         mainUrl.httpGet(params).header(Pair("Content-Type", "application/json"))
                 .responseObject(GutDataDeserializer()) { _, response, result ->
 
-                    if (response.httpStatusCode != 200) {
-                        if (response.httpStatusCode == 204) {
+                    if (response.statusCode != 200) {
+                        if (response.statusCode == 204) {
                             //Return Empty
                             responseHandler.invoke(GutscheinResults())
                         } else {
@@ -65,9 +65,9 @@ class DealsDataProvider {
     fun setMitmachenGutschein(subUrl: String, formData: List<Pair<String, Any>>, responseHandler: (res: Boolean) -> Unit?) {
         val mainUrl = baseUrl + subUrl
         mainUrl.httpUpload(parameters = formData)
-                .dataParts { _, url -> listOf() }
-                .responseString { _, response, result ->
-                    if (response.httpStatusCode != 200) {
+                .dataParts { _, _ -> listOf() }
+                .responseString { _, response, _ ->
+                    if (response.statusCode != 200) {
                         responseHandler.invoke(false)
                     } else {
                         responseHandler.invoke(true)

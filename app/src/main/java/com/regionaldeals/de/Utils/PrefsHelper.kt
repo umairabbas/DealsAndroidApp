@@ -32,14 +32,14 @@ class PrefsHelper private constructor(context: Context) {
 
         val restoredUser = SharedPreferenceUtils.getInstance(context).getStringValue(Constants.USER_OBJECT_KEY, null)
 
-        getUserIdfromPrefs(restoredUser)
+        restoredUser?.let { getUserIdfromPrefs(restoredUser) }
 
         locationLat = LocationStatic.latitude
         locationLng = LocationStatic.longitude
 
         if (locationLat == 0.0 || locationLng == 0.0) {
             val restoredText = SharedPreferenceUtils.getInstance(context).getStringValue(Constants.LOCATION_KEY, null)
-            getCordinatesfromPrefs(restoredText)
+            restoredText?.let { getCordinatesfromPrefs(restoredText) }
         }
     }
 
