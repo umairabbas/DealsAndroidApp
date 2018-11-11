@@ -23,7 +23,7 @@ class GutscheineAdapter(private val isEdit: Boolean) : RecyclerView.Adapter<Guts
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GutscheineViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.gutscheinelist_layout, parent, false)
         context = view.context
-        return GutscheineViewHolder(view, allDeals, isEdit)
+        return GutscheineViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: GutscheineViewHolder, position: Int) {

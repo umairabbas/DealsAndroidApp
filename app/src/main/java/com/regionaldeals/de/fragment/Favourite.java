@@ -18,7 +18,7 @@ import com.regionaldeals.de.MainActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.Utils.SharedPreferenceUtils;
-import com.regionaldeals.de.adapter.DealsAdapter;
+import com.regionaldeals.de.adapter.DealsAdapterold;
 import com.regionaldeals.de.entities.DealObject;
 
 import org.apache.http.NameValuePair;
@@ -49,7 +49,7 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
     private RecyclerView songRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String userId = "";
-    private DealsAdapter mAdapter;
+    private DealsAdapterold mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -179,7 +179,7 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    mAdapter = new DealsAdapter(getActivity(), deals, true, false);
+                    mAdapter = new DealsAdapterold(getActivity(), deals, true, false);
                     songRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                 }

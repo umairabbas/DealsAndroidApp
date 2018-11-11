@@ -11,7 +11,7 @@ import com.regionaldeals.de.R
 import com.regionaldeals.de.entities.GutscheineObject
 
 
-class GutscheineViewHolder(itemView: View, allDeals: List<GutscheineObject>, canEdit: Boolean) : RecyclerView.ViewHolder(itemView) {
+class GutscheineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var dealTitle: TextView
     var dealDescription: TextView

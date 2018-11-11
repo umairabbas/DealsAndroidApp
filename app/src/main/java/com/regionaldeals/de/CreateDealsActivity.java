@@ -28,7 +28,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.regionaldeals.de.Utils.JSONParser;
-import com.regionaldeals.de.adapter.DealsAdapter;
+import com.regionaldeals.de.adapter.DealsAdapterold;
 import com.regionaldeals.de.entities.DealObject;
 
 import org.apache.http.NameValuePair;
@@ -58,7 +58,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
     private final String URL_Deals = "/mobile/api/deals/list-owner";
     private JSONArray dealArr = null;
     JSONParser jsonParser = new JSONParser();
-    private DealsAdapter mAdapter;
+    private DealsAdapterold mAdapter;
     public static final int ADD_DEALS_REQUEST_CODE = 115;
     private TextView dealCount;
     private FloatingActionButton fab;
@@ -302,7 +302,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                     /**
                      * Updating parsed JSON data into ListView
                      * */
-                    mAdapter = new DealsAdapter(activity, deals, false, true);
+                    mAdapter = new DealsAdapterold(activity, deals, false, true);
                     songRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                 }

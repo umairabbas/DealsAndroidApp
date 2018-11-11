@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.regionaldeals.de.Utils.JSONParser;
-import com.regionaldeals.de.adapter.DealsAdapter;
+import com.regionaldeals.de.adapter.DealsAdapterold;
 import com.regionaldeals.de.entities.DealObject;
 
 import org.apache.http.NameValuePair;
@@ -41,7 +41,7 @@ public class NotificationDealsActivity extends AppCompatActivity {
     private final String URL_Deals = "/mobile/api/deals/plist";
     private JSONArray dealArr = null;
     JSONParser jsonParser = new JSONParser();
-    private DealsAdapter mAdapter;
+    private DealsAdapterold mAdapter;
     private String ids = "";
 
     @Override
@@ -126,7 +126,7 @@ public class NotificationDealsActivity extends AppCompatActivity {
                 return;
             activity.runOnUiThread(new Runnable() {
                 public void run() {
-                    mAdapter = new DealsAdapter(activity, deals, false, false);
+                    mAdapter = new DealsAdapterold(activity, deals, false, false);
                     songRecyclerView.setAdapter(mAdapter);
                     mAdapter.notifyDataSetChanged();
                 }

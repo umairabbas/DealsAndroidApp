@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:text="deal_title"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/action_button"
+                app:layout_constraintRight_toLeftOf="@id/imageView_mitmachen"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -60,7 +60,7 @@
                 app:layout_constraintLeft_toRightOf="@id/gut_price"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/deal_title"
-                app:layout_constraintRight_toLeftOf="@id/action_button"
+                app:layout_constraintRight_toLeftOf="@id/imageView_mitmachen"
                 />
 
             <ImageView

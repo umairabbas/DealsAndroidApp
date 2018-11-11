@@ -5,6 +5,8 @@ import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpUpload
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.regionaldeals.de.entities.DealObject
+import com.regionaldeals.de.entities.DealResults
 import com.regionaldeals.de.entities.GutscheinResults
 import com.regionaldeals.de.entities.GutscheineObject
 
@@ -12,9 +14,33 @@ class DealsDataProvider {
 
     private val baseUrl: String = "https://www.regionaldeals.de"
 
+    fun getDeals(subUrl: String, params: List<Pair<String, Any?>>, responseHandler: (result: DealResults?) -> Unit?) {
+        val mainUrl = baseUrl + subUrl
+        mainUrl.httpGet(params).header(Pair("Content-Type", "application/json"))
+                .responseObject(DealsDataDeserializer()) { _, response, result ->
+
+                    if (response.httpStatusCode != 200) {
+                        if (response.httpStatusCode == 204) {
+                            //Return Empty
+                            responseHandler.invoke(DealResults())
+                        } else {
+                            //Server issue
+                            responseHandler.invoke(null)
+                        }
+                    }
+
+                    val (data, _) = result
+                    if (data != null) {
+                        val deals = DealResults()
+                        deals.results.addAll(data)
+                        responseHandler.invoke(deals)
+                    }
+                }
+    }
+
     fun getGutschein(subUrl: String, params: List<Pair<String, Any?>>, responseHandler: (result: GutscheinResults?) -> Unit?) {
         val mainUrl = baseUrl + subUrl
-        mainUrl.httpGet(params).header(Pair("cache-control","no-store"),Pair("Content-Type", "application/json"))
+        mainUrl.httpGet(params).header(Pair("Content-Type", "application/json"))
                 .responseObject(GutDataDeserializer()) { _, response, result ->
 
                     if (response.httpStatusCode != 200) {
@@ -48,6 +74,10 @@ class DealsDataProvider {
                     }
                 }
 
+    }
+
+    class DealsDataDeserializer : ResponseDeserializable<List<DealObject>> {
+        override fun deserialize(content: String): List<DealObject> = Gson().fromJson(content, object : TypeToken<List<DealObject>>() {}.type)
     }
 
     class GutDataDeserializer : ResponseDeserializable<List<GutscheineObject>> {
