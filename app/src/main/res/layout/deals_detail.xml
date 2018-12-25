@@ -44,7 +44,7 @@
                 android:id="@+id/deal_detail_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
+                app:layout_collapseMode="parallax"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -174,7 +174,7 @@
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_marginBottom="20dp"
-                android:layout_height="match_parent" />
+                android:layout_height="300dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

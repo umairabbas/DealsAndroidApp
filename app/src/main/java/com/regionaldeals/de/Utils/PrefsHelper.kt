@@ -45,12 +45,11 @@ class PrefsHelper private constructor(context: Context) {
 
     fun syncUserId(context:Context){
         val restoredUser = SharedPreferenceUtils.getInstance(context).getStringValue(Constants.USER_OBJECT_KEY, null)
-        getUserIdfromPrefs(restoredUser)
+        restoredUser?.let { getUserIdfromPrefs(restoredUser) }
     }
 
     private fun getCordinatesfromPrefs(restoredJson: String) {
         try {
-            if (restoredJson != null) {
                 val obj = JSONObject(restoredJson)
                 if (!obj.isNull("lat") && !obj.isNull("lng")) {
                     val mLat = obj.getString("lat")
@@ -60,7 +59,7 @@ class PrefsHelper private constructor(context: Context) {
                         locationLng = java.lang.Double.parseDouble(mLng)
                     }
                 }
-            }
+
         } catch (e: JSONException) {
             e.printStackTrace()
         } catch (t: Throwable) {

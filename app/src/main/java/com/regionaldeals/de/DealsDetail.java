@@ -35,7 +35,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.regionaldeals.de.entities.DealObject;
 import com.regionaldeals.de.entities.GutscheineObject;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -285,9 +284,9 @@ public class DealsDetail extends AppCompatActivity implements
 
     @Override
     public void onSliderClick(BaseSliderView slider) {
-        new ImageViewer.Builder(context, images)
-                .setStartPosition(0)
-                .show();
+//        new ImageViewer.Builder(context, images)
+//                .setStartPosition(0)
+//                .show();
     }
 
     /**
