@@ -1,5 +1,16 @@
 <resources>
 
+    <!-- Subscribe  theme. -->
+    <style name="AppTheme.Subscribe" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
+
         <!-- Base application theme. -->
         <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
             <!-- Customize your theme here. -->
@@ -118,6 +129,20 @@
         <item name="android:fontFamily">@font/digitalt2</item>
     </style>
 
+    <style name="SubHeaderText">
+        <item name="android:textSize">@dimen/_20sdp</item>
+        <item name="android:shadowColor">@color/colorPrimaryDark</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:shadowDx">0.0</item>
+        <item name="android:shadowDy">0.0</item>
+        <item name="android:shadowRadius">1.2</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:fontFamily">@font/digitalt2</item>
+    </style>
+
     <style name="DealsToolbarHeaderText">
         <item name="android:textSize">@dimen/_32sdp</item>
         <item name="android:shadowColor">@color/colorPrimaryDark</item>
@@ -139,6 +164,19 @@
         <item name="android:shadowDy">0.0</item>
         <item name="android:shadowRadius">1.2</item>
         <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="SubDescText">
+        <item name="android:textSize">@dimen/_12sdp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:shadowColor">@color/colorPrimaryDark</item>
+        <item name="android:shadowDx">0.0</item>
+        <item name="android:shadowDy">0.0</item>
+        <item name="android:shadowRadius">1.2</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="MitmachenText">

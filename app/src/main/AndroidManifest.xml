@@ -77,6 +77,12 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
+            android:name=".SubscribeNewActivity"
+            android:label="@string/subscribe"
+            android:theme="@style/AppTheme.Subscribe"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:allowBackup="true"
             android:name=".AboutActivity"
             android:label="@string/about_us"
             android:theme="@style/AppTheme"

@@ -10,8 +10,7 @@ public class Constants {
     public static String CAT_OBJECT_KEY = "categoriesObj";
 
     public static String DEALS_OBJECT = "DEALS_OBJECT";
-
-
+    public static String SELECTED_PLAN = "SELECTED_PLAN";
 
 
 }

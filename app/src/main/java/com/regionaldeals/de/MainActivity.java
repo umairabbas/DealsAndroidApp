@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                             .setText("http://play.google.com/store/apps/details?id=" + getPackageName())
                             .startChooser();
                 } else if (id == R.id.abo_buchen) {
-                    Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
+                    Intent intent = new Intent(MainActivity.this, SubscribeNewActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.meine_anzeigen) {
                     if (userId == 0) {

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/subscribe_nav"
+    app:startDestination="@id/abo_buchen">
+
+    <fragment
+        android:id="@+id/abo_buchen"
+        android:label="ABO Buchen"
+        android:name="com.regionaldeals.de.fragment.ABOBuchen"
+        tools:layout="@layout/abo_buchen">
+        <action
+            android:id="@+id/action_abo_buchen_to_abo_buchen_user"
+            app:destination="@id/abo_buchen_user"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/abo_buchen_user"
+        android:label="User Update"
+        android:name="com.regionaldeals.de.fragment.ABOBuchenUser"
+        tools:layout="@layout/abo_buchen_user">
+    </fragment>
+
+</navigation>
