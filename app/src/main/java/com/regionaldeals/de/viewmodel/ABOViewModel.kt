@@ -3,6 +3,7 @@ package com.regionaldeals.de.viewmodel
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.regionaldeals.de.entities.PlansResults
+import com.regionaldeals.de.entities.UserObject
 
 class ABOViewModel : ViewModel() {
 
@@ -19,6 +20,16 @@ class ABOViewModel : ViewModel() {
             if (result != null) {
                 plansRes.value?.results?.clear()
                 plansRes.postValue(result)
+                responseHandler.invoke(true)
+            } else {
+                responseHandler.invoke(false)
+            }
+        }
+    }
+
+    fun updateUserData(url: String, params:  String, responseHandler: (status: Boolean) -> Unit?) {
+        subDataProvider.updateUser(url, params) { result ->
+            if (result != null) {
                 responseHandler.invoke(true)
             } else {
                 responseHandler.invoke(false)

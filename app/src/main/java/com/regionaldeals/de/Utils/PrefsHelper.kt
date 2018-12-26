@@ -13,6 +13,7 @@ class PrefsHelper private constructor(context: Context) {
     var locationLat: Double = 50.781203
     var locationLng: Double = 6.078068
     var userId: String = ""
+    var email: String = ""
 
     companion object {
 
@@ -73,6 +74,7 @@ class PrefsHelper private constructor(context: Context) {
             if (restoredJson != null) {
                 val obj = JSONObject(restoredJson)
                 userId = obj.getString("userId")
+                email = obj.getString("email")
             }
         } catch (e: JSONException) {
             e.printStackTrace()
