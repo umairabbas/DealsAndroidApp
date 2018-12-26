@@ -22,6 +22,7 @@ import com.regionaldeals.de.Utils.PrefsHelper
 import com.regionaldeals.de.adapter.DealsAdapter
 import com.regionaldeals.de.entities.DealObject
 import kotlinx.android.synthetic.main.fragment_gutscheine.*
+import org.jetbrains.anko.doAsync
 
 /**
  * Created by Umi on 28.08.2017.
@@ -128,24 +129,27 @@ class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.Ite
 
         swipeRefreshLayout?.isRefreshing = true
 
-        val requestParams = arrayListOf<Pair<String, Any?>>()
-        requestParams.add(Pair("userid", prefHelper.userId))
-        requestParams.add(Pair("lat", prefHelper.locationLat))
-        requestParams.add(Pair("long", prefHelper.locationLng))
-        requestParams.add(Pair("dealtype", "TYPE_DEALS"))
-        requestParams.add(Pair("userid", prefHelper.userId))
-        requestParams.add(Pair("radius", maxDistance * 1000))
+        doAsync {
 
-        model?.loadDeals(mUrlDeals, requestParams) {
-            activity?.runOnUiThread {
-                swipeRefreshLayout?.isRefreshing = false
-                if (it) {
-                    rV_gutschein.visibility = View.VISIBLE
-                    tvStatus.visibility = View.GONE
-                } else {
-                    rV_gutschein.visibility = View.GONE
-                    tvStatus.visibility = View.VISIBLE
-                    tvStatus.text = getString(R.string.error_dealsList)
+            val requestParams = arrayListOf<Pair<String, Any?>>()
+            requestParams.add(Pair("userid", prefHelper.userId))
+            requestParams.add(Pair("lat", prefHelper.locationLat))
+            requestParams.add(Pair("long", prefHelper.locationLng))
+            requestParams.add(Pair("dealtype", "TYPE_DEALS"))
+            requestParams.add(Pair("userid", prefHelper.userId))
+            requestParams.add(Pair("radius", maxDistance * 1000))
+
+            model?.loadDeals(mUrlDeals, requestParams) {
+                activity?.runOnUiThread {
+                    swipeRefreshLayout?.isRefreshing = false
+                    if (it) {
+                        rV_gutschein.visibility = View.VISIBLE
+                        tvStatus.visibility = View.GONE
+                    } else {
+                        rV_gutschein.visibility = View.GONE
+                        tvStatus.visibility = View.VISIBLE
+                        tvStatus.text = getString(R.string.error_dealsList)
+                    }
                 }
             }
         }

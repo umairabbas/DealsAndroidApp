@@ -19,6 +19,7 @@ import com.regionaldeals.de.Utils.PrefsHelper
 import com.regionaldeals.de.adapter.GutscheineAdapter
 import com.regionaldeals.de.entities.GutscheineObject
 import kotlinx.android.synthetic.main.fragment_gutscheine.*
+import org.jetbrains.anko.doAsync
 
 /**
  * Created by Umi on 28.08.2017.
@@ -123,22 +124,25 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener, GutscheineA
 
         swipeRefreshLayout?.isRefreshing = true
 
-        val requestParams = arrayListOf<Pair<String, Any?>>()
-        requestParams.add(Pair("userid", prefHelper.userId))
-        requestParams.add(Pair("lat", prefHelper.locationLat))
-        requestParams.add(Pair("long", prefHelper.locationLng))
-        requestParams.add(Pair("radius", maxDistance * 1000))
+        doAsync {
 
-        model?.loadGutschein(mUrlDeals, requestParams) {
-            activity?.runOnUiThread {
-                swipeRefreshLayout?.isRefreshing = false
-                if (it) {
-                    rV_gutschein.visibility = View.VISIBLE
-                    tvStatus.visibility = View.GONE
-                } else {
-                    rV_gutschein.visibility = View.GONE
-                    tvStatus.visibility = View.VISIBLE
-                    tvStatus.text = getString(R.string.error_dealsList)
+            val requestParams = arrayListOf<Pair<String, Any?>>()
+            requestParams.add(Pair("userid", prefHelper.userId))
+            requestParams.add(Pair("lat", prefHelper.locationLat))
+            requestParams.add(Pair("long", prefHelper.locationLng))
+            requestParams.add(Pair("radius", maxDistance * 1000))
+
+            model?.loadGutschein(mUrlDeals, requestParams) {
+                activity?.runOnUiThread {
+                    swipeRefreshLayout?.isRefreshing = false
+                    if (it) {
+                        rV_gutschein.visibility = View.VISIBLE
+                        tvStatus.visibility = View.GONE
+                    } else {
+                        rV_gutschein.visibility = View.GONE
+                        tvStatus.visibility = View.VISIBLE
+                        tvStatus.text = getString(R.string.error_dealsList)
+                    }
                 }
             }
         }
@@ -155,19 +159,21 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener, GutscheineA
 
     private fun mitmachenClick(deal: GutscheineObject) {
         if (prefHelper.userId.isNotEmpty()) {
-            val formData = listOf("userid" to prefHelper.userId, "gutscheinid" to deal.gutscheinId)
-            model?.mitmachenGutschein(mMitMachenUrl, formData) {
-                if (it) {
-                    for (curr: GutscheineObject in mAdapter.allDeals) {
-                        if (curr.gutscheinId == deal.gutscheinId) {
-                            curr.isGutscheinAvailed = true
+            doAsync {
+                val formData = listOf("userid" to prefHelper.userId, "gutscheinid" to deal.gutscheinId)
+                model?.mitmachenGutschein(mMitMachenUrl, formData) {
+                    if (it) {
+                        for (curr: GutscheineObject in mAdapter.allDeals) {
+                            if (curr.gutscheinId == deal.gutscheinId) {
+                                curr.isGutscheinAvailed = true
+                            }
                         }
-                    }
-                    activity?.runOnUiThread {
-                        mAdapter.notifyDataSetChanged()
-                    }
-                } else {
+                        activity?.runOnUiThread {
+                            mAdapter.notifyDataSetChanged()
+                        }
+                    } else {
 
+                    }
                 }
             }
         } else {
