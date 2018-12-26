@@ -13,6 +13,8 @@ import com.regionaldeals.de.R
 import com.regionaldeals.de.Utils.PrefsHelper
 import com.regionaldeals.de.viewmodel.ABOViewModel
 import kotlinx.android.synthetic.main.abo_buchen_user.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class ABOBuchenUser : Fragment() {
 
@@ -36,7 +38,7 @@ class ABOBuchenUser : Fragment() {
     private fun getSelectedPlan() = arguments?.getString(Constants.SELECTED_PLAN) ?: ""
 
     private fun validateForm(): Boolean {
-        var value: Boolean = true
+        var value = true
 
         if (txtFirst.text.toString().isEmpty()) {
             value = false
@@ -100,8 +102,8 @@ class ABOBuchenUser : Fragment() {
 
     }
 
-    private fun setEmail(){
-        txtEmail.setText(prefHelper.email, TextView.BufferType.EDITABLE);
+    private fun setEmail() {
+        txtEmail.setText(prefHelper.email, TextView.BufferType.EDITABLE)
         txtEmail.isEnabled = false
     }
 
@@ -112,49 +114,51 @@ class ABOBuchenUser : Fragment() {
 
         btnUserSubmit.setOnClickListener {
 
-            resetValidations()
-
             progressBarProcessing.isIndeterminate = true
 
-            if (validateForm()) {
+                resetValidations()
 
-                val bodyJson = """
-              { "userId" : """ + prefHelper.userId.toInt() + """,
-                "firstName" : """" + txtFirst.text.toString() + """",
-                "lastName" : """" + txtLast.text.toString() + """",
-                "email" : """" + txtEmail.text.toString() + """",
-                "phone" : """" + txtPhone.text.toString() + """",
-                "mobile" : """" + txtMobile.text.toString() + """",
-                "address" : """" + txtStreetAddress.text.toString() + """",
-                "postCode" : """" + txtPostal.text.toString() + """",
-                "city" : """" + txtCity.text.toString() + """",
-                "country" : """" + txtCountry.text.toString() + """",
-                "billingAddress" : """" + txtStreetAddress.text.toString() + """",
-                "billingPostCode" : """" + txtPostal.text.toString() + """",
-                "billingCity" : """" + txtCity.text.toString() + """",
-                "billingCountry" : """" + txtCountry.text.toString() + """",
-                "shopKeeper" : true
-              }
-            """
+                if (validateForm()) {
 
-                model?.updateUserData(url, bodyJson) {
-                    progressBarProcessing.isIndeterminate = false
-                    if (!it) {
-                        context?.let {
-                            Toast.makeText(it, "User Data Update problem, please try later", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        context?.let {
-                            Toast.makeText(it, "User Data Update Success", Toast.LENGTH_SHORT).show()
+                    doAsync {
+
+                        val bodyJson = """
+                      { "userId" : """ + prefHelper.userId.toInt() + """,
+                        "firstName" : """" + txtFirst.text.toString() + """",
+                        "lastName" : """" + txtLast.text.toString() + """",
+                        "email" : """" + txtEmail.text.toString() + """",
+                        "phone" : """" + txtPhone.text.toString() + """",
+                        "mobile" : """" + txtMobile.text.toString() + """",
+                        "address" : """" + txtStreetAddress.text.toString() + """",
+                        "postCode" : """" + txtPostal.text.toString() + """",
+                        "city" : """" + txtCity.text.toString() + """",
+                        "country" : """" + txtCountry.text.toString() + """",
+                        "billingAddress" : """" + txtStreetAddress.text.toString() + """",
+                        "billingPostCode" : """" + txtPostal.text.toString() + """",
+                        "billingCity" : """" + txtCity.text.toString() + """",
+                        "billingCountry" : """" + txtCountry.text.toString() + """",
+                        "shopKeeper" : true
+                      }
+                    """
+
+                        model?.updateUserData(url, bodyJson) { response ->
+                            uiThread { progressBarProcessing.isIndeterminate = false }
+                            if (!response) {
+                                context?.let {
+                                    Toast.makeText(it, "User Data Update problem, please try later", Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                context?.let {
+                                    Toast.makeText(it, "User Data Update Success", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }
                     }
+                } else {
+                    progressBarProcessing.isIndeterminate = false
                 }
-            } else {
-                progressBarProcessing.isIndeterminate = false
-            }
+
         }
-
+        
     }
-
-
 }
