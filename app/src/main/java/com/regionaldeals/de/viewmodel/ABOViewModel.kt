@@ -2,6 +2,7 @@ package com.regionaldeals.de.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.github.kittinunf.fuel.core.Response
 import com.regionaldeals.de.entities.PlansResults
 import com.regionaldeals.de.entities.UserObject
 
@@ -34,6 +35,20 @@ class ABOViewModel : ViewModel() {
             } else {
                 responseHandler.invoke(false)
             }
+        }
+    }
+
+
+
+    fun updateSubscription(url: String, responseHandler: (status: Response) -> Unit?) {
+        subDataProvider.updateSubscription(url) { result ->
+            responseHandler.invoke(result)
+        }
+    }
+
+    fun buyPlan(url: String, params: List<Pair<String, Any?>>, responseHandler: (status: Response) -> Unit?) {
+        subDataProvider.buyPlan(url, params) { result ->
+            responseHandler.invoke(result)
         }
     }
 }

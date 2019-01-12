@@ -4,6 +4,8 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.regionaldeals.de.entities.DealResults
 import com.regionaldeals.de.entities.GutscheinResults
+import com.github.kittinunf.fuel.core.Response
+
 
 
 class DealsViewModel : ViewModel() {
@@ -44,6 +46,12 @@ class DealsViewModel : ViewModel() {
     fun mitmachenGutschein(url: String, params: List<Pair<String, Any>>, responseHandler: (res: Boolean) -> Unit?) {
         dealsDataProvider.setMitmachenGutschein(url, params) { gutResult ->
             responseHandler.invoke(gutResult)
+        }
+    }
+
+    fun addToFav(url: String, responseHandler: (res: Response) -> Unit?) {
+        dealsDataProvider.setFavourite(url) { result ->
+            responseHandler.invoke(result)
         }
     }
 

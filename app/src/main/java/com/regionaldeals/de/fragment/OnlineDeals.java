@@ -87,15 +87,16 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
 
         mAdapter = new OnlineDealsAdapter(getActivity(), deals);
         songRecyclerView.setAdapter(mAdapter);
+        long wait = 300;
         // Loading JSON in Background Thread
-        swipeRefreshLayout.post(
+        swipeRefreshLayout.postDelayed(
                 new Runnable() {
                     @Override
                     public void run() {
                         new OnlineDeals.LoadDeals().execute();
                     }
                 }
-        );
+        , wait);
 
         locationLat = ((Main) getParentFragment()).getLat();
         locationLng = ((Main) getParentFragment()).getLng();

@@ -21,9 +21,45 @@
 
     <fragment
         android:id="@+id/abo_buchen_user"
-        android:label="User Update"
+        android:label="@string/user_data"
         android:name="com.regionaldeals.de.fragment.ABOBuchenUser"
         tools:layout="@layout/abo_buchen_user">
+        <action
+            android:id="@+id/action_abo_buchen_user_to_abo_buchen_agb"
+            app:destination="@id/abo_buchen_agb"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/abo_buchen_agb"
+        android:label="@string/terms_cond"
+        android:name="com.regionaldeals.de.fragment.ABOBuchenAGB"
+        tools:layout="@layout/abo_buchen_agb">
+        <action
+            android:id="@+id/action_abo_buchen_agb_to_abo_buchen_summary"
+            app:destination="@id/abo_buchen_summary"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/abo_buchen_summary"
+        android:label="@string/summary"
+        android:name="com.regionaldeals.de.fragment.ABOBuchenSummary"
+        tools:layout="@layout/abo_buchen_summary">
+        <action
+            android:id="@+id/action_abo_buchen_summary_to_abo_buchen_main"
+            app:destination="@id/abo_buchen_agb"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_left"
+            app:popEnterAnim="@anim/enter_from_left"
+            app:popExitAnim="@anim/exit_to_right"/>
+    </fragment>
+
 
 </navigation>

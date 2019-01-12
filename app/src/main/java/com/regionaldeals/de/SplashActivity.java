@@ -68,7 +68,13 @@ public class SplashActivity extends AppCompatActivity {
             actionBar.hide();
         }
 
-        createDialogue();
+        Boolean dataSecurityAccepted = SharedPreferenceUtils.getInstance(this).getBoolanValue("dataSecurity", false);
+
+        if(dataSecurityAccepted) {
+            getLocation();
+        } else {
+            createDialogue();
+        }
 
     }
     public void createDialogue() {
@@ -76,13 +82,17 @@ public class SplashActivity extends AppCompatActivity {
         View mView = getLayoutInflater().inflate(R.layout.dialogue_checkbox, null);
         CheckBox mCheckBox = mView.findViewById(R.id.checkBox);
         TextView tv = mView.findViewById(R.id.tvDiaogue);
-        tv.setText(Html.fromHtml(getString(R.string.datahtml)));
-        mBuilder.setTitle("Datenschutzerklärung");
+        //tv.setText(Html.fromHtml(getString(R.string.datahtml)));
+        tv.setText(getString(R.string.dataSecurity));
+        mBuilder.setTitle(R.string.data_privacy);
         mBuilder.setView(mView);
-        mBuilder.setPositiveButton("Agree", new DialogInterface.OnClickListener() {
+        mBuilder.setPositiveButton(getString(R.string.continue_text), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
+                SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
+                editor.putBoolean("dataSecurity", true);
+                editor.commit();
                 getLocation();
             }
         });
@@ -159,7 +169,6 @@ public class SplashActivity extends AppCompatActivity {
                     sb.append(DEFAULTCOUNTRIES[i]).append(",");
                 }
             }
-
             SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
             editor.putString("citiesString", sb.toString());
             Gson gson = new Gson();

@@ -16,6 +16,7 @@ import com.regionaldeals.de.adapter.ABOAdapter
 import com.regionaldeals.de.entities.Plans
 import com.regionaldeals.de.viewmodel.ABOViewModel
 import kotlinx.android.synthetic.main.abo_buchen.*
+import org.jetbrains.anko.doAsync
 
 class ABOBuchen : Fragment(), ABOAdapter.ItemClickListener {
 
@@ -46,6 +47,8 @@ class ABOBuchen : Fragment(), ABOAdapter.ItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        progressBarProcessing.isIndeterminate = true
+
         val linearLayoutManager = LinearLayoutManager(activity)
         rVAbo?.layoutManager = linearLayoutManager
         rVAbo?.setHasFixedSize(true)
@@ -55,12 +58,14 @@ class ABOBuchen : Fragment(), ABOAdapter.ItemClickListener {
 
         mAdapter.setClickListener(this)
 
-
-        model?.loadPlans(mUrlPlans) {
-            activity?.runOnUiThread {
-                if (it) {
-                } else {
-                    Toast.makeText(context, getString(R.string.error_plansList), Toast.LENGTH_SHORT).show()
+        doAsync {
+            model?.loadPlans(mUrlPlans) {
+                activity?.runOnUiThread {
+                    progressBarProcessing.isIndeterminate = false
+                    if (it) {
+                    } else {
+                        Toast.makeText(context, getString(R.string.error_plansList), Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -70,7 +75,7 @@ class ABOBuchen : Fragment(), ABOAdapter.ItemClickListener {
     override fun onItemClick(obj: Plans) {
         view?.let {
             val args = Bundle().apply {
-                putString(SELECTED_PLAN, obj.planShortName)
+                putParcelable(SELECTED_PLAN, obj)
             }
             Navigation.findNavController(it).navigate(R.id.action_abo_buchen_to_abo_buchen_user, args)
         }

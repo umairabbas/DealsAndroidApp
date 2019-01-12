@@ -20,6 +20,8 @@ import com.regionaldeals.de.adapter.GutscheineAdapter
 import com.regionaldeals.de.entities.GutscheineObject
 import kotlinx.android.synthetic.main.fragment_gutscheine.*
 import org.jetbrains.anko.doAsync
+import java.util.*
+import kotlin.concurrent.schedule
 
 /**
  * Created by Umi on 28.08.2017.
@@ -86,10 +88,12 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener, GutscheineA
 
         mAdapter.setClickListener(this)
 
-        swipeRefreshLayout?.post { loadDeals() }
-
         filter = IntentFilter("BroadcastReceiver")
         myReceiver = MyReceiver()
+
+        Timer().schedule(200){
+            swipeRefreshLayout?.postDelayed({ loadDeals()}, 100) ?: loadDeals()
+        }
 
     }
 

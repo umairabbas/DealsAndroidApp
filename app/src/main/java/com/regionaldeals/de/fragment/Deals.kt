@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.regionaldeals.de.Constants
 import com.regionaldeals.de.DealsDetailActivity
 import com.regionaldeals.de.MainActivity
@@ -23,6 +24,10 @@ import com.regionaldeals.de.adapter.DealsAdapter
 import com.regionaldeals.de.entities.DealObject
 import kotlinx.android.synthetic.main.fragment_gutscheine.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import org.json.JSONObject
+import java.util.*
+import kotlin.concurrent.schedule
 
 /**
  * Created by Umi on 28.08.2017.
@@ -51,13 +56,15 @@ class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.Ite
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        model?.dealLiveDataList?.observe(activity!!, Observer { results ->
-            mAdapter.allDeals.clear()
-            mAdapter.allDeals.addAll(results!!.results)
-            activity?.runOnUiThread {
-                mAdapter.notifyDataSetChanged()
-            }
-        })
+        activity?.let {
+            model?.dealLiveDataList?.observe(it, Observer { results ->
+                mAdapter.allDeals.clear()
+                mAdapter.allDeals.addAll(results!!.results)
+                it.runOnUiThread {
+                    mAdapter.notifyDataSetChanged()
+                }
+            })
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +90,9 @@ class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.Ite
 
         mAdapter.setClickListener(this)
 
-        swipeRefreshLayout?.post { loadAllDeals() }
+        Timer().schedule(200) {
+            swipeRefreshLayout?.postDelayed({ loadAllDeals() }, 200) ?: loadAllDeals()
+        }
 
         filter = IntentFilter("BroadcastReceiver")
         myReceiver = MyReceiver()
@@ -91,7 +100,7 @@ class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.Ite
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_gutscheine, container, false)
+        return inflater.inflate(R.layout.fragment_deals, container, false)
     }
 
     override fun onPause() {
@@ -121,8 +130,50 @@ class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.Ite
         activity?.startActivity(intent)
     }
 
-    override fun onFavouriteClick(obj: DealObject, isFromFav: Boolean) {
+    override fun onFavouriteClick(obj: DealObject, isFromFav: Boolean, position: Int) {
+        doAsync {
+            var favCheck = true
+            var displayMsg = ""
+            obj.favourite?.let {
+                if(it){
+                    favCheck = false
+                }
+            }
+            val mUrlFav = "/mobile/api/deals/favourite-click" + "?userid=" + prefHelper.userId + "&dealid=" + obj.dealId.toString() + "&favcheck=" + favCheck.toString()
+            model?.addToFav(mUrlFav) { response ->
+                if (response.statusCode == 200) {
 
+                    val jObject = JSONObject(String(response.data))
+                    val message = jObject.getString("message")
+                    if (message == getString(R.string.DEALS_FAV_CHECK)) {
+                        displayMsg = "Added to Favourites"
+                        updateFavItem(obj, position, favCheck)
+                    } else if (message == getString(R.string.DEALS_FAV_UNCHECK)) {
+                        displayMsg = "Removed from Favourites"
+                        updateFavItem(obj, position, favCheck)
+                    } else if (message == getString(R.string.ONLINE_FAV_UNCHECK)) {
+                        displayMsg = "Removed from Favourites"
+                        updateFavItem(obj, position, favCheck)
+                    } else if (message == getString(R.string.DEALS_FAV_ERR)) {
+                        displayMsg = "Error. Cannot do right now.. Try later"
+                    } else {
+                        displayMsg = "Failed! Server error"
+                    }
+                } else {
+                    displayMsg = "Failed! Server error"
+                }
+                uiThread {
+                    Toast.makeText(context, displayMsg, Toast.LENGTH_SHORT).show()
+                }
+                Unit
+            }
+        }
+    }
+
+    private fun updateFavItem(obj: DealObject, position: Int, favCheck: Boolean){
+        obj.favourite = favCheck
+        mAdapter.allDeals.get(position).favourite  = favCheck
+        mAdapter.notifyDataSetChanged()
     }
 
     private fun loadAllDeals() {
@@ -136,7 +187,6 @@ class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.Ite
             requestParams.add(Pair("lat", prefHelper.locationLat))
             requestParams.add(Pair("long", prefHelper.locationLng))
             requestParams.add(Pair("dealtype", "TYPE_DEALS"))
-            requestParams.add(Pair("userid", prefHelper.userId))
             requestParams.add(Pair("radius", maxDistance * 1000))
 
             model?.loadDeals(mUrlDeals, requestParams) {

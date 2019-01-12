@@ -11,6 +11,7 @@ import android.widget.Toast
 import com.regionaldeals.de.Constants
 import com.regionaldeals.de.R
 import com.regionaldeals.de.Utils.PrefsHelper
+import com.regionaldeals.de.entities.Plans
 import com.regionaldeals.de.viewmodel.ABOViewModel
 import kotlinx.android.synthetic.main.abo_buchen_user.*
 import org.jetbrains.anko.doAsync
@@ -35,7 +36,7 @@ class ABOBuchenUser : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.abo_buchen_user, container, false)
 
-    private fun getSelectedPlan() = arguments?.getString(Constants.SELECTED_PLAN) ?: ""
+    private fun getSelectedPlan() = arguments?.getParcelable<Plans>(Constants.SELECTED_PLAN) ?: null
 
     private fun validateForm(): Boolean {
         var value = true
@@ -102,6 +103,15 @@ class ABOBuchenUser : Fragment() {
 
     }
 
+    private fun goToAGB() {
+        view?.let {
+            val args = android.os.Bundle().apply {
+                putParcelable(com.regionaldeals.de.Constants.SELECTED_PLAN, getSelectedPlan())
+            }
+            androidx.navigation.Navigation.findNavController(it).navigate(com.regionaldeals.de.R.id.action_abo_buchen_user_to_abo_buchen_agb, args)
+        }
+    }
+
     private fun setEmail() {
         txtEmail.setText(prefHelper.email, TextView.BufferType.EDITABLE)
         txtEmail.isEnabled = false
@@ -116,13 +126,13 @@ class ABOBuchenUser : Fragment() {
 
             progressBarProcessing.isIndeterminate = true
 
-                resetValidations()
+            resetValidations()
 
-                if (validateForm()) {
+            if (validateForm()) {
 
-                    doAsync {
+                doAsync {
 
-                        val bodyJson = """
+                    val bodyJson = """
                       { "userId" : """ + prefHelper.userId.toInt() + """,
                         "firstName" : """" + txtFirst.text.toString() + """",
                         "lastName" : """" + txtLast.text.toString() + """",
@@ -141,22 +151,24 @@ class ABOBuchenUser : Fragment() {
                       }
                     """
 
-                        model?.updateUserData(url, bodyJson) { response ->
-                            uiThread { progressBarProcessing.isIndeterminate = false }
-                            if (!response) {
-                                context?.let {
-                                    Toast.makeText(it, "User Data Update problem, please try later", Toast.LENGTH_SHORT).show()
-                                }
-                            } else {
-                                context?.let {
-                                    Toast.makeText(it, "User Data Update Success", Toast.LENGTH_SHORT).show()
-                                }
+                    model?.updateUserData(url, bodyJson) { response ->
+                        uiThread { progressBarProcessing.isIndeterminate = false }
+                        if (!response) {
+                            context?.let {
+                                Toast.makeText(it, "User Data Update problem, please try later", Toast.LENGTH_SHORT).show()
                             }
+                        } else {
+                            context?.let {
+                                Toast.makeText(it, "User Data Update Success", Toast.LENGTH_SHORT).show()
+                            }
+
+                            goToAGB()
                         }
                     }
-                } else {
-                    progressBarProcessing.isIndeterminate = false
                 }
+            } else {
+                progressBarProcessing.isIndeterminate = false
+            }
 
         }
 

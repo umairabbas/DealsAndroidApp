@@ -9,7 +9,7 @@
         android:id="@+id/headerAbo"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:backgroundTint="@color/colorWhite"
         app:cardElevation="3dp"
         android:layout_alignParentTop="true">
 
@@ -64,24 +64,40 @@
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/scrollUserData"
         android:layout_below="@id/headerAbo"
         android:layout_above="@id/progressBarProcessing">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_marginRight="@dimen/_8sdp"
+            android:background="@color/colorWhite"
+            android:elevation="3dp">
+
+            <TextView
+                android:id="@+id/tvHeader"
+                style="@style/DealsToolbarHeaderText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:text="@string/user_data"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toTopOf="@id/inputFirst"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/inputFirst"
-                app:errorEnabled="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="50"
+                app:errorEnabled="true"
                 app:layout_constraintBottom_toTopOf="@id/inputLast"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/tvHeader">
+
                 <EditText
                     android:id="@+id/txtFirst"
                     android:layout_width="match_parent"
@@ -93,11 +109,11 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/inputLast"
-                app:errorEnabled="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="50"
+                app:errorEnabled="true"
                 app:layout_constraintBottom_toTopOf="@id/inputEmail"
                 app:layout_constraintTop_toBottomOf="@id/inputFirst">
 
@@ -112,11 +128,11 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/inputEmail"
-                app:errorEnabled="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="50"
+                app:errorEnabled="true"
                 app:layout_constraintBottom_toTopOf="@id/inputPhone"
                 app:layout_constraintTop_toBottomOf="@id/inputLast">
 
@@ -131,13 +147,14 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/inputPhone"
-                app:errorEnabled="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="20"
+                app:errorEnabled="true"
                 app:layout_constraintBottom_toTopOf="@id/inputMobile"
                 app:layout_constraintTop_toBottomOf="@id/inputEmail">
+
                 <EditText
                     android:id="@+id/txtPhone"
                     android:layout_width="match_parent"
@@ -149,13 +166,14 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/inputMobile"
-                app:errorEnabled="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="20"
+                app:errorEnabled="true"
                 app:layout_constraintBottom_toTopOf="@id/inputStreetAddress"
                 app:layout_constraintTop_toBottomOf="@id/inputPhone">
+
                 <EditText
                     android:id="@+id/txtMobile"
                     android:layout_width="match_parent"
@@ -167,11 +185,11 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/inputStreetAddress"
-                app:errorEnabled="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="100"
+                app:errorEnabled="true"
                 app:layout_constraintBottom_toTopOf="@id/inputPostal"
                 app:layout_constraintTop_toBottomOf="@id/inputMobile">
 
@@ -186,11 +204,11 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/inputPostal"
-                app:errorEnabled="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="10"
+                app:errorEnabled="true"
                 app:layout_constraintBottom_toTopOf="@id/inputCity"
                 app:layout_constraintTop_toBottomOf="@id/inputStreetAddress">
 
@@ -205,11 +223,11 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/inputCity"
-                app:errorEnabled="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="30"
+                app:errorEnabled="true"
                 app:layout_constraintBottom_toTopOf="@id/inputCountry"
                 app:layout_constraintTop_toBottomOf="@id/inputPostal">
 
@@ -224,11 +242,11 @@
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/inputCountry"
-                app:errorEnabled="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:counterEnabled="true"
                 app:counterMaxLength="30"
+                app:errorEnabled="true"
                 app:layout_constraintBottom_toBottomOf="@id/btnUserSubmit"
                 app:layout_constraintTop_toBottomOf="@id/inputCity">
 
@@ -248,8 +266,8 @@
                 android:background="@color/colorPrimary"
                 android:text="Submit"
                 android:textColor="@color/colorWhite"
-                app:layout_constraintTop_toBottomOf="@id/inputCountry"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/inputCountry" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

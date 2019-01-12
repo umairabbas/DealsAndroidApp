@@ -1,7 +1,9 @@
 package com.regionaldeals.de.fragment
 
+import com.github.kittinunf.fuel.core.Response
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.fuel.httpPut
 import com.github.kittinunf.fuel.httpUpload
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -72,6 +74,15 @@ class DealsDataProvider {
                     } else {
                         responseHandler.invoke(true)
                     }
+                }
+
+    }
+
+    fun setFavourite(subUrl: String, responseHandler: (res: Response) -> Unit?) {
+        val mainUrl = baseUrl + subUrl
+        mainUrl.httpPut().header(Pair("Accept", "application/json"))
+                .responseString { _, response, _ ->
+                    responseHandler.invoke(response)
                 }
 
     }

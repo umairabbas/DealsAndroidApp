@@ -37,7 +37,7 @@ class DealsAdapter(private val isFromFav: Boolean, private val skipFavBtn: Boole
         Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl)
 
         if (!skipFavBtn) {
-            if (deals.favourite == null) {
+            if (deals.favourite == null || deals.favourite == false) {
                 holder.favoriteImageButton.setImageResource(R.drawable.not_favorite)
             } else if (deals.favourite == true) {
                 holder.favoriteImageButton.setImageResource(R.drawable.favorite)
@@ -51,7 +51,7 @@ class DealsAdapter(private val isFromFav: Boolean, private val skipFavBtn: Boole
         }
 
         holder.favoriteImageButton.setOnClickListener {
-            mClickListener?.onFavouriteClick(allDeals[position], isFromFav)
+            mClickListener?.onFavouriteClick(allDeals[position], isFromFav, position)
         }
 
     }
@@ -66,6 +66,6 @@ class DealsAdapter(private val isFromFav: Boolean, private val skipFavBtn: Boole
 
     interface ItemClickListener {
         fun onItemClick(obj: DealObject)
-        fun onFavouriteClick(obj: DealObject, isFromFav: Boolean)
+        fun onFavouriteClick(obj: DealObject, isFromFav: Boolean, pos: Int)
     }
 }
