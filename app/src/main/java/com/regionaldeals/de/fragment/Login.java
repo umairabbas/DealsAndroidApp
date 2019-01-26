@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.regionaldeals.de.R;
+import com.regionaldeals.de.Utils.PrefsHelper;
 
 import org.json.JSONObject;
 
@@ -41,7 +42,6 @@ import static android.content.Context.MODE_PRIVATE;
 public class Login extends Fragment {
 
     private static final String TAG = "LoginFragment";
-    private static final int REQUEST_SIGNUP = 0;
     private Context context;
     private ViewPager viewPager;
     private final String URL_Login = "/mobile/api/users/login";
@@ -52,11 +52,6 @@ public class Login extends Fragment {
     private ProgressDialog progressDialog;
     private String message = "";
     private JSONObject jObject;
-
-
-    public Login() {
-        // Required empty public constructor
-    }
 
     @BindView(R.id.input_email)
     EditText _emailText;
@@ -75,7 +70,6 @@ public class Login extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.login_fragment, container, false);
         context = getContext();
 
@@ -96,19 +90,12 @@ public class Login extends Fragment {
             @Override
             public void onClick(View v) {
                 viewPager.setCurrentItem(1);
-                // Start the Signup fragment
-//                FragmentManager fragmentManager = getFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                SignUp fragment = new SignUp();
-//                fragmentTransaction.add(getParentFragment().getId(), fragment);
-//                fragmentTransaction.commit();
             }
         });
         return v;
     }
 
     public void login() {
-        Log.d(TAG, "Login");
 
         if (!validate()) {
             onLoginFailed();
@@ -153,7 +140,6 @@ public class Login extends Fragment {
                 Log.i("JSON", jsonParam.toString());
 
                 DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-                //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
                 os.writeBytes(jsonParam.toString());
 
                 os.flush();
@@ -199,9 +185,6 @@ public class Login extends Fragment {
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(String file_url) {
             progressDialog.dismiss();
             _loginButton.setEnabled(true);
@@ -209,9 +192,8 @@ public class Login extends Fragment {
                 public void run() {
                     if (isSuccess) {
 
-                        SharedPreferences.Editor editor = getActivity().getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
-                        editor.putString("userObject", jObject.toString());
-                        editor.commit();
+                        PrefsHelper prefHelper = PrefsHelper.Companion.getInstance(context);
+                        prefHelper.updateUser(context, jObject.toString());
 
                         Toast.makeText(context, getResources().getString(R.string.welcome) + " " + name, Toast.LENGTH_LONG).show();
                         try {
@@ -229,10 +211,6 @@ public class Login extends Fragment {
                 }
             });
         }
-    }
-
-    public void onLoginSuccess() {
-        _loginButton.setEnabled(true);
     }
 
     public void onLoginFailed() {

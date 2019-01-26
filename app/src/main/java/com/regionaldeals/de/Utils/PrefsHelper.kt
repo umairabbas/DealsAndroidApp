@@ -1,8 +1,10 @@
 package com.regionaldeals.de.Utils
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import com.regionaldeals.de.Constants
 import com.regionaldeals.de.Constants.SUB_OBJECT_KEY
+import com.regionaldeals.de.R
 import com.regionaldeals.de.service.LocationStatic
 import org.json.JSONException
 import org.json.JSONObject
@@ -48,6 +50,13 @@ class PrefsHelper private constructor(context: Context) {
     fun updateSubscription(data: String, context: Context) {
         SharedPreferenceUtils.getInstance(context).setValue(SUB_OBJECT_KEY, data)
 
+    }
+
+    fun updateUser(context: Context, json: String) {
+        val editor = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE).edit()
+        editor.putString(Constants.USER_OBJECT_KEY, json)
+        editor.apply()
+        getUserIdfromPrefs(json)
     }
 
     fun syncUserId(context: Context) {

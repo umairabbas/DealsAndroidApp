@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.regionaldeals.de.Utils.PrefsHelper;
+
 /**
  * Created by Umi on 11.03.2018.
  */
@@ -20,7 +22,6 @@ import android.widget.Toast;
 public class SignoutActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private Activity activity;
     private Context context;
 
     @Override
@@ -32,11 +33,9 @@ public class SignoutActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        activity = this;
         context = this;
-        final SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-        String restoredText = prefs.getString("userObject", null);
-        String restoredSub = prefs.getString("subscriptionObject", null);
+        final PrefsHelper prefHelper = PrefsHelper.Companion.getInstance(context);
+
 
         TextView email = findViewById(R.id.textEmail);
 
@@ -49,10 +48,11 @@ public class SignoutActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(context, "Signing out.", Toast.LENGTH_SHORT).show();
-
-                Intent intent = activity.getIntent();
-                activity.setResult(Activity.RESULT_OK, intent);
-                activity.finish();
+                prefHelper.setEmail("");
+                prefHelper.setUserId("");
+                Intent intent = getIntent();
+                setResult(Activity.RESULT_OK, intent);
+                finish();
             }
         });
 

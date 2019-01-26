@@ -1,7 +1,9 @@
 package com.regionaldeals.de.fragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.Utils.JSONParser;
+import com.regionaldeals.de.Utils.PrefsHelper;
 
 import org.json.JSONObject;
 
@@ -38,10 +41,6 @@ import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 public class SignUp extends Fragment {
 
-    public SignUp() {
-        // Required empty public constructor
-    }
-
     @BindView(R.id.input_name)
     EditText _nameText;
     @BindView(R.id.input_email)
@@ -52,11 +51,8 @@ public class SignUp extends Fragment {
     Button _signupButton;
     @BindView(R.id.link_login)
     TextView _loginLink;
-    //@BindView(R.id.shopCheck) Switch _isShopKeeper;
 
     private ViewPager viewPager;
-    private JSONObject Result = null;
-    JSONParser jsonParser = new JSONParser();
     private Context context;
     private final String URL_AddUser = "/mobile/api/users/signup";
     private ProgressDialog progressDialog;
@@ -67,6 +63,7 @@ public class SignUp extends Fragment {
     private Boolean isSuccess = false;
     private String message = "";
     private String displayMsg = "";
+    private JSONObject jObject;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,7 +91,6 @@ public class SignUp extends Fragment {
             @Override
             public void onClick(View v) {
                 viewPager.setCurrentItem(0);
-                // Finish the registration screen and return to the Login activity
             }
         });
 
@@ -120,7 +116,6 @@ public class SignUp extends Fragment {
         name = _nameText.getText().toString();
         email = _emailText.getText().toString();
         password = _passwordText.getText().toString();
-        //isShop = _isShopKeeper.isChecked();
 
         new SignUpCall().execute();
 
@@ -157,7 +152,6 @@ public class SignUp extends Fragment {
 
                 Log.i("JSON", jsonParam.toString());
                 DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-                //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
                 os.writeBytes(jsonParam.toString());
 
                 os.flush();
@@ -178,7 +172,7 @@ public class SignUp extends Fragment {
                 }
                 in.close();
 
-                JSONObject jObject = new JSONObject(res.toString());
+                jObject = new JSONObject(res.toString());
                 message = jObject.getString("message");
 
                 if (message.equals(getString(R.string.SIGNUP_OK))) {
@@ -196,7 +190,6 @@ public class SignUp extends Fragment {
                 } else {
                     isSuccess = false;
                     displayMsg = "Failed! Server error";
-                    //onSignupFailed();
                 }
                 conn.disconnect();
 
@@ -206,9 +199,6 @@ public class SignUp extends Fragment {
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(String file_url) {
             progressDialog.dismiss();
             _signupButton.setEnabled(true);
@@ -217,19 +207,30 @@ public class SignUp extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     if (isSuccess) {
+
                         Toast.makeText(context, displayMsg, Toast.LENGTH_LONG).show();
-                        viewPager.setCurrentItem(0);
+
+                        try {
+
+                            JSONObject data = jObject.getJSONObject("data");
+                            PrefsHelper prefHelper = PrefsHelper.Companion.getInstance(context);
+                            prefHelper.updateUser(context, data.toString());
+
+                            Intent intent = getActivity().getIntent();
+                            intent.putExtra("userEmail", data.getString("email"));
+                            intent.putExtra("userId", data.getInt("userId"));
+                            getActivity().setResult(Activity.RESULT_OK, intent);
+                            getActivity().finish();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         Toast.makeText(context, displayMsg, Toast.LENGTH_LONG).show();
                     }
                 }
             });
         }
-    }
-
-
-    public void onSignupSuccess() {
-        //setResult(RESULT_OK, null);
     }
 
     public void onSignupFailed() {

@@ -186,6 +186,7 @@
     <string name="shop_terms">Allgemeine Geschäftsordnung gelesen und akzeptiert</string>
     <string name="shop_agb">AGB (https://www.regionaldeals.de/#agb), Impressum (https://www.regionaldeals.de/#impressum) und Datenschutz (https://www.regionaldeals.de/#datenschutz) gelesen und akzeptiert</string>
     <string name="contract_close">Vertrag abschließen</string>
+    <string name="packages">Angebotspaket</string>
 
 
 </resources>

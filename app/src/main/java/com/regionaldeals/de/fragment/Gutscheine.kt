@@ -51,13 +51,15 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener, GutscheineA
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        model?.gutscheinLiveDataList?.observe(activity!!, Observer { gutscheinResults ->
-            mAdapter.allDeals.clear()
-            mAdapter.allDeals.addAll(gutscheinResults!!.results)
-            activity?.runOnUiThread {
-                mAdapter.notifyDataSetChanged()
-            }
-        })
+        activity?.let {
+            model?.gutscheinLiveDataList?.observe(it, Observer { gutscheinResults ->
+                it?.runOnUiThread {
+                    mAdapter.allDeals.clear()
+                    mAdapter.allDeals.addAll(gutscheinResults!!.results)
+                    mAdapter.notifyDataSetChanged()
+                }
+            })
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,9 +93,9 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener, GutscheineA
         filter = IntentFilter("BroadcastReceiver")
         myReceiver = MyReceiver()
 
-        Timer().schedule(200){
-            swipeRefreshLayout?.postDelayed({ loadDeals()}, 100) ?: loadDeals()
-        }
+        swipeRefreshLayout?.isRefreshing = true
+
+        swipeRefreshLayout?.postDelayed({ loadDeals() }, 700) ?: loadDeals()
 
     }
 
@@ -140,12 +142,12 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener, GutscheineA
                 activity?.runOnUiThread {
                     swipeRefreshLayout?.isRefreshing = false
                     if (it) {
-                        rV_gutschein.visibility = View.VISIBLE
-                        tvStatus.visibility = View.GONE
+                        rV_gutschein?.visibility = View.VISIBLE
+                        tvStatus?.visibility = View.GONE
                     } else {
-                        rV_gutschein.visibility = View.GONE
-                        tvStatus.visibility = View.VISIBLE
-                        tvStatus.text = getString(R.string.error_dealsList)
+                        rV_gutschein?.visibility = View.GONE
+                        tvStatus?.visibility = View.VISIBLE
+                        tvStatus?.text = getString(R.string.error_dealsList)
                     }
                 }
             }

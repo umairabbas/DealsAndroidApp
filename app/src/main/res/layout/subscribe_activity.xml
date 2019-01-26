@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorLightWhite">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -18,33 +20,44 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:background="@color/colorLightBlack"
-        android:layout_height="fill_parent"
-        android:fitsSystemWindows="true">
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardAGB"
+        android:layout_marginTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_8sdp"
+        android:clipToPadding="true"
+        app:cardElevation="3dp"
+        app:layout_constraintTop_toBottomOf="@id/appbar"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="36dp"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:paddingLeft="24dp"
-            android:layout_gravity="center"
-            android:paddingRight="24dp">
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvHeader"
+                style="@style/DealsToolbarHeaderText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:text="@string/packages"
+                android:textAlignment="center"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/currentSub"
-                android:background="@color/colorAccent"
+                style="@style/DealsPriceText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                android:textSize="@dimen/_17sdp" />
+                android:inputType="textMultiLine"
+                android:text="Wichtig: Für jeder monatlisch überweisung müssen Sie ihre email adresse in verwendungzweke eingeben."
+                android:textAlignment="center"
+                app:layout_constraintTop_toBottomOf="@id/tvHeader"
+                />
 
-        </LinearLayout>
-    </ScrollView>
-</android.support.design.widget.CoordinatorLayout>
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+</android.support.constraint.ConstraintLayout>

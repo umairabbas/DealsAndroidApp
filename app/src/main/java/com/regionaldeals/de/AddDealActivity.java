@@ -13,10 +13,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -121,13 +123,6 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         context = this;
         activity = this;
 
-        if (getIntent().hasExtra("isGutscheine")) {
-            isGutscheine = getIntent().getBooleanExtra("isGutscheine", false);
-        }
-        if (getIntent().hasExtra("userId")) {
-            userId = getIntent().getStringExtra("userId");
-        }
-
         //CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         expiry = (EditText) findViewById(R.id.input_expiry);
         calendarDate = Calendar.getInstance();
@@ -143,13 +138,61 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         inputDPrice = (EditText) findViewById(R.id.input_dprice);
         inputUrl = (EditText) findViewById(R.id.input_url);
         attachImg = (ImageView) findViewById(R.id.ivAttachment);
+
         LinearLayout dealType = (LinearLayout) findViewById(R.id.deal_type_layout);
+
+        if (getIntent().hasExtra("isGutscheine")) {
+            isGutscheine = getIntent().getBooleanExtra("isGutscheine", false);
+        }
+        if (getIntent().hasExtra("userId")) {
+            userId = getIntent().getStringExtra("userId");
+        }
 
         if (isGutscheine) {
             inputOPrice.setVisibility(View.GONE);
             dealType.setVisibility(View.GONE);
             SERVER_URL = "/mobile/api/gutschein/upload-gutschein";
         }
+
+        //Adapter Deals
+        ArrayAdapter<String> adapterDeals = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, dealTypes);
+        adapterDeals.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDeals.setAdapter(adapterDeals);
+        spinnerDeals.setOnItemSelectedListener(this);
+
+        //Adapter Shops
+        shopList = new ArrayList<>();
+        adapter = new SpinAdapter(this,
+                R.layout.custom_spinner_item,
+                shopList);
+        spinnerShop.setAdapter(adapter);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerShop.setOnItemSelectedListener(this);
+
+        //Adapter Category
+        catList = new ArrayList<>();
+        adapterCat = new SpinAdapterCat(this,
+                R.layout.custom_spinner_item,
+                catList);
+        spinnerCat.setAdapter(adapterCat);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCat.setOnItemSelectedListener(this);
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getShopsFromServer();
+            }
+        }, 300);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getCatFromServer();
+            }
+        }, 500);
 
         attachImg.setOnClickListener(this);
         bUpload.setOnClickListener(this);
@@ -172,32 +215,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
-        //Adapter Deals
-        ArrayAdapter<String> adapterDeals = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, dealTypes);
-        adapterDeals.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDeals.setAdapter(adapterDeals);
-        spinnerDeals.setOnItemSelectedListener(this);
 
-        //Adapter Shops
-        shopList = new ArrayList<>();
-        adapter = new SpinAdapter(this,
-                R.layout.custom_spinner_item,
-                shopList);
-        spinnerShop.setAdapter(adapter);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerShop.setOnItemSelectedListener(this);
-        getShopsFromServer();
-
-        //Adapter Category
-        catList = new ArrayList<>();
-        adapterCat = new SpinAdapterCat(this,
-                R.layout.custom_spinner_item,
-                catList);
-        spinnerCat.setAdapter(adapterCat);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCat.setOnItemSelectedListener(this);
-        getCatFromServer();
     }
 
     private void getShopsFromServer() {

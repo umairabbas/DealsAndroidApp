@@ -181,7 +181,8 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                         startActivityForResult(intent, LOGIN_REQUEST_CODE);
                         shouldRefresh = true;
-                    } else if (!subscribed) {
+                    } else
+                        if (!subscribed) {
                         Intent intent = new Intent(MainActivity.this, SubscribeNewActivity.class);
                         startActivity(intent);
                     }else {

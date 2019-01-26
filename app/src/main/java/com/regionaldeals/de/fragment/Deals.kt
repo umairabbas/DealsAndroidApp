@@ -58,9 +58,9 @@ class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.Ite
 
         activity?.let {
             model?.dealLiveDataList?.observe(it, Observer { results ->
-                mAdapter.allDeals.clear()
-                mAdapter.allDeals.addAll(results!!.results)
                 it.runOnUiThread {
+                    mAdapter.allDeals.clear()
+                    mAdapter.allDeals.addAll(results!!.results)
                     mAdapter.notifyDataSetChanged()
                 }
             })
@@ -90,12 +90,11 @@ class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.Ite
 
         mAdapter.setClickListener(this)
 
-        Timer().schedule(200) {
-            swipeRefreshLayout?.postDelayed({ loadAllDeals() }, 200) ?: loadAllDeals()
-        }
-
         filter = IntentFilter("BroadcastReceiver")
         myReceiver = MyReceiver()
+
+        swipeRefreshLayout?.isRefreshing = true
+        swipeRefreshLayout?.postDelayed({ loadAllDeals() }, 350) ?: loadAllDeals()
 
     }
 
@@ -193,12 +192,12 @@ class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.Ite
                 activity?.runOnUiThread {
                     swipeRefreshLayout?.isRefreshing = false
                     if (it) {
-                        rV_gutschein.visibility = View.VISIBLE
-                        tvStatus.visibility = View.GONE
+                        rV_gutschein?.visibility = View.VISIBLE
+                        tvStatus?.visibility = View.GONE
                     } else {
-                        rV_gutschein.visibility = View.GONE
-                        tvStatus.visibility = View.VISIBLE
-                        tvStatus.text = getString(R.string.error_dealsList)
+                        rV_gutschein?.visibility = View.GONE
+                        tvStatus?.visibility = View.VISIBLE
+                        tvStatus?.text = getString(R.string.error_dealsList)
                     }
                 }
             }
