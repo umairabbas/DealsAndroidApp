@@ -108,7 +108,7 @@ class ABOBuchenUser : Fragment() {
             val args = android.os.Bundle().apply {
                 putParcelable(com.regionaldeals.de.Constants.SELECTED_PLAN, getSelectedPlan())
             }
-            androidx.navigation.Navigation.findNavController(it).navigate(com.regionaldeals.de.R.id.action_abo_buchen_user_to_abo_buchen_agb, args)
+            androidx.navigation.Navigation.findNavController(it).navigate(com.regionaldeals.de.R.id.action_abo_buchen_user_to_abo_buchen_summary, args)
         }
     }
 

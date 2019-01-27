@@ -97,4 +97,18 @@ class PrefsHelper private constructor(context: Context) {
         }
     }
 
+    fun getSubReference(context: Context): String? {
+        try {
+            val subscription = SharedPreferenceUtils.getInstance(context).getStringValue(SUB_OBJECT_KEY, "")
+            if(subscription.isNotEmpty()){
+                val obj = JSONObject(subscription)
+                return obj.getString("subscriptionReference")
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        } catch (t: Throwable) {
+        }
+        return ""
+    }
+
 }

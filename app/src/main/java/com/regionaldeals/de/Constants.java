@@ -11,6 +11,6 @@ public class Constants {
 
     public static String DEALS_OBJECT = "DEALS_OBJECT";
     public static String SELECTED_PLAN = "SELECTED_PLAN";
-
+    public static String SUB_REFERENCE = "SUB_REFERENCE";
 
 }

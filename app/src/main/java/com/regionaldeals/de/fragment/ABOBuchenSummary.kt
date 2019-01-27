@@ -24,6 +24,7 @@ class ABOBuchenSummary : Fragment() {
 
     private var url: String = "/mobile/api/subscriptions/update_subscription"
     private var urlSub: String = "/mobile/api/subscriptions/subscription?userid="
+    private var subReference: String = ""
 
     private lateinit var prefHelper: PrefsHelper
 
@@ -41,11 +42,11 @@ class ABOBuchenSummary : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tvPlan.text = "Gewählter Tariff: " + getSelectedPlan()?.planName
+        tvPlan.text = getString(R.string.gewahlter_tariff) + getSelectedPlan()?.planName
 
-        tvDesc.text = "Email: " + prefHelper.email + "\nZahlung: Monatlich überwiesen\n"
+        tvDesc.text = "Email: " + prefHelper.email + "\n" + getString(R.string.zahlung_text) + "\n"
 
-        tvInfo.text = "Wichtig: Für jeder monatlisch überweisung müssen Sie ihre email adresse in verwendungzweke eingeben.\n"
+        tvInfo.text = getString(R.string.zahlung_info_text) + "\n"
 
         btnAgbSubmit.setOnClickListener { v ->
             resetValidations()
@@ -67,11 +68,12 @@ class ABOBuchenSummary : Fragment() {
                                     }
                                 }
                                 activity?.runOnUiThread {
-                                    val intent = Intent(context, MainActivity::class.java)
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    intent.putExtra("subscribed", true)
-                                    startActivity(intent)
-                                    activity?.finish()
+                                    val args = android.os.Bundle().apply {
+                                        putParcelable(com.regionaldeals.de.Constants.SELECTED_PLAN, getSelectedPlan())
+                                        putString(com.regionaldeals.de.Constants.SUB_REFERENCE, prefHelper.getSubReference(context!!))
+
+                                    }
+                                    androidx.navigation.Navigation.findNavController(v).navigate(com.regionaldeals.de.R.id.action_abo_buchen_summary_to_abo_buchen_agb, args)
                                 }
                             }
                         } else {

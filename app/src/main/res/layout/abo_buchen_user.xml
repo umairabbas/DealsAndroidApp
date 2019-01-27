@@ -102,7 +102,7 @@
                     android:id="@+id/txtFirst"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Firstname"
+                    android:hint="@string/firstname"
                     android:inputType="textPersonName"
                     android:maxLength="50" />
             </android.support.design.widget.TextInputLayout>
@@ -121,7 +121,7 @@
                     android:id="@+id/txtLast"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Last Name"
+                    android:hint="@string/last_name"
                     android:inputType="textPersonName"
                     android:maxLength="50" />
             </android.support.design.widget.TextInputLayout>
@@ -140,7 +140,7 @@
                     android:id="@+id/txtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:maxLength="100" />
             </android.support.design.widget.TextInputLayout>
@@ -159,7 +159,7 @@
                     android:id="@+id/txtPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Phone"
+                    android:hint="@string/phone"
                     android:inputType="phone"
                     android:maxLength="20" />
             </android.support.design.widget.TextInputLayout>
@@ -178,7 +178,7 @@
                     android:id="@+id/txtMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Mobile"
+                    android:hint="@string/mobile"
                     android:inputType="phone"
                     android:maxLength="20" />
             </android.support.design.widget.TextInputLayout>
@@ -197,7 +197,7 @@
                     android:id="@+id/txtStreetAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Street Address"
+                    android:hint="@string/street_address"
                     android:inputType="text"
                     android:maxLength="100" />
             </android.support.design.widget.TextInputLayout>
@@ -216,7 +216,7 @@
                     android:id="@+id/txtPostal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Postal Code"
+                    android:hint="@string/postal_code"
                     android:inputType="number"
                     android:maxLength="10" />
             </android.support.design.widget.TextInputLayout>
@@ -235,7 +235,7 @@
                     android:id="@+id/txtCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="City"
+                    android:hint="@string/city"
                     android:inputType="text"
                     android:maxLength="50" />
             </android.support.design.widget.TextInputLayout>
@@ -254,7 +254,7 @@
                     android:id="@+id/txtCountry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Country"
+                    android:hint="@string/country"
                     android:inputType="text"
                     android:maxLength="50" />
             </android.support.design.widget.TextInputLayout>
@@ -264,7 +264,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
-                android:text="Submit"
+                android:text="@string/submit"
                 android:textColor="@color/colorWhite"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/inputCountry" />

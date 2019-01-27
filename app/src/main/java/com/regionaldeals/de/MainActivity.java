@@ -2,6 +2,7 @@ package com.regionaldeals.de;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private int userId = 0;
     public static final int LOGIN_REQUEST_CODE = 1;
     public static final int SIGNOUT_REQUEST_CODE = 2;
+    public static final int SUB_REQUEST_CODE = 3;
     private TextView emailMenu;
     private static boolean shouldRefresh = false;
     private String token = "";
@@ -164,9 +166,6 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_benachrichtigungen) {
                     Intent startActivityIntent = new Intent(MainActivity.this, NotificationsActivity.class);
                     startActivity(startActivityIntent);
-                } else if (id == R.id.nav_einstellungen) {
-                    //    fragment = new Deals();
-                    Snackbar.make(navigationView, "Coming soon.", Snackbar.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_uberDealSpok) {
                     Intent intent = new Intent(MainActivity.this, AboutActivity.class);
                     startActivity(intent);
@@ -177,14 +176,10 @@ public class MainActivity extends AppCompatActivity {
                             .setText("http://play.google.com/store/apps/details?id=" + getPackageName())
                             .startChooser();
                 } else if (id == R.id.abo_buchen) {
-                    if (userId == 0) {
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
-                        shouldRefresh = true;
-                    } else
-                        if (!subscribed) {
+                    if (!subscribed) {
                         Intent intent = new Intent(MainActivity.this, SubscribeNewActivity.class);
-                        startActivity(intent);
+                        startActivityForResult(intent, SUB_REQUEST_CODE);
+                        shouldRefresh = true;
                     }else {
                         Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
                         startActivity(intent);
@@ -222,7 +217,18 @@ public class MainActivity extends AppCompatActivity {
                         Intent startActivityIntent = new Intent(MainActivity.this, ShopActivity.class);
                         startActivity(startActivityIntent);
                     }
+                } else if (id == R.id.dataschnutz) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#datenschutz"));
+                    startActivity(browserIntent);
+                } else if (id == R.id.agb) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#agb"));
+                    startActivity(browserIntent);
+                } else if (id == R.id.impressung) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#impressum"));
+                    startActivity(browserIntent);
                 }
+
+
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.main_container_wrapper, fragment);
                 transaction.commit();
@@ -398,10 +404,20 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferenceUtils.getInstance(this).removeKey(USER_OBJECT_KEY);
                 SharedPreferenceUtils.getInstance(this).removeKey(SUB_OBJECT_KEY);
                 userId = 0;
+                subscribed = false;
                 emailMenu.setText(getResources().getString(R.string.login_signup));
                 new RegCall().execute();
             }
+        } else if (requestCode == SUB_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                String email = data.getStringExtra("userEmail");
+                userId = data.getIntExtra("userId", 0);
+                emailMenu.setText(email);
+                getSubscription(userId);
+            }
         }
+
+
     }
 
     private void getSubscription(final int user) {

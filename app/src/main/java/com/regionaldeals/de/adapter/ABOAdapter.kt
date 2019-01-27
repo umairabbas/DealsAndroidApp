@@ -7,8 +7,12 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.regionaldeals.de.R
+import com.regionaldeals.de.Utils.URLImageParser
 import com.regionaldeals.de.entities.Plans
 import kotlinx.android.synthetic.main.abo_buchen_list.view.*
+import android.text.Spanned
+
+
 
 class ABOAdapter() : RecyclerView.Adapter<ABOViewHolder>() {
 
@@ -30,18 +34,17 @@ class ABOAdapter() : RecyclerView.Adapter<ABOViewHolder>() {
 
         val plans = allPlans[position]
         holder.itemView.planName.text = plans.planName
-        holder.itemView.planDesc.text = Html.fromHtml(plans.planDescription)
+        val p = URLImageParser(holder.itemView.planDesc, context)
+        val htmlSpan = Html.fromHtml(plans.planDescription, p, null)
+        holder.itemView.planDesc.text = htmlSpan
         holder.itemView.subPrice.text = plans.planPrice.toString() + " " + plans.currency
         holder.itemView.planDesc.movementMethod = LinkMovementMethod.getInstance()
         holder.itemView.subMonat.text =  plans.numberBillingCycles.toString() + " Monat"
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.btnPlan.setOnClickListener {
             mClickListener?.onItemClick(allPlans[position])
         }
 
-        holder.itemView.planDesc.setOnClickListener {
-            mClickListener?.onItemClick(allPlans[position])
-        }
     }
 
     override fun getItemCount(): Int {

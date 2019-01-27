@@ -1,11 +1,14 @@
 package com.regionaldeals.de.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.regionaldeals.de.Constants
+import com.regionaldeals.de.MainActivity
 import com.regionaldeals.de.R
 import com.regionaldeals.de.Utils.PrefsHelper
 import com.regionaldeals.de.entities.Plans
@@ -25,18 +28,22 @@ class ABOBuchenAGB : Fragment() {
             inflater.inflate(R.layout.abo_buchen_agb, container, false)
 
     private fun getSelectedPlan() = arguments?.getParcelable<Plans>(Constants.SELECTED_PLAN) ?: null
+    private fun getSubReference() = arguments?.getString(Constants.SUB_REFERENCE) ?: ""
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tvInfo.text = "Verwendungzweke: " + prefHelper.email
+        tvInfo.text = getString(R.string.Verwendungzweke) + getSubReference()
 
         btnAgbSubmit.setOnClickListener { v ->
-            val args = android.os.Bundle().apply {
-                putParcelable(com.regionaldeals.de.Constants.SELECTED_PLAN, getSelectedPlan())
-            }
-            androidx.navigation.Navigation.findNavController(v).navigate(com.regionaldeals.de.R.id.action_abo_buchen_agb_to_abo_buchen_summary, args)
-
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("userEmail", prefHelper.email)
+            intent.putExtra("userId", prefHelper.userId.toInt())
+            intent.putExtra("subscribed", true)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            activity?.setResult(Activity.RESULT_OK, intent)
+            activity?.finish()
         }
     }
 }
