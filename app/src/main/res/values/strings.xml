@@ -207,5 +207,5 @@
     <string name="submit">Submit</string>
     <string name="choose">Choose</string>
 
-
+    <string name="dataSecurity">This app uses cookies to provide you with the best possible service and to analyse user behaviour in pseudonymous form. By continuing, you accept the use of cookies and agree to the web analysis measures. You will find further information and the possibility of revocation in our data privacy declaration.\n\nLink: https://www.regionaldeals.de/#datenschutz</string>
 </resources>
