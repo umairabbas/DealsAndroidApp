@@ -1,6 +1,8 @@
 package com.regionaldeals.de.fragment
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -8,12 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import com.regionaldeals.de.Constants
+import com.regionaldeals.de.Constants.*
 import com.regionaldeals.de.R
 import com.regionaldeals.de.Utils.PrefsHelper
 import com.regionaldeals.de.entities.Plans
+import com.regionaldeals.de.location.LocationPrediction
 import com.regionaldeals.de.viewmodel.ABOViewModel
 import kotlinx.android.synthetic.main.abo_buchen_user.*
+import kotlinx.android.synthetic.main.item_list_address_prediction.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -26,6 +30,9 @@ class ABOBuchenUser : Fragment() {
 
     private lateinit var prefHelper: PrefsHelper
 
+    private val LOCATION_REQ = 101
+
+    private var locationIntent: Intent = Intent()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +43,7 @@ class ABOBuchenUser : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.abo_buchen_user, container, false)
 
-    private fun getSelectedPlan() = arguments?.getParcelable<Plans>(Constants.SELECTED_PLAN) ?: null
+    private fun getSelectedPlan() = arguments?.getParcelable<Plans>(SELECTED_PLAN) ?: null
 
     private fun validateForm(): Boolean {
         var value = true
@@ -48,10 +55,6 @@ class ABOBuchenUser : Fragment() {
         if (txtLast.text.toString().isEmpty()) {
             value = false
             inputLast.error = " "
-        }
-        if (txtEmail.text.toString().isEmpty()) {
-            value = false
-            inputEmail.error = " "
         }
         if (txtPhone.text.toString().isEmpty()) {
             value = false
@@ -65,18 +68,11 @@ class ABOBuchenUser : Fragment() {
             value = false
             inputStreetAddress.error = " "
         }
-        if (txtPostal.text.toString().isEmpty()) {
+        if (txtAddress.text.toString().isEmpty()) {
             value = false
-            inputPostal.error = " "
+            inputAddress.error = " "
         }
-        if (txtCity.text.toString().isEmpty()) {
-            value = false
-            inputCity.error = " "
-        }
-        if (txtCountry.text.toString().isEmpty()) {
-            value = false
-            inputCountry.error = " "
-        }
+
 
         return value
     }
@@ -87,19 +83,13 @@ class ABOBuchenUser : Fragment() {
 
         inputLast.error = null
 
-        inputEmail.error = null
-
         inputPhone.error = null
 
         inputMobile.error = null
 
         inputStreetAddress.error = null
 
-        inputPostal.error = null
-
-        inputCity.error = null
-
-        inputCountry.error = null
+        inputAddress.error = null
 
     }
 
@@ -112,15 +102,31 @@ class ABOBuchenUser : Fragment() {
         }
     }
 
-    private fun setEmail() {
-        txtEmail.setText(prefHelper.email, TextView.BufferType.EDITABLE)
-        txtEmail.isEnabled = false
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == LOCATION_REQ) {
+            if (resultCode == Activity.RESULT_OK) {
+                data?.let {
+                    locationIntent = it
+                    txtAddress.setText("""${it.getStringExtra(LOCATION_CITY)}, ${it.getStringExtra(LOCATION_POSTAL)}, DE"""
+                            , TextView.BufferType.EDITABLE)
+                }
+
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setEmail()
+        txtAddress.isFocusable = false
+        txtAddress.setOnClickListener {
+            activity?.let {
+                val intent = Intent(it, LocationPrediction::class.java)
+                intent.putExtra(LOCATION_FROM_SUB, true)
+                startActivityForResult(intent, LOCATION_REQ)
+            }
+        }
 
         btnUserSubmit.setOnClickListener {
 
@@ -136,17 +142,17 @@ class ABOBuchenUser : Fragment() {
                       { "userId" : """ + prefHelper.userId.toInt() + """,
                         "firstName" : """" + txtFirst.text.toString() + """",
                         "lastName" : """" + txtLast.text.toString() + """",
-                        "email" : """" + txtEmail.text.toString() + """",
+                        "email" : """" + prefHelper.email + """",
                         "phone" : """" + txtPhone.text.toString() + """",
                         "mobile" : """" + txtMobile.text.toString() + """",
                         "address" : """" + txtStreetAddress.text.toString() + """",
-                        "postCode" : """" + txtPostal.text.toString() + """",
-                        "city" : """" + txtCity.text.toString() + """",
-                        "country" : """" + txtCountry.text.toString() + """",
+                        "postCode" : """" + locationIntent.getStringExtra(LOCATION_POSTAL).toString() + """",
+                        "city" : """" + locationIntent.getStringExtra(LOCATION_CITY).toString() + """",
+                        "country" : """" + "DE" + """",
                         "billingAddress" : """" + txtStreetAddress.text.toString() + """",
-                        "billingPostCode" : """" + txtPostal.text.toString() + """",
-                        "billingCity" : """" + txtCity.text.toString() + """",
-                        "billingCountry" : """" + txtCountry.text.toString() + """",
+                        "billingPostCode" : """" + locationIntent.getStringExtra(LOCATION_POSTAL).toString() + """",
+                        "billingCity" : """" + locationIntent.getStringExtra(LOCATION_CITY).toString() + """",
+                        "billingCountry" : """" + "DE" + """",
                         "shopKeeper" : true
                       }
                     """
@@ -173,4 +179,5 @@ class ABOBuchenUser : Fragment() {
         }
 
     }
+
 }

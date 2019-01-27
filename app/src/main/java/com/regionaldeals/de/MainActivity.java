@@ -36,6 +36,7 @@ import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
 import com.regionaldeals.de.Utils.SharedPreferenceUtils;
 import com.regionaldeals.de.fragment.Main;
+import com.regionaldeals.de.location.LocationPrediction;
 import com.tooltip.Tooltip;
 
 import org.json.JSONArray;
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     ViewPager vp = fragment.getView().findViewById(R.id.view_pager);
                     vp.setCurrentItem(5);
                 } else if (id == R.id.nav_ort) {
-                    Intent startActivityIntent = new Intent(MainActivity.this, LocationManual.class);
+                    Intent startActivityIntent = new Intent(MainActivity.this, LocationPrediction.class);
                     startActivity(startActivityIntent);
                 } else if (id == R.id.nav_benachrichtigungen) {
                     Intent startActivityIntent = new Intent(MainActivity.this, NotificationsActivity.class);

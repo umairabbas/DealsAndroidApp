@@ -113,6 +113,12 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:allowBackup="true"
+            android:name=".location.LocationPrediction"
+            android:label="@string/add_shops"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:allowBackup="true"
             android:name=".NotificationDealsActivity"
             android:label="@string/new_deals"
             android:theme="@style/AppTheme"

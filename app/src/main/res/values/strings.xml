@@ -208,4 +208,16 @@
     <string name="choose">Choose</string>
 
     <string name="dataSecurity">This app uses cookies to provide you with the best possible service and to analyse user behaviour in pseudonymous form. By continuing, you accept the use of cookies and agree to the web analysis measures. You will find further information and the possibility of revocation in our data privacy declaration.\n\nLink: https://www.regionaldeals.de/#datenschutz</string>
+
+    <string name="location_granted">location permission granted</string>
+    <string name="location_denied">location permission not granted</string>
+    <string name="location_permission_title">location permission required</string>
+    <string name="location_permission_message">This app requires location for automatic address</string>
+    <string name="ok_button">OK</string>
+    <string name="location_setting">Location Settings</string>
+    <string name="enable_location">Enable Location</string>
+    <string name="enable_location_message">Your device location is disabled, please activate location to fetch address.</string>
+    <string name="stadt_post_oder_ort">City or Postal Code</string>
+    <string name="wohnort_plz_land">City, Postal und Country</string>
+
 </resources>
