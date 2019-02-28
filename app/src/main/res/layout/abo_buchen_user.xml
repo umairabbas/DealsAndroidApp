@@ -134,7 +134,7 @@
                 app:counterEnabled="true"
                 app:counterMaxLength="20"
                 app:errorEnabled="true"
-                app:layout_constraintBottom_toTopOf="@id/inputMobile"
+                app:layout_constraintBottom_toTopOf="@id/inputStreetAddress"
                 app:layout_constraintTop_toBottomOf="@id/inputLast">
 
                 <EditText
@@ -147,25 +147,6 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/inputMobile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:counterEnabled="true"
-                app:counterMaxLength="20"
-                app:errorEnabled="true"
-                app:layout_constraintBottom_toTopOf="@id/inputStreetAddress"
-                app:layout_constraintTop_toBottomOf="@id/inputPhone">
-
-                <EditText
-                    android:id="@+id/txtMobile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/mobile"
-                    android:inputType="phone"
-                    android:maxLength="20" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
                 android:id="@+id/inputStreetAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -173,7 +154,7 @@
                 app:counterMaxLength="100"
                 app:errorEnabled="true"
                 app:layout_constraintBottom_toTopOf="@id/inputAddress"
-                app:layout_constraintTop_toBottomOf="@id/inputMobile">
+                app:layout_constraintTop_toBottomOf="@id/inputPhone">
 
                 <EditText
                     android:id="@+id/txtStreetAddress"
@@ -214,7 +195,7 @@
     </ScrollView>
 
     <ProgressBar
-        android:id="@+id/progressBarProcessing"
+        android:id="@+id/progressBarProcessingUser"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

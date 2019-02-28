@@ -12,12 +12,6 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <!--<ImageView android:src="@drawable/logo_320_trans"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="72dp"-->
-            <!--android:layout_marginBottom="24dp"-->
-            <!--android:layout_gravity="center_horizontal" />-->
-
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
-                android:hint="Shop Name" />
+                android:hint="@string/shop_name" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -40,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:lines="2"
                 android:inputType="textMultiLine"
-                android:hint="Shop Details..." />
+                android:hint="@string/shop_details" />
         </android.support.design.widget.TextInputLayout>
 
         <TextView
@@ -93,25 +87,25 @@
                 android:lines="3"
                 android:focusable="false"
                 android:inputType="textMultiLine"
-                android:hint="Select Location/Address..." />
+                android:hint="@string/select_location_address" />
         </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:id="@+id/ShopCityLabel"
-            android:layout_marginTop="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/city"
-            android:textColor="#777777"
-            android:textSize="26px"
-            />
-        <Spinner
-            android:id="@+id/spinner_city"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown"
-            android:paddingTop="10dp"
-            android:layout_marginBottom="8dp"/>
+        <!--<TextView-->
+            <!--android:id="@+id/ShopCityLabel"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/city"-->
+            <!--android:textColor="#777777"-->
+            <!--android:textSize="26px"-->
+            <!--/>-->
+        <!--<Spinner-->
+            <!--android:id="@+id/spinner_city"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:spinnerMode="dropdown"-->
+            <!--android:paddingTop="10dp"-->
+            <!--android:layout_marginBottom="8dp"/>-->
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -122,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
-                android:hint="Shop Contact" />
+                android:hint="@string/shop_contact" />
         </android.support.design.widget.TextInputLayout>
 
         <!--<android.support.design.widget.TextInputLayout-->
@@ -146,7 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
-                android:hint="Shop Tax ID" />
+                android:hint="@string/shop_tax_id" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
@@ -158,7 +152,7 @@
             android:padding="12dp"
             android:textColor="@color/colorWhite"
             android:background="@color/colorPrimary"
-            android:text="Submit"/>
+            android:text="@string/submit"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_shop_del"
@@ -170,7 +164,7 @@
             android:visibility="gone"
             android:textColor="@color/colorWhite"
             android:background="@color/red"
-            android:text="Delete Shop"/>
+            android:text="@string/delete_shop"/>
 
     </LinearLayout>
 </ScrollView>

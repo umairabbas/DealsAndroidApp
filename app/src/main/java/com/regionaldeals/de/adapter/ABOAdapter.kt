@@ -37,9 +37,9 @@ class ABOAdapter() : RecyclerView.Adapter<ABOViewHolder>() {
         val p = URLImageParser(holder.itemView.planDesc, context)
         val htmlSpan = Html.fromHtml(plans.planDescription, p, null)
         holder.itemView.planDesc.text = htmlSpan
-        holder.itemView.subPrice.text = plans.planPrice.toString() + " " + plans.currency
+        holder.itemView.subPrice.text = plans.planPrice.toString() + " " + plans.currency + " Netto"
         holder.itemView.planDesc.movementMethod = LinkMovementMethod.getInstance()
-        holder.itemView.subMonat.text =  plans.numberBillingCycles.toString() + " Monat"
+        holder.itemView.subMonat.text =  plans.numberBillingCycles.toString() + " Monate"
 
         holder.itemView.btnPlan.setOnClickListener {
             mClickListener?.onItemClick(allPlans[position])

@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -49,7 +50,8 @@ class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.Ite
 
         override fun onReceive(context: Context, intent: Intent) {
             maxDistance = intent.getIntExtra("distance", maxDistance)
-            loadAllDeals()
+            val handler = Handler()
+            handler.postDelayed({ loadAllDeals() }, 300)
         }
     }
 

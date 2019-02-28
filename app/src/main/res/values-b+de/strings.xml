@@ -96,7 +96,7 @@
     <string name="start_date">Anfangsdatum</string>
     <string name="next_date">Nächstes Zahlungsdatum</string>
 
-    <string name="remaining">Verbleibende Deals: </string>
+    <string name="remaining">Deals: </string>
     <string name="deals_limit">Sie haben das Deals Limit für den aktuellen Abrechnungszeitraum erreicht</string>
 
     <string name="suberror">Bitte machen Sie das erste Abonnement</string>
@@ -162,20 +162,20 @@
     <string name="accept_terms">Ich akzeptiere alle oben genannten Bedingungen und Richtlinien.</string>
     <string name="data_privacy">Datenschutzerklärung</string>
     <string name="continue_text">Weiter</string>
-    <string name="agb_text">Zahlung sind monatlich per überweisung\n\nWir empfehlen ihnen eine dauertheftige abzuschließen\n\nUnsere KontoDaten (Sparkasse Aachen)\n\nKontoinhaber: Regionaldeals RD e.K.\nIBAN: DE66 3905 0000 1073 1335 79\nBIC: AACSDE33XX\n(Unsere kontodaten stehen in email)"</string>
+    <string name="agb_text">Zahlung sind monatlich per Überweisung zu begleichen\n\nWir empfehlen ihnen ein Dauerauftrag abzuschließen\n\nUnsere Kontodaten (Sparkasse Aachen)\n\nKontoinhaber: Regionaldeals RD e.K.\nIBAN: DE66 3905 0000 1073 1335 79\nBIC: AACSDE33XXX\n\nWichtig: bei jeder monatlichen Überweisung müssen Sie ihre Referenznummer im Verwendungszweck eingeben\n"</string>
     <string name="payment">Zahlung</string>
     <string name="user_data">Benutzerdaten</string>
     <string name="summary">Zusammenfassung</string>
     <string name="terms_cond">Geschäftsbedingungen</string>
-    <string name="shop_terms">Allgemeine Geschäftsordnung gelesen und akzeptiert</string>
+    <string name="shop_terms">Allgemeine Geschäftsbedingung gelesen und akzeptiert</string>
     <string name="shop_agb">AGB (https://www.regionaldeals.de/#agb), Impressum (https://www.regionaldeals.de/#impressum) und Datenschutz (https://www.regionaldeals.de/#datenschutz) gelesen und akzeptiert</string>
     <string name="contract_close">Vertrag abschließen</string>
     <string name="packages">Angebotspaket</string>
-    <string name="Verwendungzweke">Verwendungzweke:</string>
-    <string name="gewahlter_tariff">Gewählter Tariff:</string>
+    <string name="Verwendungzweke">Verwendungszweck: </string>
+    <string name="gewahlter_tariff">Gewählter Tarif: </string>
 
-    <string name="zahlung_text">Zahlung Monatlich per überweisung (Dauerauftrag wird empfehlen)</string>
-    <string name="zahlung_info_text">Wichtig: Für jeder monatlich überweisung müssen Sie die Referenznummer in verwendungzweke eingeben</string>
+    <string name="zahlung_text">Zahlung Monatlich per überweisung (Dauerauftrag wird empfohlen)</string>
+    <string name="zahlung_info_text">Wichtig: Für jede monatliche Überweisung müssen Sie die Referenznummer im Verwendungszweck eingeben</string>
 
     <string name="firstname">Vorname</string>
     <string name="last_name">Nachname</string>
@@ -196,10 +196,28 @@
     <string name="location_permission_message">Diese App benötigt die Standortberechtigung für die automatische Adresserkennung</string>
     <string name="ok_button">OK</string>
     <string name="location_setting">Location Settings</string>
-    <string name="enable_location">Enable Location</string>
+    <string name="enable_location">Location zugegeben</string>
     <string name="enable_location_message">Ihre Standorteinstellungen sind deaktiviert. Bitte aktivieren Sie den Standort, um die Adresse zu verfolgen</string>
     <string name="stadt_post_oder_ort">Stadt, Post oder Ort</string>
     <string name="wohnort_plz_land">Wohnort, PLZ und Land</string>
+
+
+    <string name="shop_name">Geschäftsname</string>
+    <string name="shop_details">Geschäftsprodukte bzw. Dienstleistungen</string>
+    <string name="select_location_address">Adresse auswählen...</string>
+    <string name="shop_contact">Telefonnummer</string>
+    <string name="shop_tax_id">Steuernummer</string>
+    <string name="delete_shop">Geschäft löschen</string>
+
+
+    <string name="deal_type">Deal Art</string>
+    <string name="title">Titel</string>
+    <string name="select_shop">Geschäft auswählen</string>
+    <string name="origional_price">Original Preis (€)</string>
+    <string name="null_euro">Wichtig: Fallz Sie keine Angebote anbieten, bitte füllen Sie den Bereich mit 0€ ein</string>
+    <string name="deal_price">Deal Preis (€)</string>
+    <string name="expiry_date">Verfallsdatum</string>
+    <string name="if_not_already_kindly_pay_for_activation">Falls nicht bereits vorhanden, zahlen Sie bitte für das gewünschte ABO-Paket.</string>
 
 
 </resources>

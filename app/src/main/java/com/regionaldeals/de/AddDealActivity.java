@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
@@ -75,31 +76,31 @@ import cz.msebera.android.httpclient.Header;
 public class AddDealActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private List<Shop> shopList;
-    private List<CategoryObject> catList;
+    //private List<CategoryObject> catList;
     private JSONArray shopArr = null;
     private JSONArray catArr = null;
     private SpinAdapter adapter;
-    private SpinAdapterCat adapterCat;
+    //private SpinAdapterCat adapterCat;
     private String userId = "";
     private EditText expiry;
     private Calendar calendarDate;
     private Context context;
     private Activity activity;
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    //private static final String TAG = MainActivity.class.getSimpleName();
     private String selectedFilePath;
     private List<String> selectedFilePathList;
     private String resultData = "";
     private int shopId = -1;
     private String dealTypeValue = "TYPE_DEALS";
-    private String catShortName = "essen";
+    //private String catShortName = "essen";
 
     private SliderLayout mDemoSlider;
     private Button bUpload;
     private ProgressDialog dialog;
     private Spinner spinnerShop;
     private Spinner spinnerDeals;
-    private Spinner spinnerCat;
+    //private Spinner spinnerCat;
     private EditText inputUrl;
     private EditText inputTitle;
     private EditText inputDesc;
@@ -131,13 +132,17 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         mDemoSlider = (SliderLayout) findViewById(R.id.image);
         spinnerShop = (Spinner) findViewById(R.id.spinner_shops);
         spinnerDeals = (Spinner) findViewById(R.id.spinner_dealType);
-        spinnerCat = (Spinner) findViewById(R.id.spinner_cat);
+        //spinnerCat = (Spinner) findViewById(R.id.spinner_cat);
         inputTitle = (EditText) findViewById(R.id.input_title);
         inputDesc = (EditText) findViewById(R.id.input_desc);
         inputOPrice = (EditText) findViewById(R.id.input_oprice);
         inputDPrice = (EditText) findViewById(R.id.input_dprice);
         inputUrl = (EditText) findViewById(R.id.input_url);
         attachImg = (ImageView) findViewById(R.id.ivAttachment);
+        TextView label1 = (TextView) findViewById(R.id.link_signup1);
+        TextView label2 = (TextView) findViewById(R.id.link_signup2);
+        TextInputLayout tVPrice = (TextInputLayout) findViewById(R.id.tVPrice);
+
 
         LinearLayout dealType = (LinearLayout) findViewById(R.id.deal_type_layout);
 
@@ -170,14 +175,14 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerShop.setOnItemSelectedListener(this);
 
-        //Adapter Category
-        catList = new ArrayList<>();
-        adapterCat = new SpinAdapterCat(this,
-                R.layout.custom_spinner_item,
-                catList);
-        spinnerCat.setAdapter(adapterCat);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCat.setOnItemSelectedListener(this);
+//        //Adapter Category
+//        catList = new ArrayList<>();
+//        adapterCat = new SpinAdapterCat(this,
+//                R.layout.custom_spinner_item,
+//                catList);
+//        spinnerCat.setAdapter(adapterCat);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerCat.setOnItemSelectedListener(this);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -187,12 +192,12 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
             }
         }, 300);
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getCatFromServer();
-            }
-        }, 500);
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                getCatFromServer();
+//            }
+//        }, 500);
 
         attachImg.setOnClickListener(this);
         bUpload.setOnClickListener(this);
@@ -214,6 +219,13 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                 dp.show();
             }
         });
+
+        if(isGutscheine){
+            label1.setVisibility(View.GONE);
+            label2.setVisibility(View.GONE);
+            tVPrice.setHint("Wert des Gutscheines");
+
+        }
 
 
     }
@@ -258,44 +270,44 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         });
     }
 
-    private void getCatFromServer() {
-        AsyncHttpClient androidClient = new AsyncHttpClient();
-        RequestParams params = new RequestParams("userid", userId);
-        androidClient.get(this.getString(R.string.apiUrl) + URL_Cat, params, new TextHttpResponseHandler() {
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.d("TAG", getString(R.string.token_failed) + responseString);
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, String responseToken) {
-                Log.d("TAG", "Client token: " + responseToken);
-                try {
-                    catList.clear();
-                    catArr = new JSONArray(responseToken);
-                    if (catArr != null) {
-                        for (int i = 0; i < catArr.length(); i++) {
-                            JSONObject c = catArr.getJSONObject(i);
-                            Gson gson = new GsonBuilder().create();
-                            CategoryObject newDeal = gson.fromJson(c.toString(), CategoryObject.class);
-                            catList.add(newDeal);
-                        }
-                        adapterCat.notifyDataSetChanged();
-
-                        if (catList.size() <= 0) {
-                            Toast.makeText(context, "No categories found", Toast.LENGTH_SHORT).show();
-                            //finish();
-                        }
-                    } else {
-                        Log.d("Deals: ", "null");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (Throwable t) {
-                }
-            }
-        });
-    }
+//    private void getCatFromServer() {
+//        AsyncHttpClient androidClient = new AsyncHttpClient();
+//        RequestParams params = new RequestParams("userid", userId);
+//        androidClient.get(this.getString(R.string.apiUrl) + URL_Cat, params, new TextHttpResponseHandler() {
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+//                Log.d("TAG", getString(R.string.token_failed) + responseString);
+//            }
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, String responseToken) {
+//                Log.d("TAG", "Client token: " + responseToken);
+//                try {
+//                    catList.clear();
+//                    catArr = new JSONArray(responseToken);
+//                    if (catArr != null) {
+//                        for (int i = 0; i < catArr.length(); i++) {
+//                            JSONObject c = catArr.getJSONObject(i);
+//                            Gson gson = new GsonBuilder().create();
+//                            CategoryObject newDeal = gson.fromJson(c.toString(), CategoryObject.class);
+//                            catList.add(newDeal);
+//                        }
+//                        adapterCat.notifyDataSetChanged();
+//
+//                        if (catList.size() <= 0) {
+//                            Toast.makeText(context, "No categories found", Toast.LENGTH_SHORT).show();
+//                            //finish();
+//                        }
+//                    } else {
+//                        Log.d("Deals: ", "null");
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                } catch (Throwable t) {
+//                }
+//            }
+//        });
+//    }
 
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
         switch (parent.getId()) {
@@ -315,10 +327,10 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                         break;
                 }
                 break;
-            case R.id.spinner_cat:
-                CategoryObject tmp2 = (CategoryObject) parent.getItemAtPosition(position);
-                catShortName = tmp2.getCatShortName();
-                break;
+//            case R.id.spinner_cat:
+//                CategoryObject tmp2 = (CategoryObject) parent.getItemAtPosition(position);
+//                catShortName = tmp2.getCatShortName();
+//                break;
         }
     }
 
@@ -483,13 +495,15 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
             int userIdInt = Integer.valueOf(userId);
             client.addFormPartInt("userid", userIdInt);
             client.addFormPartInt("shopid", shopId);
-            client.addFormPart("cat", catShortName);
+            //client.addFormPart("cat", catShortName);
             client.addFormPartLong("createdate", System.currentTimeMillis());
             client.addFormPartLong("publishdate", System.currentTimeMillis());
             client.addFormPartLong("expirydate", calendarDate.getTimeInMillis());
             //60 is gor DE
             client.addFormPartInt("tz", 60);
             client.addFormPart("currency", "EUR");
+            client.addFormPart("cat", null);
+
 
             if (isGutscheine) {
                 client.addFormPart("gutscheintitle", inputTitle.getText().toString());

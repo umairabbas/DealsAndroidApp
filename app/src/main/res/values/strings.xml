@@ -109,7 +109,7 @@
     <string name="start_date">Start date</string>
     <string name="next_date">Next payment date</string>
 
-    <string name="remaining">Deals Remaining: </string>
+    <string name="remaining">Deals: </string>
     <string name="deals_limit">You have reached deals limit for the current billing cycle</string>
 
     <string name="suberror">Kindly make subscription first</string>
@@ -219,5 +219,22 @@
     <string name="enable_location_message">Your device location is disabled, please activate location to fetch address.</string>
     <string name="stadt_post_oder_ort">City or Postal Code</string>
     <string name="wohnort_plz_land">City, Postal und Country</string>
+
+
+
+    <string name="shop_name">Shop Name</string>
+    <string name="shop_details">Shop Details...</string>
+    <string name="select_location_address">Select Address...</string>
+    <string name="shop_contact">Shop Contact</string>
+    <string name="shop_tax_id">Shop Tax ID</string>
+    <string name="delete_shop">Delete Shop</string>
+    <string name="deal_type">Deal Type</string>
+    <string name="title">Title</string>
+    <string name="select_shop">Select Shop</string>
+    <string name="null_euro">Wichtig: Fallz Sie keine Angebote anbieten, bitte füllen Sie den Bereich mit 0€ ein</string>
+    <string name="origional_price">Origional Price (€)</string>
+    <string name="deal_price">Deal Price (€)</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="if_not_already_kindly_pay_for_activation">If not already, kindly pay for activation.</string>
 
 </resources>

@@ -31,6 +31,18 @@
             android:id="@+id/nav_appTeilen"
             android:icon="@drawable/ic_share_black_24dp"
             android:title="@string/menu_share" />
+        <item
+            android:id="@+id/agb"
+            android:icon="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:title="AGB" />
+        <item
+            android:id="@+id/dataschnutz"
+            android:icon="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:title="@string/data_privacy" />
+        <item
+            android:id="@+id/impressung"
+            android:icon="@drawable/ic_keyboard_arrow_right_black_24dp"
+            android:title="Impressum" />
     </group>
 
     <item android:title="@string/menu_shop">
@@ -51,18 +63,6 @@
                 android:id="@+id/anzeigen_erstellen"
                 android:icon="@drawable/ic_add_shopping_cart_black_24dp"
                 android:title="@string/menu_myshops" />
-            <item
-                android:id="@+id/agb"
-                android:icon="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:title="AGB" />
-            <item
-                android:id="@+id/dataschnutz"
-                android:icon="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:title="@string/data_privacy" />
-            <item
-                android:id="@+id/impressung"
-                android:icon="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:title="Impressum" />
         </menu>
     </item>
 

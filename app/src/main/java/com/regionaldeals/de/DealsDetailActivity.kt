@@ -15,7 +15,6 @@ import com.daimajia.slider.library.Animations.DescriptionAnimation
 import com.daimajia.slider.library.SliderLayout
 import com.daimajia.slider.library.SliderTypes.BaseSliderView
 import com.daimajia.slider.library.SliderTypes.TextSliderView
-import com.facebook.drawee.backends.pipeline.Fresco
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -36,6 +35,9 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.util.*
 import javax.net.ssl.HttpsURLConnection
+
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.stfalcon.frescoimageviewer.*;
 
 /**
  * Created by Umi on 13.09.2017.
@@ -79,7 +81,6 @@ class DealsDetailActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListener
 
             enableDeleteBtn = arguments.getBoolean("deleteEnable", false)
             isGutschein = arguments.getBoolean("isGutschein", false)
-
 
             //If gutschein, else deal
             if (isGutschein) {
@@ -277,9 +278,9 @@ class DealsDetailActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListener
     }
 
     override fun onSliderClick(slider: BaseSliderView) {
-//        ImageViewer.Builder(this, images)
-//                .setStartPosition(0)
-//                .show()
+        ImageViewer.Builder(this, images)
+                .setStartPosition(0)
+                .show()
     }
 
     /**

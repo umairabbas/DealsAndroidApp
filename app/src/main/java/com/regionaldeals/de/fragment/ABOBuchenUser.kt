@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.regionaldeals.de.Constants.*
+import com.regionaldeals.de.MainActivity
 import com.regionaldeals.de.R
 import com.regionaldeals.de.Utils.PrefsHelper
 import com.regionaldeals.de.entities.Plans
@@ -20,6 +21,7 @@ import kotlinx.android.synthetic.main.abo_buchen_user.*
 import kotlinx.android.synthetic.main.item_list_address_prediction.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import org.json.JSONObject
 
 class ABOBuchenUser : Fragment() {
 
@@ -27,6 +29,8 @@ class ABOBuchenUser : Fragment() {
     private var model: ABOViewModel? = null
 
     private var url: String = "/mobile/api/users/updateuser"
+    private var urlplan: String = "/mobile/api/subscriptions/update_subscription"
+    private var urlSub: String = "/mobile/api/subscriptions/subscription?userid="
 
     private lateinit var prefHelper: PrefsHelper
 
@@ -60,10 +64,6 @@ class ABOBuchenUser : Fragment() {
             value = false
             inputPhone.error = " "
         }
-        if (txtMobile.text.toString().isEmpty()) {
-            value = false
-            inputMobile.error = " "
-        }
         if (txtStreetAddress.text.toString().isEmpty()) {
             value = false
             inputStreetAddress.error = " "
@@ -85,8 +85,6 @@ class ABOBuchenUser : Fragment() {
 
         inputPhone.error = null
 
-        inputMobile.error = null
-
         inputStreetAddress.error = null
 
         inputAddress.error = null
@@ -95,10 +93,44 @@ class ABOBuchenUser : Fragment() {
 
     private fun goToAGB() {
         view?.let {
-            val args = android.os.Bundle().apply {
-                putParcelable(com.regionaldeals.de.Constants.SELECTED_PLAN, getSelectedPlan())
-            }
-            androidx.navigation.Navigation.findNavController(it).navigate(com.regionaldeals.de.R.id.action_abo_buchen_user_to_abo_buchen_summary, args)
+
+            val price = getSelectedPlan()?.planPrice!!
+
+                if(price.equals(0.0) || price.equals(0)) {
+                    progressBarProcessingUser.isIndeterminate = true
+                    val formData = listOf("userid" to prefHelper.userId.toInt(), "billing_plan" to getSelectedPlan()?.planShortName)
+                    model?.buyPlan(urlplan, formData) {
+                        if (it.statusCode == 200) {
+                            model?.updateSubscription(urlSub + prefHelper.userId) { subRes ->
+                                val obj = JSONObject(String(subRes.data))
+                                val msg = obj.getString("message")
+                                if (msg == "PLANS_SUBSCRIPTIONS_OK") {
+                                    Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
+                                    val data = obj.getJSONObject("data")
+                                    context?.let { context ->
+                                        prefHelper.updateSubscription(data.toString(), context)
+                                    }
+                                }
+                                val intent = Intent(context, MainActivity::class.java)
+                                intent.putExtra("userEmail", prefHelper.email)
+                                intent.putExtra("userId", prefHelper.userId.toInt())
+                                intent.putExtra("subscribed", true)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                activity?.setResult(Activity.RESULT_OK, intent)
+                                progressBarProcessingUser.isIndeterminate = false
+                                activity?.finish()
+                            }
+                        }
+                    }
+
+                } else {
+                    val args = android.os.Bundle().apply {
+                        putParcelable(com.regionaldeals.de.Constants.SELECTED_PLAN, getSelectedPlan())
+                    }
+                    androidx.navigation.Navigation.findNavController(it).navigate(com.regionaldeals.de.R.id.action_abo_buchen_user_to_abo_buchen_summary, args)
+
+                }
+
         }
     }
 
@@ -130,7 +162,7 @@ class ABOBuchenUser : Fragment() {
 
         btnUserSubmit.setOnClickListener {
 
-            progressBarProcessing.isIndeterminate = true
+            progressBarProcessingUser.isIndeterminate = true
 
             resetValidations()
 
@@ -144,7 +176,7 @@ class ABOBuchenUser : Fragment() {
                         "lastName" : """" + txtLast.text.toString() + """",
                         "email" : """" + prefHelper.email + """",
                         "phone" : """" + txtPhone.text.toString() + """",
-                        "mobile" : """" + txtMobile.text.toString() + """",
+                        "mobile" : """" + txtPhone.text.toString() + """",
                         "address" : """" + txtStreetAddress.text.toString() + """",
                         "postCode" : """" + locationIntent.getStringExtra(LOCATION_POSTAL).toString() + """",
                         "city" : """" + locationIntent.getStringExtra(LOCATION_CITY).toString() + """",
@@ -158,7 +190,7 @@ class ABOBuchenUser : Fragment() {
                     """
 
                     model?.updateUserData(url, bodyJson) { response ->
-                        uiThread { progressBarProcessing.isIndeterminate = false }
+                        uiThread { progressBarProcessingUser.isIndeterminate = false }
                         if (!response) {
                             context?.let {
                                 Toast.makeText(it, "User Data Update problem, please try later", Toast.LENGTH_SHORT).show()
@@ -173,7 +205,7 @@ class ABOBuchenUser : Fragment() {
                     }
                 }
             } else {
-                progressBarProcessing.isIndeterminate = false
+                progressBarProcessingUser.isIndeterminate = false
             }
 
         }

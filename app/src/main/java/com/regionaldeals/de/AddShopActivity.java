@@ -63,7 +63,7 @@ import butterknife.ButterKnife;
  * Created by Umi on 28.10.2017.
  */
 
-public class AddShopActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddShopActivity extends AppCompatActivity{
 
     @BindView(com.regionaldeals.de.R.id.input_name)
     EditText _nameText;
@@ -105,7 +105,7 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
     private String shopCity = "";
     private String shopCountry = "";
     private Geocoder mGeocoder;
-    private Spinner shopCitySpinner;
+//    private Spinner shopCitySpinner;
     private static String[] COUNTRIES;
 
     private PopupWindow pw;
@@ -123,32 +123,34 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
         activity = this;
         isEdit = false;
 
-        shopCitySpinner = (Spinner) findViewById(R.id.spinner_city);
+//        shopCitySpinner = (Spinner) findViewById(R.id.spinner_city);
 
         SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-        String restoredCities = prefs.getString("citiesString", null);
+//        String restoredCities = prefs.getString("citiesString", null);
         String restoredCat = prefs.getString("categoriesObj", null);
 
 
-        if (restoredCities == null) {
-            //should not be
-            Toast.makeText(this, "Please restart or update app", Toast.LENGTH_LONG).show();
-            finish();
-        } else {
-            COUNTRIES = restoredCities.split(",");
-        }
+//        if (restoredCities == null) {
+//            //should not be
+//            Toast.makeText(this, "Please restart or update app", Toast.LENGTH_LONG).show();
+//            finish();
+//        } else {
+//            COUNTRIES = restoredCities.split(",");
+//        }
 
-        Arrays.sort(COUNTRIES);
-        //Adapter Deals
-        ArrayAdapter<String> adapterDeals = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, COUNTRIES);
-        adapterDeals.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        shopCitySpinner.setAdapter(adapterDeals);
-        shopCitySpinner.setOnItemSelectedListener(this);
+//        Arrays.sort(COUNTRIES);
+//        //Adapter Deals
+//        ArrayAdapter<String> adapterDeals = new ArrayAdapter<String>(this,
+//                android.R.layout.simple_spinner_item, COUNTRIES);
+//        adapterDeals.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        shopCitySpinner.setAdapter(adapterDeals);
+//        shopCitySpinner.setOnItemSelectedListener(this);
 
         ButterKnife.bind(this);
 
         Shop editShop = (Shop) getIntent().getSerializableExtra("EXTRA_SHOP_OBJ");
+
+        mGeocoder = new Geocoder(this, Locale.getDefault());
 
         if (editShop != null) {
             isEdit = true;
@@ -163,14 +165,11 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
             shopActive = editShop.getActive();
             shopId = editShop.getShopId();
             _delButton.setVisibility(View.VISIBLE);
-            int index = 0;
-            for (int i = 0; i < COUNTRIES.length; i++) {
-                if (COUNTRIES[i].equals(editShop.getShopCity())) {
-                    index = i;
-                    break;
-                }
+            try {
+                getCityNameByCoordinates(lat, lng);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            shopCitySpinner.setSelection(index);
 
             _delButton.setOnClickListener(new View.OnClickListener() {
 
@@ -186,8 +185,6 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
                 }
             });
         }
-
-        mGeocoder = new Geocoder(this, Locale.getDefault());
 
         _placeText.setOnClickListener(new View.OnClickListener() {
 
@@ -234,13 +231,13 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
     }
 
 
-    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-        switch (parent.getId()) {
-            case R.id.spinner_city:
-                shopCity = COUNTRIES[position];
-                break;
-        }
-    }
+//    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+//        switch (parent.getId()) {
+//            case R.id.spinner_city:
+//                shopCity = COUNTRIES[position];
+//                break;
+//        }
+//    }
 
     /*
      * Function to set up initial settings: Creating the data source for drop-down list, initialising the checkselected[], set the drop-down list
@@ -275,7 +272,6 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 if (!expanded) {
                     //display all selected values
                     String selected = "";
@@ -303,7 +299,6 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
         createButton.setOnClickListener(new OnClickListener() {
 
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 initiatePopUp(items, tv);
             }
         });
@@ -355,16 +350,16 @@ public class AddShopActivity extends AppCompatActivity implements AdapterView.On
         list.setAdapter(adapter);
     }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-    }
+//    @Override
+//    public void onNothingSelected(AdapterView<?> adapterView) {
+//    }
 
     private void getCityNameByCoordinates(double lat, double lon) throws IOException {
 
         List<Address> addresses = mGeocoder.getFromLocation(lat, lon, 1);
         if (addresses != null && addresses.size() > 0) {
             shopCity = addresses.get(0).getLocality();
-            shopCountry = addresses.get(0).getCountryName();
+            shopCountry = addresses.get(0).getCountryCode();
         }
     }
 

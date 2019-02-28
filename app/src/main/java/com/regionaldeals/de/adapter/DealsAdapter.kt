@@ -30,7 +30,11 @@ class DealsAdapter(private val isFromFav: Boolean, private val skipFavBtn: Boole
 
         val deals = allDeals[position]
         holder.dealTitle.text = deals.dealTitle
-        holder.dealDescription.text = deals.shop!!.shopName + ", " + deals.shop!!.shopCity!!.substring(0, 1).toUpperCase() + deals.shop!!.shopCity!!.substring(1)
+        deals.shop?.let {shop ->
+            shop.shopCity?.let{city ->
+                holder.dealDescription.text = shop.shopName + ", " + city.substring(0, 1).toUpperCase() + city.substring(1)
+            }
+        }
         holder.dealOldPrice.setText(java.lang.Double.toString(deals.originalPrice!!) + "€")
         holder.dealPrice.setText(java.lang.Double.toString(deals.dealPrice!!) + "€")
         val imgUrl = deals.getDealImageUrl(context) + "&imagecount=1&res=470x320"

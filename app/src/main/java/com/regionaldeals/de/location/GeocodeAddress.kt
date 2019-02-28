@@ -14,14 +14,17 @@ class GeocodeAddress(context: Context) {
         geocoder = Geocoder(context, Locale.getDefault())
     }
 
-    fun setGeoCoder(geocoder: Geocoder) {
-        this.geocoder = geocoder
-    }
-
     fun geocodeAddress(location: Location): String {
-        val addressList = geocoder.getFromLocation(
-                location.latitude, location.longitude, 1)
-        return extractAddress(addressList)
+        var addressList = listOf<Address>()
+        try {
+            addressList = geocoder.getFromLocation(
+                    location.latitude, location.longitude, 1)
+            return extractAddress(addressList)
+
+        } catch (e: Exception) {
+
+        }
+        return ""
     }
 
     private fun extractAddress(addressList: List<Address>): String {
