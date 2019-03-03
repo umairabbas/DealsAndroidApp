@@ -95,7 +95,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                 JSONObject data = new JSONObject(restoredSub);
                 dealCounter = data.getInt("deals_listing");
                 subStatus = data.getString("subscriptionStatus");
-                dealCount.setText(" " + Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
+                dealCount.setText(" " + Integer.toString(dealCounter) + "/30");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -177,7 +177,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
                 Boolean dealSuccess = data.getBooleanExtra("dealAddSuccess", false);
                 if (dealSuccess) {
                     dealCounter++;
-                    dealCount.setText(" " + Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
+                    dealCount.setText(" " + Integer.toString(dealCounter) + "/30");
                     getSubscription();
                 }
             }

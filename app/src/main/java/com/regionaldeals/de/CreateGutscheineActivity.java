@@ -94,7 +94,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
                 JSONObject data = new JSONObject(restoredSub);
                 dealCounter = data.getInt("gutschein_listing");
                 subStatus = data.getString("subscriptionStatus");
-                dealCount.setText(" " + Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
+                dealCount.setText(" " + Integer.toString(dealCounter) + "/30");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -161,7 +161,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
                 Boolean dealSuccess = data.getBooleanExtra("dealAddSuccess", false);
                 if (dealSuccess) {
                     dealCounter++;
-                    dealCount.setText(" " + Integer.toString(dealCounter) + "/30" + " (" + subStatus + ") ");
+                    dealCount.setText(" " + Integer.toString(dealCounter) + "/30");
                     getSubscription();
                 }
             }

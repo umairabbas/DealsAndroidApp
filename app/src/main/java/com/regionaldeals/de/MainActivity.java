@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -55,7 +55,7 @@ import cz.msebera.android.httpclient.Header;
 
 import static com.regionaldeals.de.Constants.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private FragmentManager fragmentManager;
     private Fragment fragment = null;
@@ -67,24 +67,23 @@ public class MainActivity extends AppCompatActivity {
     private static boolean shouldRefresh = false;
     private String token = "";
     private String city = "";
-    private String IMEINumber = "";
+    private String InstallationNumber = "";
     private Boolean subscribed = false;
     private Boolean notIconOn = false;
     private MenuItem notMenuItem;
     private String email = "";
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String android_id = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        IMEINumber = android_id;
+        InstallationNumber = Installation.id(this);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -95,11 +94,11 @@ public class MainActivity extends AppCompatActivity {
         fragment = new Main();
         fragmentTransaction.replace(R.id.main_container_wrapper, fragment);
         fragmentTransaction.commit();
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         View header = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        ImageView loginImg = (ImageView) header.findViewById(R.id.imageView);
+        ImageView loginImg =  header.findViewById(R.id.imageView);
 
-        emailMenu = (TextView) header.findViewById(R.id.textemail);
+        emailMenu = header.findViewById(R.id.textemail);
 
         if (getIntent().hasExtra("userCity")) {
             city = getIntent().getStringExtra("userCity");
@@ -121,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (Throwable t) {
+                t.printStackTrace();
             }
         }
         if (restoredSub != null) {
@@ -135,6 +135,21 @@ public class MainActivity extends AppCompatActivity {
         }
         if (restoredCat == null) {
             getCatFromServer();
+        }
+
+        navigationView.setNavigationItemSelectedListener(this);
+
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+        if (getIntent().hasExtra("notificationBody")) {
+            String body = getIntent().getStringExtra("notificationBody");
+            getIntent().removeExtra("notificationBody");
+            Intent startActivityIntent = new Intent(MainActivity.this, NotificationDealsActivity.class);
+            startActivityIntent.putExtra("notificationBody", body);
+            startActivity(startActivityIntent);
+        } else if (getIntent().hasExtra("notificationGut")) {
+            //Make notification icon color yellow
+            notIconOn = true;
         }
 
         loginImg.setOnClickListener(new View.OnClickListener() {
@@ -154,105 +169,89 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.nav_favourite) {
-                    ViewPager vp = fragment.getView().findViewById(R.id.view_pager);
-                    vp.setCurrentItem(5);
-                } else if (id == R.id.nav_ort) {
-                    Intent startActivityIntent = new Intent(MainActivity.this, LocationPrediction.class);
-                    startActivity(startActivityIntent);
-                } else if (id == R.id.nav_benachrichtigungen) {
-                    Intent startActivityIntent = new Intent(MainActivity.this, NotificationsActivity.class);
-                    startActivity(startActivityIntent);
-                } else if (id == R.id.nav_uberDealSpok) {
-                    Intent intent = new Intent(MainActivity.this, AboutActivity.class);
-                    startActivity(intent);
-                } else if (id == R.id.nav_appTeilen) {
-                    ShareCompat.IntentBuilder.from(MainActivity.this)
-                            .setType("text/plain")
-                            .setChooserTitle("Chooser title")
-                            .setText("http://play.google.com/store/apps/details?id=" + getPackageName())
-                            .startChooser();
-                } else if (id == R.id.abo_buchen) {
-                    if (!subscribed) {
-                        Intent intent = new Intent(MainActivity.this, SubscribeNewActivity.class);
-                        startActivityForResult(intent, SUB_REQUEST_CODE);
-                        shouldRefresh = true;
-                    }else {
-                        Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
-                        startActivity(intent);
-                    }
-                } else if (id == R.id.meine_anzeigen) {
-                    if (userId == 0) {
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
-                        shouldRefresh = true;
-                    } else if (!subscribed) {
-                        Snackbar.make(navigationView, getResources().getString(R.string.suberror), Snackbar.LENGTH_LONG).show();
-                    } else {
-                        Intent startActivityIntent = new Intent(MainActivity.this, CreateDealsActivity.class);
-                        startActivity(startActivityIntent);
-                    }
-                } else if (id == R.id.meine_gutscheien) {
-                    if (userId == 0) {
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
-                        shouldRefresh = true;
-                    } else if (!subscribed) {
-                        Snackbar.make(navigationView, getResources().getString(R.string.suberror), Snackbar.LENGTH_LONG).show();
-                    } else {
-                        Intent startActivityIntent = new Intent(MainActivity.this, CreateGutscheineActivity.class);
-                        startActivity(startActivityIntent);
-                    }
-                } else if (id == R.id.anzeigen_erstellen) {
-                    if (userId == 0) {
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivityForResult(intent, LOGIN_REQUEST_CODE);
-                        shouldRefresh = true;
-                    } else if (!subscribed) {
-                        Snackbar.make(navigationView, getResources().getString(R.string.suberror), Snackbar.LENGTH_LONG).show();
-                    } else {
-                        Intent startActivityIntent = new Intent(MainActivity.this, ShopActivity.class);
-                        startActivity(startActivityIntent);
-                    }
-                } else if (id == R.id.dataschnutz) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#datenschutz"));
-                    startActivity(browserIntent);
-                } else if (id == R.id.agb) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#agb"));
-                    startActivity(browserIntent);
-                } else if (id == R.id.impressung) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#impressum"));
-                    startActivity(browserIntent);
-                }
+    }
 
-
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.main_container_wrapper, fragment);
-                transaction.commit();
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                assert drawer != null;
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-        });
-
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
-        if (getIntent().hasExtra("notificationBody")) {
-            String body = getIntent().getStringExtra("notificationBody");
-            getIntent().removeExtra("notificationBody");
-            Intent startActivityIntent = new Intent(MainActivity.this, NotificationDealsActivity.class);
-            startActivityIntent.putExtra("notificationBody", body);
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.nav_favourite) {
+            ViewPager vp = fragment.getView().findViewById(R.id.view_pager);
+            vp.setCurrentItem(5);
+        } else if (id == R.id.nav_ort) {
+            Intent startActivityIntent = new Intent(MainActivity.this, LocationPrediction.class);
             startActivity(startActivityIntent);
-        } else if (getIntent().hasExtra("notificationGut")) {
-            //Make notification icon color yellow
-            notIconOn = true;
+        } else if (id == R.id.nav_benachrichtigungen) {
+            Intent startActivityIntent = new Intent(MainActivity.this, NotificationsActivity.class);
+            startActivity(startActivityIntent);
+        } else if (id == R.id.nav_uberDealSpok) {
+            Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_appTeilen) {
+            ShareCompat.IntentBuilder.from(MainActivity.this)
+                    .setType("text/plain")
+                    .setChooserTitle("Chooser title")
+                    .setText("http://play.google.com/store/apps/details?id=" + getPackageName())
+                    .startChooser();
+        } else if (id == R.id.abo_buchen) {
+            if (!subscribed) {
+                Intent intent = new Intent(MainActivity.this, SubscribeNewActivity.class);
+                startActivityForResult(intent, SUB_REQUEST_CODE);
+                shouldRefresh = true;
+            }else {
+                Intent intent = new Intent(MainActivity.this, SubscribeActivity.class);
+                startActivity(intent);
+            }
+        } else if (id == R.id.meine_anzeigen) {
+            if (userId == 0) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                shouldRefresh = true;
+            } else if (!subscribed) {
+                Snackbar.make(navigationView, getResources().getString(R.string.suberror), Snackbar.LENGTH_LONG).show();
+            } else {
+                Intent startActivityIntent = new Intent(MainActivity.this, CreateDealsActivity.class);
+                startActivity(startActivityIntent);
+            }
+        } else if (id == R.id.meine_gutscheien) {
+            if (userId == 0) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                shouldRefresh = true;
+            } else if (!subscribed) {
+                Snackbar.make(navigationView, getResources().getString(R.string.suberror), Snackbar.LENGTH_LONG).show();
+            } else {
+                Intent startActivityIntent = new Intent(MainActivity.this, CreateGutscheineActivity.class);
+                startActivity(startActivityIntent);
+            }
+        } else if (id == R.id.anzeigen_erstellen) {
+            if (userId == 0) {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivityForResult(intent, LOGIN_REQUEST_CODE);
+                shouldRefresh = true;
+            } else if (!subscribed) {
+                Snackbar.make(navigationView, getResources().getString(R.string.suberror), Snackbar.LENGTH_LONG).show();
+            } else {
+                Intent startActivityIntent = new Intent(MainActivity.this, ShopActivity.class);
+                startActivity(startActivityIntent);
+            }
+        } else if (id == R.id.dataschnutz) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#datenschutz"));
+            startActivity(browserIntent);
+        } else if (id == R.id.agb) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#agb"));
+            startActivity(browserIntent);
+        } else if (id == R.id.impressung) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#impressum"));
+            startActivity(browserIntent);
         }
 
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.main_container_wrapper, fragment);
+        transaction.commit();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        assert drawer != null;
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private void getCatFromServer() {
@@ -393,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LOGIN_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                String email = data.getStringExtra("userEmail");
+                email = data.getStringExtra("userEmail");
                 userId = data.getIntExtra("userId", 0);
                 emailMenu.setText(email);
                 //update Subscriptions
@@ -469,6 +468,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... args) {
 
             if (city.isEmpty()) {
+
                 String restoredText = SharedPreferenceUtils.getInstance(MainActivity.this).getStringValue(LOCATION_KEY, null);
                 if (restoredText != null) {
                     try {
@@ -484,16 +484,16 @@ public class MainActivity extends AppCompatActivity {
                 URL url = new URL(getApplicationContext().getString(R.string.apiUrl) + "/mobile/api/device/update_device");
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 conn.setRequestProperty("Accept", "application/json");
-                conn.setRequestProperty("Accept-Charset", "utf-8");
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
                 conn.connect();
+
                 JSONObject jsonParam = new JSONObject();
                 jsonParam.put("deviceType", "android");
                 jsonParam.put("deviceToken", token);
-                jsonParam.put("deviceUuidImei", IMEINumber);
+                jsonParam.put("deviceUuidImei", InstallationNumber);
                 jsonParam.put("deviceAppLanguage", Locale.getDefault().getLanguage());
 //                jsonParam.put("deviceLocationLat", lat);
 //                jsonParam.put("deviceLocationLong", lng);
@@ -507,7 +507,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("JSON", jsonParam.toString());
 
                 DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-                os.writeBytes(jsonParam.toString());
+                os.write(jsonParam.toString().getBytes("UTF-8"));
 
                 os.flush();
                 os.close();

@@ -26,6 +26,7 @@ import com.regionaldeals.de.Constants
 import com.regionaldeals.de.Constants.*
 import com.regionaldeals.de.MainActivity
 import com.regionaldeals.de.R
+import com.regionaldeals.de.Utils.PrefsHelper
 import com.regionaldeals.de.Utils.SharedPreferenceUtils
 import kotlinx.android.synthetic.main.location_prediction.*
 
@@ -35,6 +36,8 @@ class LocationPrediction : AppCompatActivity() {
     private var REQUEST_LOCATION_CODE = 101
     private lateinit var viewModel: AddressViewModel
     private var googleApiClient: GoogleApiClient? = null
+    private lateinit var prefHelper: PrefsHelper
+
 
     private fun isLocationFromSubscription() = intent.getBooleanExtra(Constants.LOCATION_FROM_SUB, false)
 
@@ -42,6 +45,8 @@ class LocationPrediction : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.location_prediction)
         viewModel = ViewModelProviders.of(this).get(AddressViewModel::class.java)
+
+        prefHelper = PrefsHelper.getInstance(this)
 
         if (googleApiClient == null) {
 
@@ -79,14 +84,18 @@ class LocationPrediction : AppCompatActivity() {
 
         if(isLocationFromSubscription()) {
 
-
             intent.putExtra(LOCATION_POSTAL, address.postCode)
             intent.putExtra(LOCATION_CITY, address.cityName)
             setResult(Activity.RESULT_OK, intent)
             finish()
         } else {
+
             val placeJson = "{\"Name\":\"${address.cityName}\", \"lat\": \"${address.cityLat}\", \"lng\":\"${address.cityLong}\"}"
             SharedPreferenceUtils.getInstance(this).setValue(LOCATION_KEY, placeJson)
+            SharedPreferenceUtils.getInstance(this).removeKey(NOT_TOKEN_KEY);
+
+            prefHelper.locationLat = address.cityLat.toDouble()
+            prefHelper.locationLng = address.cityLong.toDouble()
 
             val startActivityIntent = Intent(this, MainActivity::class.java)
             startActivityIntent.putExtra("userCity", address.cityName)

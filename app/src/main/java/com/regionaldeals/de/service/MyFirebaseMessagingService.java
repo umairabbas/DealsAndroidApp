@@ -4,12 +4,14 @@ package com.regionaldeals.de.service;
  * Created by Umi on 14.01.2018.
  */
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -37,98 +39,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     // [START receive_message]
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // [START_EXCLUDE]
-        // There are two types of messages data messages and notification messages. Data messages are handled
-        // here in onMessageReceived whether the app is in the foreground or background. Data messages are the type
-        // traditionally used with GCM. Notification messages are only received here in onMessageReceived when the app
-        // is in the foreground. When the app is in the background an automatically generated notification is displayed.
-        // When the user taps on the notification they are returned to the app. Messages containing both notification
-        // and data payloads are treated as notification messages. The Firebase console always sends notification
-        // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
-        // [END_EXCLUDE]
-
-        // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
-//            if (/* Check if data needs to be processed by long running job */ true) {
-//                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-//                scheduleJob();
-//            } else {
-//                // Handle message within 10 seconds
-//                handleNow();
-//            }
-
         }
 
-        // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
-        //imageUri will contain URL of the image to be displayed with Notification
-        //String imageUri = "https://www.regionaldeals.de/mobile/api/deals/dealimage?dealid=63&dealtype=TYPE_DEALS&imagecount=1&res=300x200";//remoteMessage.getData().get("image");
-
-        //To get a Bitmap image from the URL received
-        //bitmap = getBitmapfromUrl(imageUri);
-
-        sendNotification(remoteMessage);//remoteMessage.getNotification().getBody(), message, bitmap);
-
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
+        sendNotification(remoteMessage);
     }
 
-    /*
-     *To get a Bitmap image from the URL received
-     * */
-    public Bitmap getBitmapfromUrl(String imageUrl) {
-        try {
-            URL url = new URL(imageUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            Bitmap bitmap = BitmapFactory.decodeStream(input);
-            return bitmap;
-
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-
-        }
-    }
-
-    // [END receive_message]
-
-    /**
-     * Schedule a job using FirebaseJobDispatcher.
-     */
-//    private void scheduleJob() {
-    // [START dispatch_job]
-//        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
-//        Job myJob = dispatcher.newJobBuilder()
-//                .setService(MyJobService.class)
-//                .setTag("my-job-tag")
-//                .build();
-//        dispatcher.schedule(myJob);
-    // [END dispatch_job]
-//    }
-
-    /**
-     * Handle time allotted to BroadcastReceivers.
-     */
-//    private void handleNow() {
-//        Log.d(TAG, "Short lived task is done.");
-//    }
-
-    /**
-     * Create and show a simple notification containing the received FCM message.
-     */
     private void sendNotification(RemoteMessage remoteMessage) {
 
         String dealids = remoteMessage.getData().get("dealids");
@@ -147,24 +72,60 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
-        String channelId = getString(R.string.default_notification_channel_id);
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.drawable.ic_launcher_not)
-                        //.setLargeIcon(bmpic)/*Notification icon image*/
-                        .setContentTitle(title)
-                        .setContentText(body)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
-                        //.setStyle(new NotificationCompat.BigPictureStyle()
-                        //       .bigPicture(bmpic))/*Notification with Image*/
-                        .setAutoCancel(true)
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            String id = "deals_channel";
+            CharSequence name = "Deals Channel";
+            String description = "Get latest deals notifications in your area";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel mChannel = new NotificationChannel(id, name,importance);
+            mChannel.setDescription(description);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mNotificationManager.createNotificationChannel(mChannel);
+
+            String channelId = getString(R.string.default_notification_channel_id);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder =
+                    new NotificationCompat.Builder(this, channelId)
+                            .setSmallIcon(R.drawable.ic_launcher_not)
+                            //.setLargeIcon(bmpic)/*Notification icon image*/
+                            .setContentTitle(title)
+                            .setContentText(body)
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                            //.setStyle(new NotificationCompat.BigPictureStyle()
+                            //       .bigPicture(bmpic))/*Notification with Image*/
+                            .setAutoCancel(true)
+                            .setSound(defaultSoundUri)
+                            .setChannelId(mChannel.getId())
+                            .setContentIntent(pendingIntent);
+            mNotificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+
+        } else {
+
+            String channelId = getString(R.string.default_notification_channel_id);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            NotificationCompat.Builder notificationBuilder =
+                    new NotificationCompat.Builder(this, channelId)
+                            .setSmallIcon(R.drawable.ic_launcher_not)
+                            //.setLargeIcon(bmpic)/*Notification icon image*/
+                            .setContentTitle(title)
+                            .setContentText(body)
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                            //.setStyle(new NotificationCompat.BigPictureStyle()
+                            //       .bigPicture(bmpic))/*Notification with Image*/
+                            .setAutoCancel(true)
+                            .setSound(defaultSoundUri)
+                            .setContentIntent(pendingIntent);
+            mNotificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+
+        }
+
     }
 }

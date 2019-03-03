@@ -270,45 +270,6 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         });
     }
 
-//    private void getCatFromServer() {
-//        AsyncHttpClient androidClient = new AsyncHttpClient();
-//        RequestParams params = new RequestParams("userid", userId);
-//        androidClient.get(this.getString(R.string.apiUrl) + URL_Cat, params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                Log.d("TAG", getString(R.string.token_failed) + responseString);
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseToken) {
-//                Log.d("TAG", "Client token: " + responseToken);
-//                try {
-//                    catList.clear();
-//                    catArr = new JSONArray(responseToken);
-//                    if (catArr != null) {
-//                        for (int i = 0; i < catArr.length(); i++) {
-//                            JSONObject c = catArr.getJSONObject(i);
-//                            Gson gson = new GsonBuilder().create();
-//                            CategoryObject newDeal = gson.fromJson(c.toString(), CategoryObject.class);
-//                            catList.add(newDeal);
-//                        }
-//                        adapterCat.notifyDataSetChanged();
-//
-//                        if (catList.size() <= 0) {
-//                            Toast.makeText(context, "No categories found", Toast.LENGTH_SHORT).show();
-//                            //finish();
-//                        }
-//                    } else {
-//                        Log.d("Deals: ", "null");
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                } catch (Throwable t) {
-//                }
-//            }
-//        });
-//    }
-
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
         switch (parent.getId()) {
             case R.id.spinner_shops:
@@ -327,10 +288,6 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                         break;
                 }
                 break;
-//            case R.id.spinner_cat:
-//                CategoryObject tmp2 = (CategoryObject) parent.getItemAtPosition(position);
-//                catShortName = tmp2.getCatShortName();
-//                break;
         }
     }
 

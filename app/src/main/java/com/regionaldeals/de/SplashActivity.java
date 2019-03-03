@@ -9,14 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,34 +23,16 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.Utils.SharedPreferenceUtils;
-import com.regionaldeals.de.entities.CitiesObject;
 import com.regionaldeals.de.location.LocationPrediction;
-
-import org.apache.http.NameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.regionaldeals.de.Constants.CITIES_KEY;
 import static com.regionaldeals.de.Constants.LOCATION_KEY;
 
 public class SplashActivity extends AppCompatActivity {
     private final int SPLASH_DISPLAY_LENGTH = 1500;
-    private JSONParser jsonParser = new JSONParser();
     public static final int MY_PERMISSION_ACCESS_COURSE_LOCATION = 99;
-    private final String URL_Cities = "/mobile/api/device/citieslist";
-    private JSONArray data;
-    private String[] COUNTRIES;
-    private String message = "";
-    private StringBuilder sb;
-    private List<CitiesObject> city = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,73 +99,6 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
-    class loadCities extends AsyncTask<String, String, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        protected String doInBackground(String... args) {
-            sb = new StringBuilder();
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            // getting JSON string from URL
-            String json = jsonParser.makeHttpRequest(getString(R.string.apiUrl) + URL_Cities, "GET",
-                    params);
-            Log.d("JSON: ", "> " + json);
-            try {
-                JSONObject jsonObj = new JSONObject(json);
-                data = jsonObj.getJSONArray("data");
-                message = jsonObj.getString("message");
-                city.clear();
-                COUNTRIES = new String[data.length()];
-                for (int i = 0; i < data.length(); i++) {
-                    JSONObject result = (JSONObject) data.get(i);
-                    CitiesObject c = new CitiesObject();
-                    c.setCityName(result.getString("cityName"));
-                    c.setCountryCode(result.getString("countryCode"));
-                    c.setId(result.getInt("id"));
-                    COUNTRIES[i] = result.getString("cityName");
-                    sb.append(COUNTRIES[i]).append(",");
-                    if (!result.isNull("cityLat") && !result.isNull("cityLong")) {
-                        c.setCityLat(result.getDouble("cityLat"));
-                        c.setCityLong(result.getDouble("cityLong"));
-                    }
-                    city.add(c);
-                }
-                Arrays.sort(COUNTRIES);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        protected void onPostExecute(String file_url) {
-            if (message.equals("CITIES_LIST_OK") && COUNTRIES.length > 1) {
-                //all good
-            } else {
-                Arrays.sort(DEFAULTCOUNTRIES);
-                for (int i = 0; i < DEFAULTCOUNTRIES.length; i++) {
-                    sb.append(DEFAULTCOUNTRIES[i]).append(",");
-                }
-            }
-            SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE).edit();
-            editor.putString("citiesString", sb.toString());
-            Gson gson = new Gson();
-            String json = gson.toJson(city);
-            editor.putString("citiesObject", json);
-            editor.commit();
-
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    Intent startActivityIntent = new Intent(SplashActivity.this, LocationPrediction.class);
-                    //Intent startActivityIntent = new Intent(SplashActivity.this, LocationManual.class);
-                    startActivity(startActivityIntent);
-                    SplashActivity.this.finish();
-                }
-            });
-        }
-    }
 
     public void getLocation() {
         int status = getPackageManager().checkPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -257,115 +170,14 @@ public class SplashActivity extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    new SplashActivity.loadCities().execute();
+
+                    Intent startActivityIntent = new Intent(SplashActivity.this, LocationPrediction.class);
+                    startActivity(startActivityIntent);
+                    SplashActivity.this.finish();
+
                 }
             }, SPLASH_DISPLAY_LENGTH - 500);
         }
     }
 
-    // an array with countries to display in the list
-    private static String[] DEFAULTCOUNTRIES = new String[]
-            {
-                    "Aachen",
-                    "Augsburg",
-                    "Bergisch",
-                    "Berlin",
-                    "Bielefeld",
-                    "Bochum",
-                    "Bonn",
-                    "Bottrop",
-                    "Braunschweig",
-                    "Bremen",
-                    "Bremerhaven",
-                    "Chemnitz",
-                    "Cottbus",
-                    "Darmstadt",
-                    "Dessau-Roßlau",
-                    "Dortmund",
-                    "Dresden",
-                    "Duisburg",
-                    "Düren",
-                    "Düsseldorf",
-                    "Erfurt",
-                    "Erlangen",
-                    "Essen",
-                    "Esslingen",
-                    "Flensburg",
-                    "Frankfurt",
-                    "Freiburg",
-                    "Fürth",
-                    "Gelsenkirchen",
-                    "Gera",
-                    "Gladbach",
-                    "Göttingen",
-                    "Gütersloh",
-                    "Hagen",
-                    "Halle",
-                    "Hamburg",
-                    "Hamm",
-                    "Hanau",
-                    "Hannover",
-                    "Heidelberg",
-                    "Heilbronn",
-                    "Herne",
-                    "Hildesheim",
-                    "Ingolstadt",
-                    "Iserlohn",
-                    "Jena",
-                    "Kaiserslautern",
-                    "Karlsruhe",
-                    "Kassel",
-                    "Kiel",
-                    "Koblenz",
-                    "Krefeld",
-                    "Köln",
-                    "Leipzig",
-                    "Leverkusen",
-                    "Ludwigsburg",
-                    "Ludwigshafen",
-                    "Lübeck",
-                    "Lünen",
-                    "Magdeburg",
-                    "Mainz",
-                    "Mannheim",
-                    "Marl",
-                    "Minden",
-                    "Moers",
-                    "Mönchengladbach",
-                    "Mülheim",
-                    "München",
-                    "Münster",
-                    "Neuss",
-                    "Nürnberg",
-                    "Oberhausen",
-                    "Offenbach",
-                    "Oldenburg",
-                    "Osnabrück",
-                    "Paderborn",
-                    "Pforzheim",
-                    "Potsdam",
-                    "Ratingen",
-                    "Recklinghausen",
-                    "Regensburg",
-                    "Remscheid",
-                    "Reutlingen",
-                    "Rostock",
-                    "Saarbrücken",
-                    "Salzgitter",
-                    "Schwerin",
-                    "Siegen",
-                    "Solingen",
-                    "Stuttgart",
-                    "Trier",
-                    "Tübingen",
-                    "Ulm",
-                    "Velbert",
-                    "Villingen-Schwenn.",
-                    "Wiesbaden",
-                    "Witten",
-                    "Wolfsburg",
-                    "Wuppertal",
-                    "Würzburg",
-                    "Zwickau"
-            };
 }
