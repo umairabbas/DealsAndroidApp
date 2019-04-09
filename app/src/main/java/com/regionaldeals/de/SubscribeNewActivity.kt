@@ -1,7 +1,10 @@
 package com.regionaldeals.de
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.KeyEvent
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 
@@ -18,5 +21,25 @@ class SubscribeNewActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController)
     }
 
-    override fun onSupportNavigateUp() = findNavController(R.id.navController).navigateUp()
+    override fun onBackPressed() {
+        val controller = findNavController(R.id.navController)
+        val dest = controller.currentDestination
+        dest?.label?.let {
+            if(it.equals(getString(R.string.terms_cond))) {
+                return
+            }
+        }
+        super.onBackPressed()
+    }
+
+    override fun onSupportNavigateUp():Boolean {
+        val controller = findNavController(R.id.navController)
+        val dest = controller.currentDestination
+        dest?.label?.let {
+            if(it.equals(getString(R.string.terms_cond))) {
+                return false
+            }
+        }
+        return controller.navigateUp()
+    }
 }

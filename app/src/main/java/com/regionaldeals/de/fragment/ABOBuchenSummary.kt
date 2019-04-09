@@ -1,9 +1,12 @@
 package com.regionaldeals.de.fragment
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.SharedElementCallback
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +41,10 @@ class ABOBuchenSummary : Fragment() {
             inflater.inflate(R.layout.abo_buchen_summary, container, false)
 
     private fun getSelectedPlan() = arguments?.getParcelable<Plans>(Constants.SELECTED_PLAN) ?: null
+
+    override fun setReturnTransition(transition: Any?) {
+        super.setReturnTransition(transition)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
