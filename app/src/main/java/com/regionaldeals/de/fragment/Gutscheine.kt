@@ -30,8 +30,8 @@ import kotlin.concurrent.schedule
 
 class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener, GutscheineAdapter.ItemClickListener {
 
-    private val mUrlDeals = "/mobile/api/gutschein/list"
-    private val mMitMachenUrl = "/mobile/api/gutschein/gutscheinclick"
+    private val mUrlDeals = "/web/gutschein/list"
+    private val mMitMachenUrl = "/web/gutschein/gutscheinclick"
     private var gutRecyclerView: RecyclerView? = null
     private lateinit var mAdapter: GutscheineAdapter
     private var maxDistance = 50
@@ -174,7 +174,7 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener, GutscheineA
                     if (it) {
                         for (curr: GutscheineObject in mAdapter.allDeals) {
                             if (curr.gutscheinId == deal.gutscheinId) {
-                                curr.isGutscheinAvailed = true
+                                curr.gutscheinAvailed = true
                             }
                         }
                         activity?.runOnUiThread {

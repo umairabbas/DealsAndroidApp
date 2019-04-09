@@ -13,7 +13,7 @@ import org.json.JSONObject
 
 class SubDataProvider {
 
-    private val baseUrl: String = "https://www.regionaldeals.de"
+    private val baseUrl: String = "https://api.regionaldeals.de"
 
     fun getPlans(subUrl: String, responseHandler: (result: PlansResults?) -> Unit?) {
         val mainUrl = baseUrl + subUrl

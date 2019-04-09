@@ -36,7 +36,7 @@ import kotlin.concurrent.schedule
 
 class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.ItemClickListener {
 
-    private val mUrlDeals = "/mobile/api/deals/list"
+    private val mUrlDeals = "/web/deals/list"
     private var dealsRecyclerView: RecyclerView? = null
     private lateinit var mAdapter: DealsAdapter
     private var maxDistance = 50
@@ -140,20 +140,20 @@ class Deals : Fragment(), SwipeRefreshLayout.OnRefreshListener, DealsAdapter.Ite
                     favCheck = false
                 }
             }
-            val mUrlFav = "/mobile/api/deals/favourite-click" + "?userid=" + prefHelper.userId + "&dealid=" + obj.dealId.toString() + "&favcheck=" + favCheck.toString()
+            val mUrlFav = "/web/deals/favourite-click" + "?userid=" + prefHelper.userId + "&dealid=" + obj.dealId.toString() + "&favcheck=" + favCheck.toString()
             model?.addToFav(mUrlFav) { response ->
                 if (response.statusCode == 200) {
 
                     val jObject = JSONObject(String(response.data))
                     val message = jObject.getString("message")
                     if (message == getString(R.string.DEALS_FAV_CHECK)) {
-                        displayMsg = "Added to Favourites"
+                        displayMsg = getString(R.string.favAdded)
                         updateFavItem(obj, position, favCheck)
                     } else if (message == getString(R.string.DEALS_FAV_UNCHECK)) {
-                        displayMsg = "Removed from Favourites"
+                        displayMsg = getString(R.string.favRemoved)
                         updateFavItem(obj, position, favCheck)
                     } else if (message == getString(R.string.ONLINE_FAV_UNCHECK)) {
-                        displayMsg = "Removed from Favourites"
+                        displayMsg = getString(R.string.favRemoved)
                         updateFavItem(obj, position, favCheck)
                     } else if (message == getString(R.string.DEALS_FAV_ERR)) {
                         displayMsg = "Error. Cannot do right now.. Try later"

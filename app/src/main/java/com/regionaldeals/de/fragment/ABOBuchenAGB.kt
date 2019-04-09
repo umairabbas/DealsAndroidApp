@@ -27,7 +27,6 @@ class ABOBuchenAGB : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater.inflate(R.layout.abo_buchen_agb, container, false)
 
-    private fun getSelectedPlan() = arguments?.getParcelable<Plans>(Constants.SELECTED_PLAN) ?: null
     private fun getSubReference() = arguments?.getString(Constants.SUB_REFERENCE) ?: ""
 
 

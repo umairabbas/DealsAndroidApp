@@ -40,7 +40,7 @@ public class DealsAdapterold extends RecyclerView.Adapter<DealsViewHolderold> {
     private Activity activity;
     private GradientDrawable gradientDrawable;
     private List<DealObject> allDeals;
-    private String URLFav = "/mobile/api/deals/favourite-click";
+    private String URLFav = "/web/deals/favourite-click";
     private Boolean favChecked = true;
     private Boolean skipFav = false;
 
@@ -181,14 +181,14 @@ public class DealsAdapterold extends RecyclerView.Adapter<DealsViewHolderold> {
 
                 if (message.equals(activity.getString(R.string.DEALS_FAV_CHECK))) {
                     isSuccess = true;
-                    displayMsg = "Added to Favourites";
+                    displayMsg = "Deal wurde zu Favoriten hinzugefügt";
                     //onSignupSuccess();
                 } else if (message.equals(activity.getString(R.string.DEALS_FAV_UNCHECK))) {
                     isSuccess = true;
-                    displayMsg = "Removed from Favourites";
+                    displayMsg = "Deal ist entfernt";
                 } else if (message.equals(activity.getString(R.string.ONLINE_FAV_UNCHECK))) {
                     isSuccess = true;
-                    displayMsg = "Removed from Favourites";
+                    displayMsg = "Deal ist entfernt";
                 } else if (message.equals(activity.getString(R.string.DEALS_FAV_ERR))) {
                     isSuccess = false;
                     displayMsg = "Error. Cannot do right now.. Try later";

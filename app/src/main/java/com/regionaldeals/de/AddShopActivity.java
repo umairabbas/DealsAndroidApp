@@ -82,8 +82,8 @@ public class AddShopActivity extends AppCompatActivity{
     @BindView(com.regionaldeals.de.R.id.input_place)
     EditText _placeText;
 
-    private final String URL_Login = "/mobile/api/shops/upload-shop";
-    private final String URL_ShopDel = "/mobile/api/shops/deactivate";
+    private final String URL_Login = "/web/shops/upload-shop";
+    private final String URL_ShopDel = "/web/shops/deactivate";
     private ProgressDialog progressDialog;
     private String name = "";
     private String contact = "";
@@ -123,28 +123,8 @@ public class AddShopActivity extends AppCompatActivity{
         activity = this;
         isEdit = false;
 
-//        shopCitySpinner = (Spinner) findViewById(R.id.spinner_city);
-
         SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
-//        String restoredCities = prefs.getString("citiesString", null);
         String restoredCat = prefs.getString("categoriesObj", null);
-
-
-//        if (restoredCities == null) {
-//            //should not be
-//            Toast.makeText(this, "Please restart or update app", Toast.LENGTH_LONG).show();
-//            finish();
-//        } else {
-//            COUNTRIES = restoredCities.split(",");
-//        }
-
-//        Arrays.sort(COUNTRIES);
-//        //Adapter Deals
-//        ArrayAdapter<String> adapterDeals = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_spinner_item, COUNTRIES);
-//        adapterDeals.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        shopCitySpinner.setAdapter(adapterDeals);
-//        shopCitySpinner.setOnItemSelectedListener(this);
 
         ButterKnife.bind(this);
 
@@ -178,7 +158,7 @@ public class AddShopActivity extends AppCompatActivity{
                     progressDialog = new ProgressDialog(context,
                             com.regionaldeals.de.R.style.ThemeOverlay_AppCompat_Dialog);
                     progressDialog.setIndeterminate(true);
-                    progressDialog.setMessage("Removing...");
+                    progressDialog.setMessage("Wird entfernen...");
                     progressDialog.show();
                     _delButton.setEnabled(false);
                     new ShopDeleteCall().execute();
@@ -229,16 +209,6 @@ public class AddShopActivity extends AppCompatActivity{
 
         initialize(restoredCat);
     }
-
-
-//    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-//        switch (parent.getId()) {
-//            case R.id.spinner_city:
-//                shopCity = COUNTRIES[position];
-//                break;
-//        }
-//    }
-
     /*
      * Function to set up initial settings: Creating the data source for drop-down list, initialising the checkselected[], set the drop-down list
      * */
@@ -350,9 +320,6 @@ public class AddShopActivity extends AppCompatActivity{
         list.setAdapter(adapter);
     }
 
-//    @Override
-//    public void onNothingSelected(AdapterView<?> adapterView) {
-//    }
 
     private void getCityNameByCoordinates(double lat, double lon) throws IOException {
 
@@ -395,7 +362,7 @@ public class AddShopActivity extends AppCompatActivity{
         progressDialog = new ProgressDialog(this,
                 com.regionaldeals.de.R.style.ThemeOverlay_AppCompat_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Adding...");
+        progressDialog.setMessage("Wird hinzufügen...");
         progressDialog.show();
 
         name = _nameText.getText().toString();
@@ -503,10 +470,10 @@ public class AddShopActivity extends AppCompatActivity{
             runOnUiThread(new Runnable() {
                 public void run() {
                     if (isSuccess) {
-                        Toast.makeText(context, "Shop Added\n" + message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Geschäft erfolgreich hinzugefügt\n" + message, Toast.LENGTH_LONG).show();
                         finish();
                     } else {
-                        Toast.makeText(context, "Failed\n" + message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Geschäfte konnten nicht hinzugefügt werden\n" + message, Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -552,7 +519,7 @@ public class AddShopActivity extends AppCompatActivity{
                     isSuccess = true;
                 } else if (message.equals(getString(com.regionaldeals.de.R.string.SHOPS_REMOVE_ERR))) {
                     isSuccess = false;
-                    message = "Cannot remove shop";
+                    message = "Geschäfte kann nicht entfernt werden";
                 } else {
                     isSuccess = false;
                 }
@@ -571,7 +538,7 @@ public class AddShopActivity extends AppCompatActivity{
             runOnUiThread(new Runnable() {
                 public void run() {
                     if (isSuccess) {
-                        Toast.makeText(context, "Shop Removed\n", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Geschäfte entfernt\n", Toast.LENGTH_LONG).show();
                         finish();
                     } else {
                         Toast.makeText(context, "Failed\n" + message, Toast.LENGTH_LONG).show();
@@ -600,28 +567,28 @@ public class AddShopActivity extends AppCompatActivity{
         //String address = _addressText.getText().toString();
 
         if (name.isEmpty()) {
-            _nameText.setError("enter a valid name");
+            _nameText.setError("Geben Sie einen gültigen Namen ein");
             valid = false;
         } else {
             _nameText.setError(null);
         }
 
         if (tax.isEmpty()) {
-            _taxText.setError("enter a valid tax number");
+            _taxText.setError("Geben Sie eine gültige Steuernummer ein");
             valid = false;
         } else {
             _taxText.setError(null);
         }
 
         if (contact.isEmpty()) {
-            _contactText.setError("enter a valid contact");
+            _contactText.setError("Geben Sie einen gültigen Kontakt ein");
             valid = false;
         } else {
             _contactText.setError(null);
         }
 
         if (lat == 0 || lng == 0 || address.isEmpty()) {
-            _placeText.setError("enter shop location");
+            _placeText.setError("Geschäftestandort eingeben");
             valid = false;
         } else {
             _placeText.setError(null);
@@ -642,7 +609,7 @@ public class AddShopActivity extends AppCompatActivity{
 
         if (selectedCat.isEmpty() || selectedCat.equals("")) {
             valid = false;
-            Toast.makeText(context, "Please select a Category first.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Bitte wählen Sie zuerst eine Kategorie aus", Toast.LENGTH_SHORT).show();
         } else {
             selectedCat = selectedCat.substring(0, selectedCat.length() - 1);
         }

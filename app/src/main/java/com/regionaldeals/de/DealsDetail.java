@@ -70,7 +70,7 @@ public class DealsDetail extends AppCompatActivity implements
     private Context context;
     private String message;
     private Boolean isSuccess = false;
-    private String URL_DealDel = "/mobile/api/deals/deactivate";
+    private String URL_DealDel = "/web/deals/deactivate";
     private int dealId = -1;
     private int shopId = -1;
     private String userId = "";
@@ -356,7 +356,7 @@ public class DealsDetail extends AppCompatActivity implements
                 message = "";
                 URL url;
                 if (isGutschein) {
-                    URL_DealDel = "/mobile/api/gutschein/deactivate";
+                    URL_DealDel = "/web/gutschein/deactivate";
                     url = new URL(getString(R.string.apiUrl) + URL_DealDel + "?gutscheinid=" + dealId + "&userid=" + userId +
                             "&shopid=" + shopId);
                 } else {

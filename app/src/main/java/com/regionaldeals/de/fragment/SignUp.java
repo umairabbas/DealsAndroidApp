@@ -54,7 +54,7 @@ public class SignUp extends Fragment {
 
     private ViewPager viewPager;
     private Context context;
-    private final String URL_AddUser = "/mobile/api/users/signup";
+    private final String URL_AddUser = "/web/users/signup";
     private ProgressDialog progressDialog;
     private String name = "";
     private String email = "";

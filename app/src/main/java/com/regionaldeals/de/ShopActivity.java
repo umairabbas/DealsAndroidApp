@@ -43,7 +43,7 @@ public class ShopActivity extends AppCompatActivity implements SwipeRefreshLayou
     private String userId = "";
     JSONParser jsonParser = new JSONParser();
     private ShopAdapter mAdapter;
-    private final String URL_Deals = "/mobile/api/shops/list";
+    private final String URL_Deals = "/web/shops/list";
     private Boolean isFirst = true;
     private SwipeRefreshLayout swipeRefreshLayout;
 

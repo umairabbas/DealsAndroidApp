@@ -51,7 +51,7 @@ public class NearBy extends Fragment implements SwipeRefreshLayout.OnRefreshList
     private ListView mListView;
     JSONParser jsonParser = new JSONParser();
     Context context;
-    private final String URL_Online = "/mobile/api/shops/list";
+    private final String URL_Online = "/web/shops/list";
     private JSONArray shopArr = null;
     //    private SwipeRefreshLayout swipeRefreshLayout;
     //private String userId = "";

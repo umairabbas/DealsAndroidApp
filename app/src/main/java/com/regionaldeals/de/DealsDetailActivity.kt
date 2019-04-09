@@ -52,7 +52,7 @@ class DealsDetailActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListener
 
     private var message: String = ""
     private var isSuccess: Boolean = false
-    private var urlDealsDeactivate = "/mobile/api/deals/deactivate"
+    private var urlDealsDeactivate = "/web/deals/deactivate"
     private var dealId: Int? = null
     private var shopId: Int? = null
     private var userId: String? = null
@@ -224,7 +224,7 @@ class DealsDetailActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListener
                 message = ""
                 val url: URL
                 if (isGutschein) {
-                    urlDealsDeactivate = "/mobile/api/gutschein/deactivate"
+                    urlDealsDeactivate = "/web/gutschein/deactivate"
                     url = URL(getString(R.string.apiUrl) + urlDealsDeactivate + "?gutscheinid=" + dealId + "&userid=" + userId +
                             "&shopid=" + shopId)
                 } else {

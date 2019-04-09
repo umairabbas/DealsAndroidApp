@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void getCatFromServer() {
         AsyncHttpClient androidClient = new AsyncHttpClient();
         RequestParams params = new RequestParams("userid", userId);
-        androidClient.get(this.getString(R.string.apiUrl) + "/mobile/api/categories/list", params, new TextHttpResponseHandler() {
+        androidClient.get(this.getString(R.string.apiUrl) + "/web/categories/list", params, new TextHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 Log.d("TAG", getString(R.string.token_failed) + responseString);
@@ -350,11 +350,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.search) {
-            Toast.makeText(this, "Coming soon.", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
         if (id == R.id.notification) {
             String text = "Keine neuen Benachrichtigungen";
             if (notIconOn) {
@@ -426,7 +421,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void run() {
                 AsyncHttpClient androidClient = new AsyncHttpClient();
-                androidClient.get(getString(R.string.apiUrl) + "/mobile/api/subscriptions/subscription?userid=" + Integer.toString(user), new TextHttpResponseHandler() {
+                androidClient.get(getString(R.string.apiUrl) + "/web/subscriptions/subscription?userid=" + Integer.toString(user), new TextHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         Log.d("TAG", getString(R.string.token_failed) + responseString);
@@ -481,7 +476,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             try {
                 String message = "";
-                URL url = new URL(getApplicationContext().getString(R.string.apiUrl) + "/mobile/api/device/update_device");
+                URL url = new URL(getApplicationContext().getString(R.string.apiUrl) + "/web/device/update_device");
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");

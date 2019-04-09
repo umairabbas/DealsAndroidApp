@@ -44,7 +44,7 @@ public class Login extends Fragment {
     private static final String TAG = "LoginFragment";
     private Context context;
     private ViewPager viewPager;
-    private final String URL_Login = "/mobile/api/users/login";
+    private final String URL_Login = "/web/users/login";
     private String email = "";
     private String password = "";
     private Boolean isSuccess = false;

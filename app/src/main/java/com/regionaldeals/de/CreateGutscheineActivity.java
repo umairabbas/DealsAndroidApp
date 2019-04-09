@@ -55,7 +55,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
     private String userId = "";
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<GutscheineObject> deals;
-    private final String URL_Deals = "/mobile/api/gutschein/list-owner";
+    private final String URL_Deals = "/web/gutschein/list-owner";
     private JSONArray dealArr = null;
     JSONParser jsonParser = new JSONParser();
     private TextView dealCount;
@@ -121,7 +121,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
         );
     }
 
-    private final String URL_Shops = "/mobile/api/shops/list";
+    private final String URL_Shops = "/web/shops/list";
 
     private void getShopsFromServer() {
         AsyncHttpClient androidClient = new AsyncHttpClient();
@@ -174,7 +174,7 @@ public class CreateGutscheineActivity extends AppCompatActivity implements Swipe
             @Override
             public void run() {
                 AsyncHttpClient androidClient = new AsyncHttpClient();
-                androidClient.get(context.getString(R.string.apiUrl) + "/mobile/api/subscriptions/subscription?userid=" + userId, new TextHttpResponseHandler() {
+                androidClient.get(context.getString(R.string.apiUrl) + "/web/subscriptions/subscription?userid=" + userId, new TextHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         Log.d("TAG", getString(R.string.token_failed) + responseString);

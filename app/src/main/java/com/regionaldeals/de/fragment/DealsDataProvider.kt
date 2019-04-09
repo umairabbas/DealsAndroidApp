@@ -14,7 +14,7 @@ import com.regionaldeals.de.entities.GutscheineObject
 
 class DealsDataProvider {
 
-    private val baseUrl: String = "https://www.regionaldeals.de"
+    private val baseUrl: String = "https://api.regionaldeals.de"
 
     fun getDeals(subUrl: String, params: List<Pair<String, Any?>>, responseHandler: (result: DealResults?) -> Unit?) {
         val mainUrl = baseUrl + subUrl

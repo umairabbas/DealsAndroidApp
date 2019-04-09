@@ -28,9 +28,9 @@ class ABOBuchenUser : Fragment() {
 
     private var model: ABOViewModel? = null
 
-    private var url: String = "/mobile/api/users/updateuser"
-    private var urlplan: String = "/mobile/api/subscriptions/update_subscription"
-    private var urlSub: String = "/mobile/api/subscriptions/subscription?userid="
+    private var url: String = "/web/users/updateuser"
+    private var urlplan: String = "/web/subscriptions/update_subscription"
+    private var urlSub: String = "/web/subscriptions/subscription?userid="
 
     private lateinit var prefHelper: PrefsHelper
 

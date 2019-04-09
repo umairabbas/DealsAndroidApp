@@ -17,7 +17,7 @@
     <string name="shopping">Near by</string>
     <string name="max_distance">Entfernung</string>
     <string name="mitmachen">Avail</string>
-    <string name="apiUrl">https://www.regionaldeals.de</string>
+    <string name="apiUrl">https://api.regionaldeals.de</string>
 
     <string name="gutNot">You have won a coupon.\nPlease click to see</string>
     <string name="error_gif">x or y bound size should be at least %1$dpx and file size should be no more than %2$sM</string>
@@ -236,5 +236,7 @@
     <string name="deal_price">Deal Price (€)</string>
     <string name="expiry_date">Expiry Date</string>
     <string name="if_not_already_kindly_pay_for_activation">If not already, kindly pay for activation.</string>
+    <string name="favRemoved">Removed from Favourites</string>
+    <string name="favAdded">Added to Favourites</string>
 
 </resources>

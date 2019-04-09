@@ -45,7 +45,7 @@ public class OnlineDealsAdapter extends RecyclerView.Adapter<OnlineDealsViewHold
     private GradientDrawable gradientDrawable;
     private int[] androidColors;
     private Activity activity;
-    private String URLFav = "/mobile/api/deals/favourite-click";
+    private String URLFav = "/web/deals/favourite-click";
     private Boolean favChecked = true;
 
     public OnlineDealsAdapter(Context context, List<DealObject> allDeals) {

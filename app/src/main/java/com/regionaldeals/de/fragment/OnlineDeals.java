@@ -47,7 +47,7 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
     private List<DealObject> deals;
     JSONParser jsonParser = new JSONParser();
     Context context;
-    private final String URL_Online = "/mobile/api/deals/list";
+    private final String URL_Online = "/web/deals/list";
     private JSONArray dealArr = null;
     private RecyclerView songRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -56,19 +56,7 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
     private Double locationLng = 6.078068;
     private OnlineDealsAdapter mAdapter;
     private int maxDistance = 50;
-    private MyReceiver myReceiver;
     private IntentFilter filter;
-
-    public class MyReceiver extends BroadcastReceiver {
-        public MyReceiver() {
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            maxDistance = intent.getIntExtra("distance", maxDistance);
-            new OnlineDeals.LoadDeals().execute();
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -126,21 +114,18 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
         }
 
         filter = new IntentFilter("BroadcastReceiver");
-        myReceiver = new MyReceiver();
 
         return view;
     }
 
     @Override
     public void onPause() {
-        context.unregisterReceiver(myReceiver);
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        context.registerReceiver(myReceiver, filter);
     }
 
     @Override

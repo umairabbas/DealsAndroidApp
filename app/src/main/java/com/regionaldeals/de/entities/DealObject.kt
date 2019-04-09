@@ -34,7 +34,7 @@ class DealObject() : Serializable {
     }
 
     fun getDealImageUrl(c: Context): String {
-        return c.getString(R.string.apiUrl) + "/mobile/api/deals/dealimage?dealid=" + dealId + "&" + "dealtype=" + dealType
+        return c.getString(R.string.apiUrl) + "/web/deals/dealimage?dealid=" + dealId + "&" + "dealtype=" + dealType
     }
 
     fun getDateExpire(): Long? {

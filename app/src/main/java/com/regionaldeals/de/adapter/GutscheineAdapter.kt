@@ -35,7 +35,7 @@ class GutscheineAdapter(private val isEdit: Boolean) : RecyclerView.Adapter<Guts
         Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl)
 
         if (!isEdit) {
-            if (deals.isGutscheinAvailed) {
+            if (deals.gutscheinAvailed) {
                 holder.mitMachenBtn.isEnabled = false
                 holder.mitMachenBtn.setColorFilter(context.resources.getColor(R.color.colorAccent))
             } else {

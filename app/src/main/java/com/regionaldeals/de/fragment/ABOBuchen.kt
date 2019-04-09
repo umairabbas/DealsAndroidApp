@@ -24,7 +24,7 @@ import org.jetbrains.anko.doAsync
 
 class ABOBuchen : Fragment(), ABOAdapter.ItemClickListener {
 
-    private val mUrlPlans = "/mobile/api/subscriptions/plans"
+    private val mUrlPlans = "/web/subscriptions/plans"
     private lateinit var mAdapter: ABOAdapter
     private var model: ABOViewModel? = null
     private lateinit var prefHelper: PrefsHelper
@@ -33,7 +33,9 @@ class ABOBuchen : Fragment(), ABOAdapter.ItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        model = ViewModelProviders.of(activity!!).get(ABOViewModel::class.java)
+        activity?.let {
+            model = ViewModelProviders.of(it).get(ABOViewModel::class.java)
+        }
         context?.let { prefHelper = PrefsHelper.getInstance(it) }
     }
 

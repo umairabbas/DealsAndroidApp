@@ -39,7 +39,7 @@ import java.util.List;
 public class NotificationsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     private Toolbar toolbar;
     private Context context;
-    private final String URL_Deals = "/mobile/api/users/notifications";
+    private final String URL_Deals = "/web/users/notifications";
     private TextView nearbyText;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<NotificationsObject> shopList;
@@ -49,8 +49,7 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
     private NotificationsAdapter mAdapter;
     private Activity activity;
     private String userId = "";
-    private String android_id = "";
-
+    private String InstallationNumber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +67,8 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
+        InstallationNumber = Installation.id(this);
+
         SharedPreferences prefs = getSharedPreferences(getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredUser = prefs.getString("userObject", null);
         try {
@@ -83,9 +84,6 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
         shopList = new ArrayList<>();
         mAdapter = new NotificationsAdapter(context, shopList);
         mListView.setAdapter(mAdapter);
-
-        android_id = Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ANDROID_ID);
 
         new NotificationsActivity.LoadDeals().execute();
 
@@ -125,7 +123,7 @@ public class NotificationsActivity extends AppCompatActivity implements SwipeRef
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
             params.add(new BasicNameValuePair("userid", userId));
-            params.add(new BasicNameValuePair("deviceuuidimei", android_id));
+            params.add(new BasicNameValuePair("deviceuuidimei", InstallationNumber));
 
             // getting JSON string from URL
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Deals, "GET",

@@ -109,9 +109,9 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
     private ImageView attachImg;
 
     private static final int PICK_FILE_REQUEST = 1;
-    private final String URL_Shops = "/mobile/api/shops/list";
-    private final String URL_Cat = "/mobile/api/categories/list";
-    private String SERVER_URL = "/mobile/api/deals/upload-deal";
+    private final String URL_Shops = "/web/shops/list";
+    private final String URL_Cat = "/web/categories/list";
+    private String SERVER_URL = "/web/deals/upload-deal";
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
     public static final int REQUEST_CODE_CHOOSE = 1234;
     private static final String[] dealTypes = {"Deals", "Online Deals"};
@@ -156,7 +156,7 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         if (isGutscheine) {
             inputOPrice.setVisibility(View.GONE);
             dealType.setVisibility(View.GONE);
-            SERVER_URL = "/mobile/api/gutschein/upload-gutschein";
+            SERVER_URL = "/web/gutschein/upload-gutschein";
         }
 
         //Adapter Deals

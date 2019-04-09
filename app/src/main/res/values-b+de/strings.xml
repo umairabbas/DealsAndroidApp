@@ -17,7 +17,7 @@
     <string name="shopping">In der Nähe</string>
     <string name="max_distance">Entfernung</string>
     <string name="mitmachen">Mitmachen</string>
-    <string name="apiUrl">https://www.regionaldeals.de</string>
+    <string name="apiUrl">https://api.regionaldeals.de</string>
 
     <string name="gutNot">Sie haben einen Gutschein gewonnen.\nBitte klicken Sie hier um zu sehen</string>
     <string name="error_gif">x oder y gebundene Größe sollte mindestens %1$dpx und Dateigröße sollte nicht mehr als %2$sM sein</string>
@@ -90,7 +90,7 @@
     <string name="menu_subscription">Abo Buchen</string>
     <string name="menu_mydeals">Meine Anzeigen</string>
     <string name="menu_mycoupons">Meine Gutscheine</string>
-    <string name="menu_myshops">Anzeigen Erstellen</string>
+    <string name="menu_myshops">Geschäft hinzufügen</string>
 
     <string name="billing_cycle">Rechnungskreis</string>
     <string name="start_date">Anfangsdatum</string>
@@ -218,6 +218,10 @@
     <string name="deal_price">Deal Preis (€)</string>
     <string name="expiry_date">Verfallsdatum</string>
     <string name="if_not_already_kindly_pay_for_activation">Falls nicht bereits vorhanden, zahlen Sie bitte für das gewünschte ABO-Paket.</string>
+
+
+    <string name="favRemoved">Deal wurde aus den Favoriten entfernt</string>
+    <string name="favAdded">Deal wurde zu Favoriten hinzugefügt</string>
 
 
 </resources>

@@ -55,7 +55,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
     private String userId = "";
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<DealObject> deals;
-    private final String URL_Deals = "/mobile/api/deals/list-owner";
+    private final String URL_Deals = "/web/deals/list-owner";
     private JSONArray dealArr = null;
     JSONParser jsonParser = new JSONParser();
     private DealsAdapterold mAdapter;
@@ -137,7 +137,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
         );
     }
 
-    private final String URL_Shops = "/mobile/api/shops/list";
+    private final String URL_Shops = "/web/shops/list";
 
     private void getShopsFromServer() {
         AsyncHttpClient androidClient = new AsyncHttpClient();
@@ -190,7 +190,7 @@ public class CreateDealsActivity extends AppCompatActivity implements SwipeRefre
             @Override
             public void run() {
                 AsyncHttpClient androidClient = new AsyncHttpClient();
-                androidClient.get("https://regionaldeals.de/mobile/api/subscriptions/subscription?userid=" + userId, new TextHttpResponseHandler() {
+                androidClient.get("https://regionaldeals.de/web/subscriptions/subscription?userid=" + userId, new TextHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                         Log.d("TAG", getString(R.string.token_failed) + responseString);

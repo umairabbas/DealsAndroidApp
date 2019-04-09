@@ -42,9 +42,7 @@ public class Favourite extends Fragment implements SwipeRefreshLayout.OnRefreshL
     private List<DealObject> deals;
     JSONParser jsonParser = new JSONParser();
     Context context;
-    private final String URL_Fav = "/mobile/api/deals/favourites";
-    //private JSONArray dealArr = null;
-    private JSONArray OnlinedealsArr = null;
+    private final String URL_Fav = "/web/deals/favourites";
     private JSONArray normalDealsArr = null;
     private RecyclerView songRecyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;

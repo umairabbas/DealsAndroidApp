@@ -38,7 +38,7 @@ public class NotificationDealsActivity extends AppCompatActivity {
     private RecyclerView songRecyclerView;
     private String userId = "";
     private List<DealObject> deals;
-    private final String URL_Deals = "/mobile/api/deals/plist";
+    private final String URL_Deals = "/web/deals/plist";
     private JSONArray dealArr = null;
     JSONParser jsonParser = new JSONParser();
     private DealsAdapterold mAdapter;

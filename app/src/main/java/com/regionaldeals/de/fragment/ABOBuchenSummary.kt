@@ -22,8 +22,8 @@ class ABOBuchenSummary : Fragment() {
 
     private var model: ABOViewModel? = null
 
-    private var url: String = "/mobile/api/subscriptions/update_subscription"
-    private var urlSub: String = "/mobile/api/subscriptions/subscription?userid="
+    private var url: String = "/web/subscriptions/update_subscription"
+    private var urlSub: String = "/web/subscriptions/subscription?userid="
     private var subReference: String = ""
 
     private lateinit var prefHelper: PrefsHelper

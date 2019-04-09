@@ -7,9 +7,9 @@ import java.io.Reader
 
 class AddressDataProvider {
 
-    private val baseUrl: String = "https://www.regionaldeals.de"
+    private val baseUrl: String = "https://api.regionaldeals.de"
 
-    private val placeUrl: String = "$baseUrl/mobile/api/device/citieslist"
+    private val placeUrl: String = "$baseUrl/web/device/citieslist"
 
     fun getAddressPredictions(query: String, responseHandler: (result: LocationRoot) -> Unit?) {
         val params: MutableList<Pair<String, Any?>> = mutableListOf()

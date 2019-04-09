@@ -19,13 +19,13 @@ class GutscheineObject : Serializable {
     var gutscheinDescription: String? = ""
     var gutscheinPrice: Long? = 0
     var currency: String? = ""
-    var isGutscheinAvailed: Boolean = false
-    var isGutscheinWin: Long? = 0
+    var gutscheinAvailed: Boolean = false
+    var gutscheinWin: Long? = 0
     var category: CategoryObject? = null
     var gutscheinImageCount: Int? = 0
     var gutscheinCode: String? = ""
 
     fun getGutscheinImageUrl(c: Context): String {
-        return c.getString(R.string.apiUrl) + "/mobile/api/gutschein/gutscheinimage?gutscheinid=" + gutscheinId
+        return c.getString(R.string.apiUrl) + "/web/gutschein/gutscheinimage?gutscheinid=" + gutscheinId
     }
 }
