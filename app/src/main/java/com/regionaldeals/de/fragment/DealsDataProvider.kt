@@ -78,6 +78,20 @@ class DealsDataProvider {
 
     }
 
+    fun postPasswordReset(subUrl: String, formData: List<Pair<String, Any>>) {
+        val mainUrl = baseUrl + subUrl
+        mainUrl.httpUpload(parameters = formData)
+                .dataParts { _, _ -> listOf() }
+                .responseString { _, response, _ ->
+                    if (response.statusCode != 200) {
+
+                    } else {
+
+                    }
+                }
+
+    }
+
     fun setFavourite(subUrl: String, responseHandler: (res: Response) -> Unit?) {
         val mainUrl = baseUrl + subUrl
         mainUrl.httpPut().header(Pair("Accept", "application/json"))

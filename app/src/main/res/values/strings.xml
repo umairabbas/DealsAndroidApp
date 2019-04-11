@@ -238,5 +238,11 @@
     <string name="if_not_already_kindly_pay_for_activation">If not already, kindly pay for activation.</string>
     <string name="favRemoved">Removed from Favourites</string>
     <string name="favAdded">Added to Favourites</string>
+    <string name="passwort_vergessen">Password Forgotten?</string>
+    <string name="enter_email_address">Enter email address</string>
+    <string name="email_reset_ins">Password reset instruction sent on email</string>
+    <string name="valid_email">enter a valid username or email address</string>
+    <string name="valid_pass">between 4 and 10 alphanumeric characters</string>
+    <string name="valid_name">at least 3 characters</string>
 
 </resources>

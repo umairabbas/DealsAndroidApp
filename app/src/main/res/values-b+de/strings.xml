@@ -222,6 +222,12 @@
 
     <string name="favRemoved">Deal wurde aus den Favoriten entfernt</string>
     <string name="favAdded">Deal wurde zu Favoriten hinzugefügt</string>
+    <string name="passwort_vergessen">Passwort vergessen?</string>
+    <string name="enter_email_address">E-Mail Adresse eingeben</string>
+    <string name="email_reset_ins">Anleitung zum Zurücksetzen des Passworts per E-Mail gesendet</string>
+    <string name="valid_email">Geben sie eine gültige E-Mail-Adresse an</string>
+    <string name="valid_pass">zwischen 4 und 10 alphanumerische Zeichen</string>
+    <string name="valid_name">mindestens 3 Zeichen</string>
 
 
 </resources>

@@ -246,21 +246,21 @@ public class SignUp extends Fragment {
         String password = _passwordText.getText().toString();
 
         if (name.isEmpty() || name.length() < 3) {
-            _nameText.setError("at least 3 characters");
+            _nameText.setError(getString(R.string.valid_name));
             valid = false;
         } else {
             _nameText.setError(null);
         }
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid email address");
+            _emailText.setError(getString(R.string.valid_email));
             valid = false;
         } else {
             _emailText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            _passwordText.setError(getString(R.string.valid_pass));
             valid = false;
         } else {
             _passwordText.setError(null);

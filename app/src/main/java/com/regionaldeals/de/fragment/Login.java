@@ -3,12 +3,13 @@ package com.regionaldeals.de.fragment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,13 +28,15 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.Pair;
 
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Umi on 11.10.2017.
@@ -41,7 +44,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Login extends Fragment {
 
-    private static final String TAG = "LoginFragment";
     private Context context;
     private ViewPager viewPager;
     private final String URL_Login = "/web/users/login";
@@ -61,6 +63,11 @@ public class Login extends Fragment {
     Button _loginButton;
     @BindView(R.id.link_signup)
     TextView _signupLink;
+
+    @BindView(R.id.link_passowrd)
+    TextView _passowrdLink;
+
+    private final DealsDataProvider dealsDataProvider = new DealsDataProvider();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +99,43 @@ public class Login extends Fragment {
                 viewPager.setCurrentItem(1);
             }
         });
+
+        _passowrdLink.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                createDialogue();
+            }
+        });
+
         return v;
+    }
+
+    public void createDialogue() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
+        View mView = getLayoutInflater().inflate(R.layout.dialogue_password, null);
+        final EditText mEmailText = mView.findViewById(R.id.input_email);
+        mBuilder.setTitle(R.string.passwort_vergessen);
+        mBuilder.setView(mView);
+        mBuilder.setPositiveButton(getString(R.string.submit), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                if (mEmailText.getText().toString().isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(mEmailText.getText().toString()).matches()) {
+                    Toast.makeText(getContext(), getString(R.string.valid_email), Toast.LENGTH_SHORT).show();
+                } else {
+                    dialogInterface.dismiss();
+                    Pair<String, String> email = new Pair("email", mEmailText.getText().toString());
+                    List<Pair<String, String>> formData = new ArrayList<>();
+                    formData.add(email);
+                    dealsDataProvider.postPasswordReset("/web/users/forgetpassword", formData);
+                        Toast.makeText(getContext(), getString(R.string.email_reset_ins), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        final AlertDialog mDialog = mBuilder.create();
+        mDialog.show();
     }
 
     public void login() {
@@ -225,14 +268,14 @@ public class Login extends Fragment {
         String password = _passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            _emailText.setError("enter a valid username or email address");
+            _emailText.setError(getString(R.string.valid_email));
             valid = false;
         } else {
             _emailText.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+            _passwordText.setError(getString(R.string.valid_pass));
             valid = false;
         } else {
             _passwordText.setError(null);
