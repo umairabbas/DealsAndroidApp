@@ -229,5 +229,8 @@
     <string name="valid_pass">zwischen 4 und 10 alphanumerische Zeichen</string>
     <string name="valid_name">mindestens 3 Zeichen</string>
 
+    <string name="zahlung_text_test">Testen Sie unsere App, 3 Monaten lang kostonlos.</string>
+    <string name="zahlung_info_text_test">-Keine Vertragsindung \n-Keine Kündigung nötig \n-Testphase läuft automatisch ab \n-Ihr Account bleibe weiterhin erhalten, falls Sie sich für ein Abo Vertrag entschieden haben, können Sie sich mit Ihren aktuellen Account einloggen und eine Abo Paket buchen.</string>
+    <string name="funktion">Funktion</string>
 
 </resources>

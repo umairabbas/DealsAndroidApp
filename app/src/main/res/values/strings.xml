@@ -196,6 +196,8 @@
     <string name="gewahlter_tariff">Gewählter Tariff:</string>
     <string name="zahlung_text">Zahlung Monatlich per überweisung (Dauerauftrag wird empfehlen)</string>
     <string name="zahlung_info_text">Wichtig: Für jeder monatlich überweisung müssen Sie die Referenznummer in verwendungzweke eingeben</string>
+    <string name="zahlung_text_test">Testen Sie unsere App, 3 Monaten lang kostonlos.</string>
+    <string name="zahlung_info_text_test">-Keine Vertragsindung \n-Keine Kündigung nötig \n-Testphase läuft automatisch ab \n-Ihr Account bleibe weiterhin erhalten, falls Sie sich für ein Abo Vertrag entschieden haben, können Sie sich mit Ihren aktuellen Account einloggen und eine Abo Paket buchen.</string>
     <string name="firstname">Firstname</string>
     <string name="last_name">Last Name</string>
     <string name="email">Email</string>
@@ -244,5 +246,6 @@
     <string name="valid_email">enter a valid username or email address</string>
     <string name="valid_pass">between 4 and 10 alphanumeric characters</string>
     <string name="valid_name">at least 3 characters</string>
+    <string name="funktion">Guide</string>
 
 </resources>

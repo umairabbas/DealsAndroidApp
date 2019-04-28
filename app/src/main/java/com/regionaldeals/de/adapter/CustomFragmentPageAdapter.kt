@@ -20,8 +20,8 @@ class CustomFragmentPageAdapter(fm: FragmentManager, private val context: Contex
 
     override fun getItem(position: Int): Fragment? {
         when (position) {
-            0 -> return Gutscheine()
-            1 -> return Deals()
+            0 -> return Deals()
+            1 -> return Gutscheine()
             2 -> return OnlineDeals()
             3 -> return NearBy()
             4 -> return Favourite()
@@ -35,8 +35,8 @@ class CustomFragmentPageAdapter(fm: FragmentManager, private val context: Contex
 
     override fun getPageTitle(position: Int): CharSequence? {
         when (position) {
-            0 -> return context.resources.getString(R.string.gutscheine)
-            1 -> return context.resources.getString(R.string.deals)
+            0 -> return context.resources.getString(R.string.deals)
+            1 -> return context.resources.getString(R.string.gutscheine)
             2 -> return context.resources.getString(R.string.online_deals)
             3 -> return context.resources.getString(R.string.nearby)
             4 -> return context.resources.getString(R.string.favouriten)

@@ -9,7 +9,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.regionaldeals.de.Constants;
 import com.regionaldeals.de.DealsDetail;
+import com.regionaldeals.de.DealsDetailActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.entities.DealObject;
 
@@ -43,21 +45,11 @@ public class OnlineDealsViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
-                Intent intent = new Intent(context, DealsDetail.class);
+                Intent intent = new Intent(context, DealsDetailActivity.class);
                 DealObject currDeal = allDeals.get(getAdapterPosition());
-                intent.putExtra("currDeal", currDeal);
-                intent.putExtra("title", currDeal.getDealTitle());
-                intent.putExtra("desc", currDeal.getDealDescription());
-                intent.putExtra("coverImg", currDeal.getDealImageUrl(context) + "&imagecount=");
-                intent.putExtra("imgCount", currDeal.getDealImageCount());
-                intent.putExtra("lat", Double.parseDouble(currDeal.getShop().getShopLocationLat()));
-                intent.putExtra("long", Double.parseDouble(currDeal.getShop().getShopLocationLong()));
-                intent.putExtra("contact", currDeal.getShop().getShopContact());
-                intent.putExtra("address", currDeal.getShop().getShopAddress());
-                intent.putExtra("shopName", currDeal.getShop().getShopName());
-                intent.putExtra("shopCountry", currDeal.getShop().getShopCountry());
-                intent.putExtra("shopDetails", currDeal.getShop().getShopDetails());
-                intent.putExtra(DealsDetail.EXTRA_POSITION, getAdapterPosition());
+                intent.putExtra(Constants.DEALS_OBJECT, currDeal);
+                intent.putExtra("deleteEnable", false);
+                intent.putExtra("isGutschein", false);
                 context.startActivity(intent);
             }
         });

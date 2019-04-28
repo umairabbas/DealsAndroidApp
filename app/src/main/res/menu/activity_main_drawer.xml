@@ -48,6 +48,10 @@
     <item android:title="@string/menu_shop">
         <menu>
             <item
+                android:id="@+id/funktion"
+                android:icon="@drawable/ic_keyboard_arrow_right_black_24dp"
+                android:title="@string/funktion" />
+            <item
                 android:id="@+id/abo_buchen"
                 android:icon="@drawable/ic_local_offer_black_24dp"
                 android:title="@string/menu_subscription" />

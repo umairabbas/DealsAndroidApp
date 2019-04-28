@@ -1,8 +1,6 @@
 package com.regionaldeals.de.fragment;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -162,17 +160,6 @@ public class OnlineDeals extends Fragment implements SwipeRefreshLayout.OnRefres
             params.add(new DoubleNameValuePair("long", locationLng));
             params.add(new BasicNameValuePair("userid", userId));
             params.add(new IntNameValuePair("radius", maxDistance * 1000));
-            params.add(new NameValuePair() {
-                @Override
-                public String getName() {
-                    return "dealtype";
-                }
-
-                @Override
-                public String getValue() {
-                    return "online";
-                }
-            });
 
             // getting JSON string from URL
             String json = jsonParser.makeHttpRequest(context.getString(R.string.apiUrl) + URL_Online, "GET",

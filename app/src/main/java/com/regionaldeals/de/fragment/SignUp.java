@@ -147,7 +147,7 @@ public class SignUp extends Fragment {
                 jsonParam.put("email", email);
                 jsonParam.put("phone", "");
                 jsonParam.put("address", "");
-                jsonParam.put("shopKeeper", isShop);
+                jsonParam.put("merchant", isShop);
                 jsonParam.put("active", true);
 
                 Log.i("JSON", jsonParam.toString());

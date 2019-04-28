@@ -29,8 +29,6 @@ class ABOBuchenUser : Fragment() {
     private var model: ABOViewModel? = null
 
     private var url: String = "/web/users/updateuser"
-    private var urlplan: String = "/web/subscriptions/update_subscription"
-    private var urlSub: String = "/web/subscriptions/subscription?userid="
 
     private lateinit var prefHelper: PrefsHelper
 
@@ -93,44 +91,10 @@ class ABOBuchenUser : Fragment() {
 
     private fun goToAGB() {
         view?.let {
-
-            val price = getSelectedPlan()?.planPrice!!
-
-                if(price.equals(0.0) || price.equals(0)) {
-                    progressBarProcessingUser.isIndeterminate = true
-                    val formData = listOf("userid" to prefHelper.userId.toInt(), "billing_plan" to getSelectedPlan()?.planShortName)
-                    model?.buyPlan(urlplan, formData) {
-                        if (it.statusCode == 200) {
-                            model?.updateSubscription(urlSub + prefHelper.userId) { subRes ->
-                                val obj = JSONObject(String(subRes.data))
-                                val msg = obj.getString("message")
-                                if (msg == "PLANS_SUBSCRIPTIONS_OK") {
-                                    Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
-                                    val data = obj.getJSONObject("data")
-                                    context?.let { context ->
-                                        prefHelper.updateSubscription(data.toString(), context)
-                                    }
-                                }
-                                val intent = Intent(context, MainActivity::class.java)
-                                intent.putExtra("userEmail", prefHelper.email)
-                                intent.putExtra("userId", prefHelper.userId.toInt())
-                                intent.putExtra("subscribed", true)
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                activity?.setResult(Activity.RESULT_OK, intent)
-                                progressBarProcessingUser.isIndeterminate = false
-                                activity?.finish()
-                            }
-                        }
-                    }
-
-                } else {
-                    val args = android.os.Bundle().apply {
-                        putParcelable(com.regionaldeals.de.Constants.SELECTED_PLAN, getSelectedPlan())
-                    }
-                    androidx.navigation.Navigation.findNavController(it).navigate(com.regionaldeals.de.R.id.action_abo_buchen_user_to_abo_buchen_summary, args)
-
-                }
-
+            val args = android.os.Bundle().apply {
+                putParcelable(com.regionaldeals.de.Constants.SELECTED_PLAN, getSelectedPlan())
+            }
+            androidx.navigation.Navigation.findNavController(it).navigate(com.regionaldeals.de.R.id.action_abo_buchen_user_to_abo_buchen_summary, args)
         }
     }
 
@@ -185,7 +149,7 @@ class ABOBuchenUser : Fragment() {
                         "billingPostCode" : """" + locationIntent.getStringExtra(LOCATION_POSTAL).toString() + """",
                         "billingCity" : """" + locationIntent.getStringExtra(LOCATION_CITY).toString() + """",
                         "billingCountry" : """" + "DE" + """",
-                        "shopKeeper" : true
+                        "merchant" : true
                       }
                     """
 

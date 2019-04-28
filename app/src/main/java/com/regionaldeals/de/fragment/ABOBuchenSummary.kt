@@ -6,14 +6,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.SharedElementCallback
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
-import com.regionaldeals.de.Constants
-import com.regionaldeals.de.MainActivity
-import com.regionaldeals.de.R
+import com.regionaldeals.de.*
 import com.regionaldeals.de.Utils.PrefsHelper
 import com.regionaldeals.de.entities.Plans
 import com.regionaldeals.de.viewmodel.ABOViewModel
@@ -51,44 +46,93 @@ class ABOBuchenSummary : Fragment() {
 
         tvPlan.text = getString(R.string.gewahlter_tariff) + getSelectedPlan()?.planName
 
-        tvDesc.text = "Email: " + prefHelper.email + "\n" + getString(R.string.zahlung_text) + "\n"
+        val price = getSelectedPlan()?.planPrice!!
 
-        tvInfo.text = getString(R.string.zahlung_info_text) + "\n"
+        if (price.equals(0.0) || price.equals(0)) {
 
-        btnAgbSubmit.setOnClickListener { v ->
-            resetValidations()
-            if (validateForm()) {
-                progressBarProcessing.isIndeterminate = true
-                doAsync {
-                    val formData = listOf("userid" to prefHelper.userId.toInt(), "billing_plan" to getSelectedPlan()?.planShortName)
-                    model?.buyPlan(url, formData) {
-                        if (it.statusCode == 200) {
-                            model?.updateSubscription(urlSub + prefHelper.userId) { subRes ->
-                                progressBarProcessing.isIndeterminate = false
-                                val obj = JSONObject(String(subRes.data))
-                                val msg = obj.getString("message")
-                                if (msg == "PLANS_SUBSCRIPTIONS_OK") {
-                                    Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
-                                    val data = obj.getJSONObject("data")
-                                    context?.let { context ->
-                                        prefHelper.updateSubscription(data.toString(), context)
+            tvDesc.text = "Email: " + prefHelper.email + "\n"
+
+            tvInfo.text = getString(R.string.zahlung_info_text_test) + "\n"
+
+            tvInfo.gravity = Gravity.LEFT
+
+            btnAgbSubmit.setOnClickListener { v ->
+                resetValidations()
+                if (validateForm()) {
+                    progressBarProcessing.isIndeterminate = true
+                    doAsync {
+                        val formData = listOf("userid" to prefHelper.userId.toInt(), "billing_plan" to getSelectedPlan()?.planShortName)
+                        model?.buyPlan(url, formData) {
+                            if (it.statusCode == 200) {
+                                model?.updateSubscription(urlSub + prefHelper.userId) { subRes ->
+                                    val obj = JSONObject(String(subRes.data))
+                                    val msg = obj.getString("message")
+                                    if (msg == "PLANS_SUBSCRIPTIONS_OK") {
+                                        Toast.makeText(v.context, "SUCCESS", Toast.LENGTH_SHORT).show()
+                                        val data = obj.getJSONObject("data")
+                                        context?.let { context ->
+                                            prefHelper.updateSubscription(data.toString(), context)
+                                        }
                                     }
-                                }
-                                activity?.runOnUiThread {
-                                    val args = android.os.Bundle().apply {
-                                        putParcelable(com.regionaldeals.de.Constants.SELECTED_PLAN, getSelectedPlan())
-                                        putString(com.regionaldeals.de.Constants.SUB_REFERENCE, prefHelper.getSubReference(context!!))
-
+                                    view.let {
+                                        val intent = Intent(activity, MainActivity::class.java)
+                                        intent.putExtra("userEmail", prefHelper.email)
+                                        intent.putExtra("userId", prefHelper.userId.toInt())
+                                        intent.putExtra("subscribed", true)
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                                        activity?.setResult(Activity.RESULT_OK, intent)
+                                        progressBarProcessing.isIndeterminate = false
+                                        activity?.finish()
                                     }
-                                    androidx.navigation.Navigation.findNavController(v).navigate(com.regionaldeals.de.R.id.action_abo_buchen_summary_to_abo_buchen_agb, args)
+
                                 }
                             }
-                        } else {
-                            Toast.makeText(context, "FAILED", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
-                //androidx.navigation.Navigation.findNavController(v).navigate(com.regionaldeals.de.R.id.action_abo_buchen_user_to_abo_buchen_agb)
+            }
+        } else {
+
+            tvDesc.text = "Email: " + prefHelper.email + "\n" + getString(R.string.zahlung_text) + "\n"
+
+            tvInfo.text = getString(R.string.zahlung_info_text) + "\n"
+
+
+            btnAgbSubmit.setOnClickListener { v ->
+                resetValidations()
+                if (validateForm()) {
+                    progressBarProcessing.isIndeterminate = true
+                    doAsync {
+                        val formData = listOf("userid" to prefHelper.userId.toInt(), "billing_plan" to getSelectedPlan()?.planShortName)
+                        model?.buyPlan(url, formData) {
+                            if (it.statusCode == 200) {
+                                model?.updateSubscription(urlSub + prefHelper.userId) { subRes ->
+                                    progressBarProcessing.isIndeterminate = false
+                                    val obj = JSONObject(String(subRes.data))
+                                    val msg = obj.getString("message")
+                                    if (msg == "PLANS_SUBSCRIPTIONS_OK") {
+                                        Toast.makeText(context, "SUCCESS", Toast.LENGTH_SHORT).show()
+                                        val data = obj.getJSONObject("data")
+                                        context?.let { context ->
+                                            prefHelper.updateSubscription(data.toString(), context)
+                                        }
+                                    }
+                                    activity?.runOnUiThread {
+                                        val args = android.os.Bundle().apply {
+                                            putParcelable(com.regionaldeals.de.Constants.SELECTED_PLAN, getSelectedPlan())
+                                            putString(com.regionaldeals.de.Constants.SUB_REFERENCE, prefHelper.getSubReference(context!!))
+
+                                        }
+                                        androidx.navigation.Navigation.findNavController(v).navigate(com.regionaldeals.de.R.id.action_abo_buchen_summary_to_abo_buchen_agb, args)
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(context, "FAILED", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                    //androidx.navigation.Navigation.findNavController(v).navigate(com.regionaldeals.de.R.id.action_abo_buchen_user_to_abo_buchen_agb)
+                }
             }
         }
     }

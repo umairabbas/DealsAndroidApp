@@ -243,6 +243,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.impressung) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#impressum"));
             startActivity(browserIntent);
+        } else if (id == R.id.funktion) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/app"));
+            startActivity(browserIntent);
         }
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();

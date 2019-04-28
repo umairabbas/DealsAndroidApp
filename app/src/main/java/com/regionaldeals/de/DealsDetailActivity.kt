@@ -174,7 +174,7 @@ class DealsDetailActivity : AppCompatActivity(), GoogleMap.OnMarkerClickListener
         val urlMaps = HashMap<String, String>()
         val imgTitle = arrayOf(" ", "  ", "   ", "    ", "     ")
         for (a in 1..imgCount) {
-            urlMaps[imgTitle[a - 1]] = coverUrl + "&imagecount=" + Integer.toString(a) + "&res=470x320"
+            urlMaps[imgTitle[a - 1]] = coverUrl + "&imagecount=" + Integer.toString(a)
         }
 
         images = ArrayList()
