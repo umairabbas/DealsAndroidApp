@@ -81,7 +81,7 @@ public class DealsAdapterold extends RecyclerView.Adapter<DealsViewHolderold> {
         holder.dealOldPrice.setText(Double.toString(deals.getOriginalPrice()) + "€");
         holder.dealPrice.setText(Double.toString(deals.getDealPrice()) + "€");
         String imgUrl = deals.getDealImageUrl(context) + "&imagecount=1&res=470x320";
-        Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl);
+        Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).resize(470, 320).onlyScaleDown().into(holder.dealCoverUrl);
 
         if (!skipFav) {
             if (deals.getFavourite() == null) {

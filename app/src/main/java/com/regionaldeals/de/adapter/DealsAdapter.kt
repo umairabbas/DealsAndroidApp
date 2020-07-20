@@ -38,7 +38,7 @@ class DealsAdapter(private val isFromFav: Boolean, private val skipFavBtn: Boole
         holder.dealOldPrice.setText(java.lang.Double.toString(deals.originalPrice!!) + "€")
         holder.dealPrice.setText(java.lang.Double.toString(deals.dealPrice!!) + "€")
         val imgUrl = deals.getDealImageUrl(context) + "&imagecount=1&res=470x320"
-        Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl)
+        Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).resize(470, 320).onlyScaleDown().into(holder.dealCoverUrl)
 
         if (!skipFavBtn) {
             if (deals.favourite == null || deals.favourite == false) {

@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DealsAndroidApp.iml" filepath="$PROJECT_DIR$/DealsAndroidApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/DealsAndroidApp-app.iml" filepath="$PROJECT_DIR$/app/DealsAndroidApp-app.iml" group="DealsAndroidApp/app" />
+      <module fileurl="file://$PROJECT_DIR$/KotlinApps-DealsAndroidApp.iml" filepath="$PROJECT_DIR$/KotlinApps-DealsAndroidApp.iml" group="DealsAndroidApp" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

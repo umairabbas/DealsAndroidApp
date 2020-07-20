@@ -32,7 +32,7 @@ class GutscheineAdapter(private val isEdit: Boolean) : RecyclerView.Adapter<Guts
         holder.dealDescription.text = deals.shop?.shopName + ", " + deals.shop?.shopCity?.substring(0, 1)?.toUpperCase() + deals.shop?.shopCity?.substring(1)
         holder.gut_price.text = deals.gutscheinPrice.toString() + "€"
         val imgUrl = deals.getGutscheinImageUrl(context) + "&imagecount=1&res=470x320"
-        Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).into(holder.dealCoverUrl)
+        Picasso.with(context).load(imgUrl).placeholder(ColorUtility.getColorFromPosition(position)).resize(470, 320).onlyScaleDown().into(holder.dealCoverUrl)
 
         if (!isEdit) {
             if (deals.gutscheinAvailed) {
