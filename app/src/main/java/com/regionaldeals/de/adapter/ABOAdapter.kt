@@ -1,7 +1,7 @@
 package com.regionaldeals.de.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
@@ -14,7 +14,7 @@ import android.text.Spanned
 
 
 
-class ABOAdapter() : RecyclerView.Adapter<ABOViewHolder>() {
+class ABOAdapter() : androidx.recyclerview.widget.RecyclerView.Adapter<ABOViewHolder>() {
 
     private lateinit var context: Context
     var allPlans = arrayListOf<Plans>()

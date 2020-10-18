@@ -5,7 +5,7 @@ package com.regionaldeals.de;
  */
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 public class LocationActivityBase extends FragmentActivity {
 

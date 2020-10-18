@@ -3,8 +3,8 @@ package com.regionaldeals.de.location
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -12,9 +12,9 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.TextView
@@ -64,7 +64,7 @@ class LocationPrediction : AppCompatActivity() {
         buttonLocation.setOnClickListener { getLocationCordinates() }
 
         recyclerViewAddress.setHasFixedSize(true)
-        recyclerViewAddress.layoutManager = LinearLayoutManager(this)
+        recyclerViewAddress.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         recyclerViewAddress.adapter = addressPredictionAdapter
 
         queryAddress()

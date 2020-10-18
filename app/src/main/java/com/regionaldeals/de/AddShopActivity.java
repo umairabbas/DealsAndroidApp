@@ -10,7 +10,9 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,24 +21,28 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.regionaldeals.de.adapter.DropDownListAdapter;
 import com.regionaldeals.de.entities.Shop;
 
@@ -56,30 +62,18 @@ import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * Created by Umi on 28.10.2017.
  */
 
 public class AddShopActivity extends AppCompatActivity{
 
-    @BindView(com.regionaldeals.de.R.id.input_name)
     EditText _nameText;
-    @BindView(com.regionaldeals.de.R.id.input_details)
     EditText _detailText;
-    @BindView(com.regionaldeals.de.R.id.input_contact)
     EditText _contactText;
-    //    @BindView(R.id.input_address)
-//    EditText _addressText;
-    @BindView(com.regionaldeals.de.R.id.input_tax)
     EditText _taxText;
-    @BindView(com.regionaldeals.de.R.id.btn_shop_submit)
     Button _shopButton;
-    @BindView(com.regionaldeals.de.R.id.btn_shop_del)
     Button _delButton;
-    @BindView(com.regionaldeals.de.R.id.input_place)
     EditText _placeText;
 
     private final String URL_Login = "/web/shops/upload-shop";
@@ -96,7 +90,7 @@ public class AddShopActivity extends AppCompatActivity{
     private JSONObject jObject;
     private Boolean isSuccess = false;
     private Activity activity;
-    private int PLACE_PICKER_REQUEST = 1;
+    //private int PLACE_PICKER_REQUEST = 1;
     private double lat = 0;
     private double lng = 0;
     private Boolean isEdit = false;
@@ -105,8 +99,6 @@ public class AddShopActivity extends AppCompatActivity{
     private String shopCity = "";
     private String shopCountry = "";
     private Geocoder mGeocoder;
-//    private Spinner shopCitySpinner;
-    private static String[] COUNTRIES;
 
     private PopupWindow pw;
     private boolean expanded;        //to  store information whether the selected values are displayed completely or in shortened representatn
@@ -126,7 +118,13 @@ public class AddShopActivity extends AppCompatActivity{
         SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.sharedPredName), MODE_PRIVATE);
         String restoredCat = prefs.getString("categoriesObj", null);
 
-        ButterKnife.bind(this);
+        _nameText = findViewById(R.id.input_name);
+        _detailText = findViewById(R.id.input_details);
+        _contactText = findViewById(R.id.input_contact);
+        _taxText = findViewById(R.id.input_tax);
+        _shopButton = findViewById(R.id.btn_shop_submit);
+        _delButton = findViewById(R.id.btn_shop_del);
+        _placeText = findViewById(R.id.input_place);
 
         Shop editShop = (Shop) getIntent().getSerializableExtra("EXTRA_SHOP_OBJ");
 
@@ -170,21 +168,51 @@ public class AddShopActivity extends AppCompatActivity{
 
             @Override
             public void onClick(View v) {
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                Places.initialize(getApplicationContext(), "AIzaSyDAWwXrER-iVyB4ObZG_dEaxQJAYQTkD_k");
+                PlacesClient placesClient = Places.createClient(context);
 
-                try {
-                    startActivityForResult(builder.build(activity), PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                    GoogleApiAvailability.getInstance().getErrorDialog(activity, e.getConnectionStatusCode(),
-                            0 /* requestCode */).show();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                    String message = "Google Play Services is not available: " +
-                            GoogleApiAvailability.getInstance().getErrorString(e.errorCode);
-                    //Log.e(TAG, message);
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                }
+                List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS, Place.Field.LAT_LNG, Place.Field.NAME);
+
+                // Start the autocomplete intent.
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                        .build(context);
+                startActivityForResult(intent, 10);
+
+//                String placeId = "PLACE_PICKER_REQUEST";
+//                List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+//                FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields)
+//                        .build();
+////
+//                // Add a listener to handle the response.
+//                placesClient.fetchPlace(request).addOnSuccessListener(new OnSuccessListener<FetchPlaceResponse>() {
+//                    @Override
+//                    public void onSuccess(FetchPlaceResponse response) {
+//                        Place place = response.getPlace();
+//                        place.getName();
+//                        LatLng latlng = place.getLatLng();
+//                        lat = latlng.latitude;
+//                        lng = latlng.longitude;
+//                        address = place.getAddress();
+//                        _placeText.setText(address + "\n" + lat + ", " + lng);
+//                        try {
+//                            getCityNameByCoordinates(lat, lng);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception exception) {
+//                        if (exception instanceof ApiException) {
+//                            ApiException apiException = (ApiException) exception;
+//                            int statusCode = apiException.getStatusCode();
+//                            // Handle error with given status code.
+//                            if (context != null) {
+//                                Toast.makeText(context, "Place not found: " + statusCode, Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    }
+//                });
             }
         });
 
@@ -332,23 +360,50 @@ public class AddShopActivity extends AppCompatActivity{
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
+        if (requestCode == 10) {
             if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, this);
+                Place place = Autocomplete.getPlaceFromIntent(data);
                 LatLng latlng = place.getLatLng();
                 lat = latlng.latitude;
                 lng = latlng.longitude;
-                address = place.getAddress().toString();
+                address = place.getAddress();
                 _placeText.setText(address + "\n" + lat + ", " + lng);
-
                 try {
                     getCityNameByCoordinates(lat, lng);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
             }
+            return;
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
+
+    //@Override
+   // protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //if (requestCode == PLACE_PICKER_REQUEST) {
+//            if (resultCode == RESULT_OK) {
+//                Place place = PlacePicker.getPlace(data, this);
+//                LatLng latlng = place.getLatLng();
+//                lat = latlng.latitude;
+//                lng = latlng.longitude;
+//                address = place.getAddress().toString();
+//                _placeText.setText(address + "\n" + lat + ", " + lng);
+//
+//                try {
+//                    getCityNameByCoordinates(lat, lng);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 
     public void addShop() {
 

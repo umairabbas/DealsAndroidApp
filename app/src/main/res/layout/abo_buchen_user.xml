@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorLightWhite">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/headerAbo"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -13,7 +13,7 @@
         app:cardElevation="3dp"
         android:layout_alignParentTop="true">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/_20sdp"
@@ -57,10 +57,10 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_unchecked_circle_green_24dp" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -69,7 +69,7 @@
         android:layout_below="@id/headerAbo"
         android:layout_above="@id/progressBarProcessing">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_8sdp"
@@ -88,7 +88,7 @@
                 app:layout_constraintBottom_toTopOf="@id/inputFirst"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputFirst"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -105,9 +105,9 @@
                     android:hint="@string/firstname"
                     android:inputType="textPersonName"
                     android:maxLength="50" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputLast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,10 +124,10 @@
                     android:hint="@string/last_name"
                     android:inputType="textPersonName"
                     android:maxLength="50" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -144,9 +144,9 @@
                     android:hint="@string/phone"
                     android:inputType="phone"
                     android:maxLength="20" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputStreetAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -163,9 +163,9 @@
                     android:hint="@string/street_address"
                     android:inputType="text"
                     android:maxLength="100" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/inputAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -179,9 +179,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/wohnort_plz_land"
                     android:inputType="text" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnUserSubmit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -191,7 +191,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/inputAddress" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
     <ProgressBar

@@ -1,7 +1,7 @@
 package com.regionaldeals.de.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.github.kittinunf.fuel.core.Response
 import com.regionaldeals.de.entities.PlansResults
 import com.regionaldeals.de.entities.UserObject

@@ -14,12 +14,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.AttributeSet;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -48,6 +48,8 @@ import com.regionaldeals.de.Utils.HttpClient;
 import com.regionaldeals.de.Utils.RealPathUtil;
 import com.regionaldeals.de.entities.CategoryObject;
 import com.regionaldeals.de.entities.Shop;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
@@ -64,6 +66,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -175,14 +178,6 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerShop.setOnItemSelectedListener(this);
 
-//        //Adapter Category
-//        catList = new ArrayList<>();
-//        adapterCat = new SpinAdapterCat(this,
-//                R.layout.custom_spinner_item,
-//                catList);
-//        spinnerCat.setAdapter(adapterCat);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinnerCat.setOnItemSelectedListener(this);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -192,12 +187,6 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
             }
         }, 300);
 
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                getCatFromServer();
-//            }
-//        }, 500);
 
         attachImg.setOnClickListener(this);
         bUpload.setOnClickListener(this);
@@ -347,9 +336,6 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
     }
 
     private void proceedFileChooser() {
-//        Intent chooseIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        chooseIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//        startActivityForResult(Intent.createChooser(chooseIntent,"Choose File to Upload.."), PICK_FILE_REQUEST);
         Matisse.from(AddDealActivity.this)
                 .choose(MimeType.of(MimeType.JPEG, MimeType.PNG, MimeType.GIF))
                 .countable(true)
@@ -362,26 +348,30 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                 .forResult(REQUEST_CODE_CHOOSE);
     }
 
+    private List<Uri> mSelected = Collections.emptyList();
+    private HashMap<String, String> url_maps = new HashMap<String, String>();
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_CODE_CHOOSE) {
-                if (data != null) {
-                    List<Uri> mSelected = Matisse.obtainResult(data);
-                    Log.d("Matisse", "mSelected: " + mSelected);
-                    //Remove pervious pictures
-                    mDemoSlider.removeAllSliders();
-                    selectedFilePathList.clear();
-
-                    HashMap<String, String> url_maps = new HashMap<String, String>();
-                    for (int a = 0; a < mSelected.size(); a++) {
-                        selectedFilePath = RealPathUtil.getRealPath(this, mSelected.get(a));
-                        if (selectedFilePath != null && !selectedFilePath.equals("")) {
-                            selectedFilePathList.add(selectedFilePath);
-                            url_maps.put(Integer.toString(a), mSelected.get(a).toString());
-                        }
-                    }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+                selectedFilePath = RealPathUtil.getRealPath(this, resultUri);
+                url_maps.put(Integer.toString(url_maps.size()), resultUri.toString());
+                if (selectedFilePath != null && !selectedFilePath.equals("")) {
+                    selectedFilePathList.add(selectedFilePath);
+                }
+                // start picker to get image for cropping and then use the image in cropping activity
+                if (mSelected.size() > 0) {
+                    CropImage.activity(mSelected.get(0))
+                            .setGuidelines(CropImageView.Guidelines.ON)
+                            .setAspectRatio(5, 3)
+                            .setFixAspectRatio(true)
+                            .start(this);
+                    mSelected.remove(0);
+                } else {
                     for (String name : url_maps.keySet()) {
                         TextSliderView textSliderView = new TextSliderView(this);
                         textSliderView
@@ -397,6 +387,31 @@ public class AddDealActivity extends AppCompatActivity implements AdapterView.On
                     mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
                     mDemoSlider.setCustomAnimation(new DescriptionAnimation());
                     mDemoSlider.setDuration(6000);
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_CHOOSE) {
+                if (data != null) {
+                    mSelected = Matisse.obtainResult(data);
+                    Log.d("Matisse", "mSelected: " + mSelected);
+                    //Remove pervious pictures
+                    mDemoSlider.removeAllSliders();
+                    selectedFilePathList.clear();
+                    url_maps.clear();
+
+                    // start picker to get image for cropping and then use the image in cropping activity
+                    if (mSelected.size() > 0) {
+                        CropImage.activity(mSelected.get(0))
+                                .setGuidelines(CropImageView.Guidelines.ON)
+                                .setAspectRatio(5, 3)
+                                .setFixAspectRatio(true)
+                                .start(this);
+                        mSelected.remove(0);
+                    }
+
                 }
             }
         }

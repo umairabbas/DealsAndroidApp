@@ -1,7 +1,7 @@
 package com.regionaldeals.de.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.regionaldeals.de.Utils.ColorUtility
 import com.regionaldeals.de.entities.GutscheineObject
 import com.squareup.picasso.Picasso
 
-class GutscheineAdapter(private val isEdit: Boolean) : RecyclerView.Adapter<GutscheineViewHolder>() {
+class GutscheineAdapter(private val isEdit: Boolean) : androidx.recyclerview.widget.RecyclerView.Adapter<GutscheineViewHolder>() {
 
     private lateinit var context: Context
     var allDeals = arrayListOf<GutscheineObject>()

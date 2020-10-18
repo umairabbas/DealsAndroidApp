@@ -1,10 +1,10 @@
 package com.regionaldeals.de.fragment
 
 import android.app.Activity
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +23,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.json.JSONObject
 
-class ABOBuchenUser : Fragment() {
+class ABOBuchenUser : androidx.fragment.app.Fragment() {
 
 
     private var model: ABOViewModel? = null

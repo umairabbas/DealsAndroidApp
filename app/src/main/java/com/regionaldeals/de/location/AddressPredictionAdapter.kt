@@ -1,11 +1,11 @@
 package com.regionaldeals.de.location
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.regionaldeals.de.R
 
-class AddressPredictionAdapter(private val clickListener: (data) -> Unit) : RecyclerView.Adapter<AddressPredictionViewHolder>() {
+class AddressPredictionAdapter(private val clickListener: (data) -> Unit) : androidx.recyclerview.widget.RecyclerView.Adapter<AddressPredictionViewHolder>() {
 
     private var placesList = mutableListOf<data>()
 

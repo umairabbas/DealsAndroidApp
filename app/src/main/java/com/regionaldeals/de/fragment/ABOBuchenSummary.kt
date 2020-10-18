@@ -1,11 +1,11 @@
 package com.regionaldeals.de.fragment
 
 import android.app.Activity
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.SharedElementCallback
+import androidx.fragment.app.Fragment
+import androidx.core.app.SharedElementCallback
 import android.view.*
 import android.widget.Toast
 import com.regionaldeals.de.*
@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.abo_buchen_summary.*
 import org.jetbrains.anko.doAsync
 import org.json.JSONObject
 
-class ABOBuchenSummary : Fragment() {
+class ABOBuchenSummary : androidx.fragment.app.Fragment() {
 
     private var model: ABOViewModel? = null
 

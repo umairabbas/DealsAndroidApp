@@ -5,9 +5,6 @@ package com.regionaldeals.de.adapter
  */
 
 import android.content.Context
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
 
 import com.regionaldeals.de.R
 import com.regionaldeals.de.fragment.Deals
@@ -16,17 +13,17 @@ import com.regionaldeals.de.fragment.Gutscheine
 import com.regionaldeals.de.fragment.OnlineDeals
 import com.regionaldeals.de.fragment.NearBy
 
-class CustomFragmentPageAdapter(fm: FragmentManager, private val context: Context) : FragmentPagerAdapter(fm) {
+class CustomFragmentPageAdapter(fm: androidx.fragment.app.FragmentManager, private val context: Context) : androidx.fragment.app.FragmentPagerAdapter(fm) {
 
-    override fun getItem(position: Int): Fragment? {
-        when (position) {
+    override fun getItem(position: Int): androidx.fragment.app.Fragment {
+        return when (position) {
             0 -> return Deals()
             1 -> return Gutscheine()
             2 -> return OnlineDeals()
             3 -> return NearBy()
             4 -> return Favourite()
+            else -> return Deals()
         }
-        return null
     }
 
     override fun getCount(): Int {

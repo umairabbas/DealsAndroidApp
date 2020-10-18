@@ -1,7 +1,7 @@
 package com.regionaldeals.de.adapter
 
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -11,7 +11,7 @@ import com.regionaldeals.de.R
 import com.regionaldeals.de.entities.GutscheineObject
 
 
-class GutscheineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class GutscheineViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     var dealTitle: TextView
     var dealDescription: TextView

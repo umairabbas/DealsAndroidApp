@@ -12,7 +12,7 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -22,9 +22,9 @@
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
                 android:hint="@string/shop_name" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -35,7 +35,7 @@
                 android:lines="2"
                 android:inputType="textMultiLine"
                 android:hint="@string/shop_details" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/ShopCatLabel"
@@ -74,7 +74,7 @@
 
         </RelativeLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -88,7 +88,7 @@
                 android:focusable="false"
                 android:inputType="textMultiLine"
                 android:hint="@string/select_location_address" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!--<TextView-->
             <!--android:id="@+id/ShopCityLabel"-->
@@ -107,7 +107,7 @@
             <!--android:paddingTop="10dp"-->
             <!--android:layout_marginBottom="8dp"/>-->
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
                 android:hint="@string/shop_contact" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!--<android.support.design.widget.TextInputLayout-->
             <!--android:layout_width="match_parent"-->
@@ -131,7 +131,7 @@
                 <!--android:hint="Shop Address" />-->
         <!--</android.support.design.widget.TextInputLayout>-->
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -141,9 +141,9 @@
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
                 android:hint="@string/shop_tax_id" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_shop_submit"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -154,7 +154,7 @@
             android:background="@color/colorPrimary"
             android:text="@string/submit"/>
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_shop_del"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

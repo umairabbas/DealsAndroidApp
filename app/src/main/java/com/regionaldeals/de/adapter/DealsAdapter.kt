@@ -1,7 +1,7 @@
 package com.regionaldeals.de.adapter
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.regionaldeals.de.Utils.ColorUtility
 import com.regionaldeals.de.entities.DealObject
 import com.squareup.picasso.Picasso
 
-class DealsAdapter(private val isFromFav: Boolean, private val skipFavBtn: Boolean) : RecyclerView.Adapter<DealsViewHolder>() {
+class DealsAdapter(private val isFromFav: Boolean, private val skipFavBtn: Boolean) : androidx.recyclerview.widget.RecyclerView.Adapter<DealsViewHolder>() {
 
     private lateinit var context: Context
     var allDeals = arrayListOf<DealObject>()

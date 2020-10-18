@@ -2,7 +2,7 @@ package com.regionaldeals.de;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;

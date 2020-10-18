@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/DealsAndroidApp.iml" filepath="$PROJECT_DIR$/DealsAndroidApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/DealsAndroidApp-app.iml" filepath="$PROJECT_DIR$/app/DealsAndroidApp-app.iml" group="DealsAndroidApp/app" />
-      <module fileurl="file://$PROJECT_DIR$/KotlinApps-DealsAndroidApp.iml" filepath="$PROJECT_DIR$/KotlinApps-DealsAndroidApp.iml" group="DealsAndroidApp" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DealsAndroidApp.iml" filepath="$PROJECT_DIR$/.idea/modules/DealsAndroidApp.iml" group="DealsAndroidApp" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="DealsAndroidApp/app" />
     </modules>
   </component>
 </project>

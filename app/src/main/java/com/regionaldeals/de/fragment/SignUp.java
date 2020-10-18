@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.regionaldeals.de.R;
-import com.regionaldeals.de.Utils.JSONParser;
 import com.regionaldeals.de.Utils.PrefsHelper;
 
 import org.json.JSONObject;
@@ -29,10 +28,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 /**
@@ -41,15 +36,10 @@ import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 public class SignUp extends Fragment {
 
-    @BindView(R.id.input_name)
     EditText _nameText;
-    @BindView(R.id.input_email)
     EditText _emailText;
-    @BindView(R.id.input_password)
     EditText _passwordText;
-    @BindView(R.id.btn_signup)
     Button _signupButton;
-    @BindView(R.id.link_login)
     TextView _loginLink;
 
     private ViewPager viewPager;
@@ -75,7 +65,12 @@ public class SignUp extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.signup_fragment, container, false);
 
-        ButterKnife.bind(this, v);
+        _nameText = v.findViewById(R.id.input_name);
+        _emailText = v.findViewById(R.id.input_email);
+        _passwordText = v.findViewById(R.id.input_password);
+        _signupButton = v.findViewById(R.id.btn_signup);
+        _loginLink = v.findViewById(R.id.link_login);
+
         context = getContext();
 
         viewPager = getActivity().findViewById(R.id.viewpager);

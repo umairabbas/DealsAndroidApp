@@ -1,17 +1,17 @@
 package com.regionaldeals.de.fragment
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,14 +28,14 @@ import kotlin.concurrent.schedule
  * Created by Umi on 28.08.2017.
  */
 
-class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener, GutscheineAdapter.ItemClickListener {
+class Gutscheine : androidx.fragment.app.Fragment(), androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener, GutscheineAdapter.ItemClickListener {
 
     private val mUrlDeals = "/web/gutschein/list"
     private val mMitMachenUrl = "/web/gutschein/gutscheinclick"
-    private var gutRecyclerView: RecyclerView? = null
+    private var gutRecyclerView: androidx.recyclerview.widget.RecyclerView? = null
     private lateinit var mAdapter: GutscheineAdapter
     private var maxDistance = 50
-    private var swipeRefreshLayout: SwipeRefreshLayout? = null
+    private var swipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout? = null
     private var myReceiver: MyReceiver? = null
     private var filter: IntentFilter? = null
     private var model: DealsViewModel? = null
@@ -80,12 +80,12 @@ class Gutscheine : Fragment(), SwipeRefreshLayout.OnRefreshListener, GutscheineA
 
         prefHelper = PrefsHelper.getInstance(context!!)
 
-        this.gutRecyclerView = view.findViewById<View>(R.id.rV_gutschein) as RecyclerView
-        val linearLayoutManager = LinearLayoutManager(activity)
+        this.gutRecyclerView = view.findViewById<View>(R.id.rV_gutschein) as androidx.recyclerview.widget.RecyclerView
+        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         gutRecyclerView?.layoutManager = linearLayoutManager
         gutRecyclerView?.setHasFixedSize(true)
 
-        swipeRefreshLayout = view.findViewById<View>(R.id.swipe_refresh_layout) as SwipeRefreshLayout
+        swipeRefreshLayout = view.findViewById<View>(R.id.swipe_refresh_layout) as androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         swipeRefreshLayout?.setOnRefreshListener(this)
 
         mAdapter = GutscheineAdapter(false)

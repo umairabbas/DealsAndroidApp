@@ -7,9 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import kotlin.Pair;
 
 
@@ -55,16 +52,10 @@ public class Login extends Fragment {
     private String message = "";
     private JSONObject jObject;
 
-    @BindView(R.id.input_email)
     EditText _emailText;
-    @BindView(R.id.input_password)
     EditText _passwordText;
-    @BindView(R.id.btn_login)
     Button _loginButton;
-    @BindView(R.id.link_signup)
     TextView _signupLink;
-
-    @BindView(R.id.link_passowrd)
     TextView _passowrdLink;
 
     private final DealsDataProvider dealsDataProvider = new DealsDataProvider();
@@ -80,9 +71,14 @@ public class Login extends Fragment {
         View v = inflater.inflate(R.layout.login_fragment, container, false);
         context = getContext();
 
-        viewPager = getActivity().findViewById(R.id.viewpager);
 
-        ButterKnife.bind(this, v);
+        _emailText = v.findViewById(R.id.input_email);
+        _passwordText = v.findViewById(R.id.input_password);
+        _loginButton = v.findViewById(R.id.btn_login);
+        _signupLink = v.findViewById(R.id.link_signup);
+        _passowrdLink = v.findViewById(R.id.link_passowrd);
+
+        viewPager = getActivity().findViewById(R.id.viewpager);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 

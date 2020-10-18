@@ -3,14 +3,13 @@ package com.regionaldeals.de.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.regionaldeals.de.Constants;
-import com.regionaldeals.de.DealsDetail;
 import com.regionaldeals.de.DealsDetailActivity;
 import com.regionaldeals.de.R;
 import com.regionaldeals.de.entities.DealObject;

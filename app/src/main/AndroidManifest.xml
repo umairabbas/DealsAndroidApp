@@ -131,8 +131,6 @@
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"></activity>
         <activity
-            android:name=".GooglePlacesAutocompleteActivity"></activity>
-        <activity
             android:name=".LocationManual"
             android:screenOrientation="portrait"></activity>
         <activity
@@ -143,32 +141,22 @@
             android:name=".DealsDetailActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
         <!-- [START firebase_service] -->
-        <service
-            android:name=".service.MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
+<!--        <service-->
+<!--            android:name=".service.MyFirebaseMessagingService">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.firebase.MESSAGING_EVENT"/>-->
+<!--            </intent-filter>-->
+<!--        </service>-->
         <!-- [END firebase_service] -->
         <!-- [START firebase_iid_service] -->
-        <service
-            android:name=".service.MyFirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
         <service
             android:name=".service.LocationStatic">
         </service>
 
         <!-- [END firebase_iid_service] -->
-        <!--<service android:name=".service.MyJobService"-->
-            <!--android:exported="false">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>-->
-            <!--</intent-filter>-->
-        <!--</service>-->
 
     </application>
 

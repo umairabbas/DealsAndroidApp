@@ -1,7 +1,7 @@
 package com.regionaldeals.de.fragment
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.regionaldeals.de.entities.DealResults
 import com.regionaldeals.de.entities.GutscheinResults
 import com.github.kittinunf.fuel.core.Response

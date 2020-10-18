@@ -1,12 +1,12 @@
 package com.regionaldeals.de.fragment
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +22,7 @@ import com.regionaldeals.de.viewmodel.ABOViewModel
 import kotlinx.android.synthetic.main.abo_buchen.*
 import org.jetbrains.anko.doAsync
 
-class ABOBuchen : Fragment(), ABOAdapter.ItemClickListener {
+class ABOBuchen : androidx.fragment.app.Fragment(), ABOAdapter.ItemClickListener {
 
     private val mUrlPlans = "/web/subscriptions/plans"
     private lateinit var mAdapter: ABOAdapter
@@ -59,7 +59,7 @@ class ABOBuchen : Fragment(), ABOAdapter.ItemClickListener {
 
         progressBarProcessing.isIndeterminate = true
 
-        val linearLayoutManager = LinearLayoutManager(activity)
+        val linearLayoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
         rVAbo?.layoutManager = linearLayoutManager
         rVAbo?.setHasFixedSize(true)
 

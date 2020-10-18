@@ -64,7 +64,7 @@ class SubDataProvider {
     fun updateSubscription(subUrl: String, responseHandler: (result: Response) -> Unit?) {
         val mainUrl = baseUrl + subUrl
         mainUrl.httpGet().header()
-                .responseObject(PlansDataDeserializer()) { _, response, result ->
+                .responseObject(PlansDataDeserializer()) { _, response, _ ->
                     responseHandler.invoke(response)
                 }
     }
