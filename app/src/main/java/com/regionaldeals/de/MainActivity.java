@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.fragment.app.Fragment;
@@ -30,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.TextHttpResponseHandler;
@@ -103,11 +106,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             city = getIntent().getStringExtra("userCity");
         }
 
-        token = FirebaseInstanceId.getInstance().getToken();
-
         String restoredText = SharedPreferenceUtils.getInstance(this).getStringValue(USER_OBJECT_KEY, null);
         String restoredSub = SharedPreferenceUtils.getInstance(this).getStringValue(SUB_OBJECT_KEY, null);
-        String restoredNot = SharedPreferenceUtils.getInstance(this).getStringValue(NOT_TOKEN_KEY, null);
+        final String restoredNot = SharedPreferenceUtils.getInstance(this).getStringValue(NOT_TOKEN_KEY, null);
         String restoredCat = SharedPreferenceUtils.getInstance(this).getStringValue(CAT_OBJECT_KEY, null);
 
         if (restoredText != null) {
@@ -126,9 +127,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             subscribed = true;
         }
         if (restoredNot != null) {
-            if (!token.equals(restoredNot)) {
-                new RegCall().execute();
-            }
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( MainActivity.this,  new OnSuccessListener<InstanceIdResult>() {
+                @Override
+                public void onSuccess(InstanceIdResult instanceIdResult) {
+                    token = instanceIdResult.getToken();
+                    if (!token.equals(restoredNot)) {
+                        new RegCall().execute();
+                    }
+                }
+            });
         } else {
             new RegCall().execute();
         }
@@ -387,6 +394,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == LOGIN_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 email = data.getStringExtra("userEmail");
