@@ -241,16 +241,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(startActivityIntent);
             }
         } else if (id == R.id.dataschnutz) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#datenschutz"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/privacy.php"));
             startActivity(browserIntent);
         } else if (id == R.id.agb) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#agb"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/termsandconditions.php"));
             startActivity(browserIntent);
         } else if (id == R.id.impressung) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/#impressum"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/impressum.php"));
             startActivity(browserIntent);
         } else if (id == R.id.funktion) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.regionaldeals.de/app"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://partner.regionaldeals.de"));
             startActivity(browserIntent);
         }
 

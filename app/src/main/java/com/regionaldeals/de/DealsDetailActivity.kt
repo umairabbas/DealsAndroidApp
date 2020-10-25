@@ -36,8 +36,8 @@ import java.net.URL
 import java.util.*
 import javax.net.ssl.HttpsURLConnection
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.stfalcon.frescoimageviewer.*;
+import com.facebook.drawee.backends.pipeline.Fresco
+import com.stfalcon.frescoimageviewer.*
 
 /**
  * Created by Umi on 13.09.2017.
